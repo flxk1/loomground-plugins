@@ -1,0 +1,30 @@
+{
+  "name": "loomground",
+  "owner": {
+    "name": "Flxk1"
+  },
+  "metadata": {
+    "description": "Loomground system — the editorial pipeline (hub tree), its course/lecture orchestrator, and the Versum knowledge-graph plugin (the one write path + a mental-model organiser).",
+    "version": "1.1.0"
+  },
+  "plugins": [
+    {
+      "name": "loomground-editorial",
+      "source": "./loomground-editorial",
+      "description": "An editorial system as one plugin — a tree of coordinator hubs, not a sequence. A root orchestrator routes by mode to hubs (ingest, scan, research, verification, argument-hardening, render, capture-to-kg) and enforces three gates. Each run yields talking points with a Sources list, saved to the conf",
+      "version": "0.9.0"
+    },
+    {
+      "name": "loomground-course-orchestrator",
+      "source": "./loomground-course-orchestrator",
+      "description": "Course/lecture hub — projects approved editorial talking points and KG-verified claims into micro-learning lessons and assembled courses. Read-only on the configured knowledge graph; grounds lecture order in the concept graph and proposes candidate concepts for curation. Five modes (foundation, less",
+      "version": "0.1.0"
+    },
+    {
+      "name": "loomground-versum",
+      "source": "./loomground-versum",
+      "description": "The Loomground Versum knowledge-graph plugin: the one write path into the graph and an organiser that places documents by the mental models they share with the corpus. loomground-knowledge-write admits a source (identity, dedup, sidecar, index); loomground-organise ranks concept-neighbour domains, a person confirms, then hands off to the write path. Configurable effort (deterministic / local-first / cloud); never auto-files.",
+      "version": "0.1.0"
+    }
+  ]
+}
