@@ -1,0 +1,4 @@
+interface:
+  display_name: "Advise Solver Add-ons"
+  short_description: "Explain when optional Solver add-ons help"
+  default_prompt: "Use $advise-solver-addons to assess whether this problem needs the world-model or metacognition add-on."
