@@ -1,0 +1,15 @@
+{
+  "name": "solver-addons",
+  "version": "0.1.0",
+  "description": "Provider-neutral, deterministic advice for optional Loomground Solver add-ons.",
+  "author": {
+    "name": "Flxk1"
+  },
+  "keywords": [
+    "solver",
+    "world-model",
+    "metacognition",
+    "deterministic",
+    "provider-agnostic"
+  ]
+}

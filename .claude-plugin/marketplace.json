@@ -25,6 +25,12 @@
       "source": "./loomground-versum",
       "description": "The Loomground Versum knowledge-graph plugin: the one write path into the graph and an organiser that places documents by the mental models they share with the corpus. loomground-knowledge-write admits a source (identity, dedup, sidecar, index); loomground-organise ranks concept-neighbour domains, a person confirms, then hands off to the write path. Configurable effort (deterministic / local-first / cloud); never auto-files.",
       "version": "0.1.0"
+    },
+    {
+      "name": "solver-addons",
+      "source": "./solver-addons",
+      "description": "Provider-neutral deterministic advice for deciding when optional Loomground Solver world-model and metacognition add-ons are useful. It reports scores, requirements, missing inputs, benefits and risks; it never retrieves data, selects providers, activates modules or authorizes actions.",
+      "version": "0.1.0"
     }
   ]
 }
