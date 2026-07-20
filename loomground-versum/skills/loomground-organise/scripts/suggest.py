@@ -113,6 +113,7 @@ def rank_domains(query_concepts, index: Index, top_k: int = 5, exclude_urn=None)
 # and either can override the cascade tuning. Defaults below are tunable, not sacred.
 STRONG_DOMINANCE = 0.5     # cascade: top-1 leads top-2 by >= this fraction of top-1 → one domain
 MIN_SIGNAL = 0.02          # cascade: below this the overlap is not real signal
+POLICY_MODES = frozenset({"cascade", "cloud", "local", "deterministic"})
 
 
 @dataclass(frozen=True)
@@ -143,10 +144,26 @@ def load_policy(obj) -> Policy:
         if not os.path.exists(obj):
             return Policy()
         obj = json.loads(open(obj, encoding="utf-8").read())
-    eff = obj.get("effort", obj) if isinstance(obj, dict) else {}
-    f = {k: eff[k] for k in ("mode", "allow_cloud", "local_available", "dominance", "min_signal")
-         if k in eff}
-    return Policy(**f)
+    if not isinstance(obj, dict):
+        raise ValueError("effort policy must be a JSON object")
+    eff = obj.get("effort", obj)
+    if not isinstance(eff, dict):
+        raise ValueError("effort must be a JSON object")
+    allowed = {"mode", "allow_cloud", "local_available", "dominance", "min_signal"}
+    unknown = set(eff) - allowed
+    if unknown:
+        raise ValueError(f"unknown effort setting(s): {', '.join(sorted(unknown))}")
+    f = {k: eff[k] for k in allowed if k in eff}
+    policy = Policy(**f)
+    if policy.mode not in POLICY_MODES:
+        raise ValueError(f"unknown effort mode {policy.mode!r}; expected one of {', '.join(sorted(POLICY_MODES))}")
+    if not isinstance(policy.allow_cloud, bool) or not isinstance(policy.local_available, bool):
+        raise ValueError("allow_cloud and local_available must be booleans")
+    if isinstance(policy.dominance, bool) or not isinstance(policy.dominance, (int, float)) or not 0 <= policy.dominance <= 1:
+        raise ValueError("dominance must be a number between 0 and 1")
+    if isinstance(policy.min_signal, bool) or not isinstance(policy.min_signal, (int, float)) or not 0 <= policy.min_signal <= 1:
+        raise ValueError("min_signal must be a number between 0 and 1")
+    return policy
 
 
 def _cap(tier: str, policy: Policy) -> str:

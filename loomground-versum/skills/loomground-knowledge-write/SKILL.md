@@ -1,6 +1,6 @@
 ---
 name: loomground-knowledge-write
-description: The single write path into a Loomground Versum knowledge graph. Use when an approved source (a PDF already on disk, or a citation to record) should be added to the graph. Resolves the known-correct citation, computes the canonical URN, checks for duplicates, writes the house-format stub plus a metadata sidecar, and indexes any locally-present PDF into candidate claims. It NEVER fetches binaries from within a session — PDF acquisition is out-of-band (a file you supply, or the KG's own downloader run in your environment). Domain-general via profiles; the Digital Law Sources corpus is the default target. Standalone, and adoptable by loomground-editorial as its post-approval write router.
+description: The single write path into a Loomground Versum knowledge graph. Use when an approved local PDF or prepared source record should be added to the graph. Resolves the known-correct citation, computes the canonical URN, checks for duplicates, writes the house-format stub plus a metadata sidecar, and indexes any locally-present PDF into candidate claims. It NEVER fetches binaries from within a session — acquisition and preparation are out-of-band. Domain-general via profiles; the Digital Law Sources corpus is the default target. Standalone, and adoptable by loomground-editorial as its post-approval write router.
 ---
 
 # loomground-knowledge-write
@@ -38,7 +38,7 @@ to run the pipeline and how to read its report; it does not re-implement the log
 ## When to use
 
 - The editorial pipeline showed sources and the user approved one or more for the graph.
-- The user pastes a bibliographic note, a URL, or a DOI/CELEX/arXiv id to capture.
+- The user supplies a local PDF or prepared source record to capture.
 - The user drops a PDF and says "add this to the knowledge graph / KG / Versum."
 
 Do NOT use it to invent or guess a citation, and do NOT confirm concepts — this skill
@@ -46,7 +46,9 @@ writes the provenance + candidate-claim layers only; concept links are curation.
 
 ## Inputs
 
-- **source** — one of: a PDF path, a URL, or a citation string.
+- **source** — an existing local PDF or prepared source-record path. URLs, DOI/CELEX/arXiv
+  identifiers, and citation strings are context for resolving identity, but are not accepted as
+  paths by `capture_file`; prepare the local record out-of-band before invoking the pipeline.
 - **target** — the Versum corpus folder to write into. Default: the Digital Law Sources
   KG inbox. Any folder that has (or should have) a `.versum/` index is valid.
 - **profile** — the domain profile (`law-eu` for the legal corpus, `generic` otherwise).
@@ -54,9 +56,9 @@ writes the provenance + candidate-claim layers only; concept links are curation.
 
 ## Steps
 
-1. **Resolve the citation.** Use the known-correct citation. If the source is a URL or
-   id, resolve to the canonical bibliographic record; if a PDF, read its metadata /
-   first page. Never fabricate — if the citation can't be established, stop and report.
+1. **Resolve the citation.** Use the known-correct citation from the local record. For a PDF,
+   read its metadata / first page. If the user supplied only a URL or identifier, stop and ask
+   for a local file or prepared record; never pass it to `capture_file` as though it were a path.
 2. **Compute the canonical URN.** Prefer a canonical identifier embedded in the record —
    `urn:dls:celex:...`, `urn:dls:doi:...`, `urn:dls:arxiv:...`. Fall back to a
    path/title slug `urn:<namespace>:source:<slug>`. (The folder indexer uses the slug
@@ -68,12 +70,9 @@ writes the provenance + candidate-claim layers only; concept links are curation.
    `.md.metadata.json` sidecar carrying the resolved citation, the canonical URN, the
    verification level, and (if applicable) the `sidecar_canonical` override.
 5. **PDF placement — never fetched in-session.** If a PDF is already present locally,
-   copy it into the inbox next to the stub. If only a URL/identifier is known, do NOT
-   download it from within the session: record the source and its identity, and leave
-   binary acquisition to the out-of-band path (a file the user supplies, or the KG's own
-   downloader — e.g. `fetch_pdfs.py` / `web_ingest_weekly.py` — run in the user's
-   environment). The stub + sidecar are complete without the PDF; the claim layer is
-   built later, when the PDF has been fetched out-of-band.
+   copy it into the inbox next to the stub. If only a URL/identifier is known, do not invoke
+   the write pipeline yet: leave acquisition or preparation to an out-of-band path and resume
+   after a local PDF or prepared source record exists.
 6. **Index (only what's on disk).** Run `python -m versum index <target> --profile
    <profile>` over the local inbox so any present PDFs get candidate claims and a
    fingerprint. Sources with no local PDF yet stay at the provenance layer until their

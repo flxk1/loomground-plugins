@@ -5,6 +5,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -61,6 +63,30 @@ class PackageBuildTests(unittest.TestCase):
         for path in paths:
             manifest = json.loads(path.read_text())
             self.assertEqual(manifest["author"], {"name": "flxk1"})
+
+    def test_canonical_packages_match_json_schema(self):
+        schema = json.loads((ROOT / "schemas/loomground-package.schema.json").read_text())
+        validator = Draft202012Validator(schema)
+        for package in ("loomground-kg", "loomground-versum", "solver-addons"):
+            manifest = json.loads((ROOT / package / "package.json").read_text())
+            errors = sorted(validator.iter_errors(manifest), key=lambda error: list(error.path))
+            self.assertEqual(errors, [], f"{package}: {[error.message for error in errors]}")
+
+    def test_generated_packages_exclude_platform_metadata(self):
+        subprocess.run(
+            [sys.executable, "tools/build_packages.py", "--target", "all"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        )
+        self.assertEqual(list((ROOT / "dist").rglob(".DS_Store")), [])
+        self.assertEqual(list((ROOT / "dist").rglob("__pycache__")), [])
+
+    def test_runtime_dependencies_are_declared(self):
+        versum = json.loads((ROOT / "loomground-versum/package.json").read_text())
+        solver = json.loads((ROOT / "solver-addons/package.json").read_text())
+        self.assertEqual(versum["runtime"]["requires"], ["versum"])
+        self.assertEqual(solver["runtime"]["requires"], ["loomground-language", "loomground-solver"])
 
 
 if __name__ == "__main__":

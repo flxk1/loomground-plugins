@@ -14,7 +14,12 @@
   "capabilities": {
     "reasoning.addon-advice": { "mode": "read", "humanConfirmation": false }
   },
-  "runtime": {"python": ">=3.10", "network": false, "config": []},
+  "runtime": {
+    "python": ">=3.10",
+    "network": false,
+    "config": [],
+    "requires": ["loomground-language", "loomground-solver"]
+  },
   "adapters": {
     "claude": {},
     "codex": {"interface": {

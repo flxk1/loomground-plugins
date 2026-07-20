@@ -10,11 +10,16 @@ import shutil
 import sys
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
 TARGETS = ("claude", "codex", "generic")
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+CAPABILITY = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:\.[a-z][a-z0-9]*(?:-[a-z0-9]+)*)+$")
+SCHEMA = json.loads((ROOT / "schemas" / "loomground-package.schema.json").read_text(encoding="utf-8"))
+SCHEMA_VALIDATOR = Draft202012Validator(SCHEMA)
 
 
 class PackageError(ValueError):
@@ -26,6 +31,10 @@ def load_package(package_dir: Path) -> dict:
     if not path.is_file():
         raise PackageError(f"missing {path.relative_to(ROOT)}")
     data = json.loads(path.read_text(encoding="utf-8"))
+    schema_errors = sorted(SCHEMA_VALIDATOR.iter_errors(data), key=lambda error: list(error.path))
+    if schema_errors:
+        details = "; ".join(error.message for error in schema_errors)
+        raise PackageError(f"{path}: schema validation failed: {details}")
     required = {"schemaVersion", "name", "version", "description", "author", "skills", "capabilities", "runtime", "adapters"}
     missing = required - data.keys()
     if missing:
@@ -49,7 +58,10 @@ def load_package(package_dir: Path) -> dict:
             raise PackageError(f"{path}: invalid skill name {skill['name']!r}")
         if not (skill_dir / "SKILL.md").is_file():
             raise PackageError(f"{path}: missing {skill['path']}/SKILL.md")
-        provided.update(skill["provides"])
+        for capability in skill["provides"]:
+            if not CAPABILITY.fullmatch(capability):
+                raise PackageError(f"{path}: invalid capability {capability!r}")
+            provided.add(capability)
     if provided != set(data["capabilities"]):
         raise PackageError(f"{path}: provided capabilities and capability declarations differ")
     if set(data["adapters"]) != set(TARGETS):
@@ -69,11 +81,24 @@ def reset_output(target: str, name: str) -> Path:
 
 
 def copy_shared(package_dir: Path, output: Path) -> None:
-    shutil.copytree(package_dir / "skills", output / "skills")
+    shutil.copytree(
+        package_dir / "skills",
+        output / "skills",
+        ignore=shutil.ignore_patterns(".DS_Store", "__pycache__", "*.pyc", ".pytest_cache"),
+    )
     for filename in ("README.md", "package.json"):
         source = package_dir / filename
         if source.is_file():
             shutil.copy2(source, output / filename)
+
+
+def clean_generated_metadata() -> None:
+    if not DIST.exists():
+        return
+    for path in DIST.rglob(".DS_Store"):
+        path.unlink(missing_ok=True)
+    for path in DIST.rglob("__pycache__"):
+        shutil.rmtree(path, ignore_errors=True)
 
 
 def claude_manifest(data: dict) -> dict:
@@ -146,6 +171,7 @@ def main() -> int:
                 for target in targets:
                     output = build(directory, data, target)
                     print(f"built {output.relative_to(ROOT)}")
+        clean_generated_metadata()
     except (OSError, json.JSONDecodeError, KeyError, TypeError, PackageError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
