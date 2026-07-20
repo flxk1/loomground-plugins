@@ -11,8 +11,8 @@ the right place — without ever filing it on a guess.
 Two skills, one doctrine (the graph is the source of truth; folders are a projection; every
 write goes through one door):
 
-- **loomground-knowledge-write** — the single write path. Admits a source (PDF, URL, or
-  citation): resolves identity, dedups, writes the house stub + `canonical_urn` sidecar, and
+- **loomground-knowledge-write** — the single write path. Admits a local PDF or prepared source
+  record: resolves identity, dedups, writes the house stub + `canonical_urn` sidecar, and
   indexes candidate claims. Deterministic on the happy path; a local model only when identity
   bottoms out. Nothing else writes to the graph.
 - **loomground-organise** — LLM-driven placement. For a document waiting in the review queue,

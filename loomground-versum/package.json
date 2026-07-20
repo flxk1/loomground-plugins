@@ -25,7 +25,8 @@
   "runtime": {
     "python": ">=3.10",
     "network": false,
-    "config": ["skills/loomground-organise/organise.config.example.json"]
+    "config": ["skills/loomground-organise/organise.config.example.json"],
+    "requires": ["versum"]
   },
   "adapters": {
     "claude": {},

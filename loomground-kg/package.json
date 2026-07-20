@@ -17,7 +17,8 @@
   "runtime": {
     "python": ">=3.10",
     "network": false,
-    "config": ["skills/loomground-kg/config.example.json"]
+    "config": ["skills/loomground-kg/config.example.json"],
+    "requires": []
   },
   "adapters": {
     "claude": {},

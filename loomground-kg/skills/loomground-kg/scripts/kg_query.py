@@ -97,9 +97,20 @@ def _resolve_kg(a):
     if a.kg_root: return a.kg_root
     for cand in [a.config, os.environ.get("LOOMGROUND_KG_CONFIG"),
                  os.path.join(os.getcwd(), "loomground-kg.config.json")]:
-        if cand and os.path.exists(cand):
-            try: return json.load(open(cand, encoding="utf-8"))["kg_root"]
-            except Exception: pass
+        if not cand:
+            continue
+        if not os.path.exists(cand):
+            if cand == a.config or cand == os.environ.get("LOOMGROUND_KG_CONFIG"):
+                sys.exit(f"KG config not found: {cand}")
+            continue
+        try:
+            config = json.load(open(cand, encoding="utf-8"))
+            root = config["kg_root"]
+            if not isinstance(root, str) or not root:
+                raise ValueError("kg_root must be a non-empty string")
+            return root
+        except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
+            sys.exit(f"invalid KG config {cand}: {exc}")
     if os.environ.get("KG_ROOT"): return os.environ["KG_ROOT"]
     return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -111,6 +122,10 @@ def main():
     ap.add_argument("--config", default=None)
     ap.add_argument("--limit", type=int, default=20)
     a = ap.parse_args()
+    if a.cmd in {"urn", "search"} and not a.arg:
+        ap.error(f"{a.cmd} requires an argument")
+    if a.limit < 1:
+        ap.error("--limit must be at least 1")
     kg = _resolve_kg(a)
     if not os.path.isdir(os.path.join(kg, "by-domain")):
         sys.exit(f"KG not found at {kg} (expected a by-domain/ folder). Pass --kg-root.")

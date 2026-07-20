@@ -16,6 +16,12 @@ copies do not belong in the repository.
 
 ## Build and test
 
+Install the development dependency once:
+
+```bash
+python3 -m pip install -r requirements-dev.txt
+```
+
 ```bash
 python3 tools/build_packages.py --target all
 python3 -m unittest discover -s tests

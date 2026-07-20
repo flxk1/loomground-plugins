@@ -29,6 +29,8 @@ SIDE = ".metadata.json"
 
 def cmd_list(args):
     review = Path(args.review)
+    if not review.is_dir():
+        raise ValueError(f"review directory not found: {review}")
     items = []
     for sc in sorted(review.glob("*" + SIDE)):
         try:
@@ -52,6 +54,11 @@ def _concepts_for_urn(store, urn):
 
 
 def cmd_suggest(args):
+    store = Path(args.store)
+    if not (store / "by-domain").is_dir():
+        raise ValueError(f"concept store not found: {store / 'by-domain'}")
+    if args.top_k < 1:
+        raise ValueError("--top-k must be at least 1")
     idx = S.build_index(args.store)
     policy = S.load_policy(args.config)         # effort policy from the workspace config (or default)
     if args.concepts:
@@ -106,7 +113,10 @@ def main(argv=None):
     pc.add_argument("--force", action="store_true", help="overwrite an existing file on --init")
     pc.set_defaults(fn=cmd_config)
     args = p.parse_args(argv)
-    args.fn(args)
+    try:
+        args.fn(args)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        p.error(str(exc))
 
 
 if __name__ == "__main__":
