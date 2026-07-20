@@ -15,7 +15,7 @@ Before answering anything, run the read tool and quote it — never state KG sta
 ```
 # one-time per machine: point at your KG config (all device paths live only there)
 export LOOMGROUND_KG_CONFIG="/abs/path/to/loomground-kg.config.json"
-python3 <this skill dir>/kg_query.py status
+python3 <this skill dir>/scripts/kg_query.py status
 ```
 The code carries no machine paths; the single config file (see `config.example.json`) holds
 `kg_root` and each library's `root_path`, so the same skill runs unchanged on any machine.
@@ -26,10 +26,9 @@ The code carries no machine paths; the single config file (see `config.example.j
   stand-in until the concept layer is curated).
 - `libraries` — the configured libraries and their roots.
 
-Read path = `kg_query.py`. **Write door = `loomground-editorial:capture-to-kg` only** — never
-write claims directly, never fetch a PDF in-session. If a genuinely new document must enter
-the graph, route it through `capture-to-kg` (it registers provenance out-of-band); the live
-indexer then picks it up.
+Read path = `scripts/kg_query.py`. Writes must route through the installed package that provides
+the `knowledge.capture` capability — never write claims directly or fetch a PDF in-session. The
+capture provider registers provenance out-of-band; the live indexer then picks it up.
 
 ## Job 1 — know the digest
 The editorial weekly digest lives in the successor KG folder: `00_Inbox` (candidates),
