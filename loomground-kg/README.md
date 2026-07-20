@@ -7,7 +7,8 @@ migration wrote to `Loomground Sources/06_Graph/versum/`; `SKILL.md` is the cock
 ## Install / use
 Point it at the KG and run the read tool:
 ```
-KG_ROOT=".../Knowledge/Loomground Sources/06_Graph/versum" python3 kg_query.py status
+KG_ROOT=".../Knowledge/Loomground Sources/06_Graph/versum" \
+  python3 skills/loomground-kg/scripts/kg_query.py status
 ```
 Or set `KG_ROOT` once in your environment. The skill grounds every answer on this tool.
 

@@ -1,0 +1,37 @@
+{
+  "$schema": "../schemas/loomground-package.schema.json",
+  "schemaVersion": 1,
+  "name": "loomground-kg",
+  "version": "0.1.0",
+  "description": "A read-only cockpit over the Loomground Versum knowledge graph.",
+  "author": { "name": "flxk1" },
+  "keywords": ["knowledge-graph", "local-first", "query", "versum"],
+  "skills": [{
+    "name": "loomground-kg",
+    "path": "skills/loomground-kg",
+    "provides": ["knowledge.query"]
+  }],
+  "capabilities": {
+    "knowledge.query": { "mode": "read", "humanConfirmation": false }
+  },
+  "runtime": {
+    "python": ">=3.10",
+    "network": false,
+    "config": ["skills/loomground-kg/config.example.json"]
+  },
+  "adapters": {
+    "claude": {},
+    "codex": {
+      "interface": {
+        "displayName": "Loomground KG",
+        "shortDescription": "Query a local Versum knowledge graph",
+        "longDescription": "Inspect graph status, sources, libraries, and canonical URNs through a read-only local query surface.",
+        "developerName": "flxk1",
+        "category": "Productivity",
+        "capabilities": ["Knowledge graph queries", "Local-first", "Read-only"],
+        "defaultPrompt": ["Show the status of my Versum graph.", "Find sources related to this concept."]
+      }
+    },
+    "generic": {}
+  }
+}

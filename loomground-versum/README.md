@@ -1,5 +1,10 @@
 # loomground-versum
 
+This is a portable Loomground source package. `package.json` is the canonical package manifest;
+Claude, Codex, and generic host layouts are generated with
+`python3 tools/build_packages.py loomground-versum --target all` from the repository root.
+Files under `dist/` are build artifacts and should not be edited directly.
+
 The Loomground Versum knowledge-graph plugin: get a document into the graph, and get it to
 the right place — without ever filing it on a guess.
 

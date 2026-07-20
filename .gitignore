@@ -1,4 +1,6 @@
 _to_delete/
+/dist/
+/workspace.config.local.json
 **/.DS_Store
 **/__pycache__/
 **/.pytest_cache/

@@ -1,0 +1,45 @@
+{
+  "$schema": "../schemas/loomground-package.schema.json",
+  "schemaVersion": 1,
+  "name": "loomground-versum",
+  "version": "0.1.0",
+  "description": "Loomground's human-gated knowledge-graph write path and concept-neighbour organiser.",
+  "author": { "name": "flxk1" },
+  "keywords": ["knowledge-graph", "local-first", "organise", "provenance", "versum"],
+  "skills": [
+    {
+      "name": "loomground-knowledge-write",
+      "path": "skills/loomground-knowledge-write",
+      "provides": ["knowledge.capture"]
+    },
+    {
+      "name": "loomground-organise",
+      "path": "skills/loomground-organise",
+      "provides": ["knowledge.organise"]
+    }
+  ],
+  "capabilities": {
+    "knowledge.capture": { "mode": "write", "humanConfirmation": true },
+    "knowledge.organise": { "mode": "read-write", "humanConfirmation": true }
+  },
+  "runtime": {
+    "python": ">=3.10",
+    "network": false,
+    "config": ["skills/loomground-organise/organise.config.example.json"]
+  },
+  "adapters": {
+    "claude": {},
+    "codex": {
+      "interface": {
+        "displayName": "Loomground Versum",
+        "shortDescription": "Capture and organise a human-gated knowledge graph",
+        "longDescription": "Admit sources through one provenance-safe write path and organise documents by shared mental models, with human confirmation before placement.",
+        "developerName": "Flxk1",
+        "category": "Productivity",
+        "capabilities": ["Knowledge graph", "Local-first", "Write with confirmation"],
+        "defaultPrompt": ["Add this source to my Versum graph.", "Where should this document be organised?"]
+      }
+    },
+    "generic": {}
+  }
+}
