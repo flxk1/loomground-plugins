@@ -1,0 +1,4 @@
+interface:
+  display_name: "Probability Tracker"
+  short_description: "Track and update calibrated probabilities"
+  default_prompt: "Use $probability-tracker to track and update the probability given this evidence."

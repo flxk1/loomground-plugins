@@ -1,0 +1,4 @@
+interface:
+  display_name: "Estimate Liability"
+  short_description: "Estimate liability probability as a range"
+  default_prompt: "Use $estimate-liability to estimate the liability probability given these factors."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Strategic Analysis"
+  short_description: "Analyse a competitive position"
+  default_prompt: "Use $strategic-analysis to analyse this position and recommend the best move."
