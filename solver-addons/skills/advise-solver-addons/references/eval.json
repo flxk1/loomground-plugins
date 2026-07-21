@@ -1,0 +1,9 @@
+{
+  "skill": "advise-solver-addons",
+  "provides": "solver.advise-addons",
+  "wraps": "loomground_solver.addons.advise via scripts/advise.py",
+  "scripted": true,
+  "fail_closed": true,
+  "provenance": "Authored for loomground; wraps the Apache-2.0 loomground_solver engine. No third-party skill source.",
+  "notes": "Progressive-disclosure: lean SKILL.md + references/ pair."
+}
