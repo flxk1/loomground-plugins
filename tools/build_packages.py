@@ -81,11 +81,15 @@ def reset_output(target: str, name: str) -> Path:
 
 
 def copy_shared(package_dir: Path, output: Path) -> None:
-    shutil.copytree(
-        package_dir / "skills",
-        output / "skills",
-        ignore=shutil.ignore_patterns(".DS_Store", "__pycache__", "*.pyc", ".pytest_cache"),
-    )
+    ignore = shutil.ignore_patterns(".DS_Store", "__pycache__", "*.pyc", ".pytest_cache")
+    shutil.copytree(package_dir / "skills", output / "skills", ignore=ignore)
+    # Optional plugin-level directories carried verbatim into the distribution
+    # when a package uses them (e.g. an MCP-driver plugin ships mcp/, apps/,
+    # references/, schemas/ alongside skills/). Absent dirs are skipped.
+    for dirname in ("mcp", "apps", "references", "schemas"):
+        source = package_dir / dirname
+        if source.is_dir():
+            shutil.copytree(source, output / dirname, ignore=ignore)
     for filename in ("README.md", "package.json"):
         source = package_dir / filename
         if source.is_file():

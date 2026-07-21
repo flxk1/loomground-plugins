@@ -1,0 +1,21 @@
+{
+  "skill": "rvnd-build-surface",
+  "provides": "rvnd.build-surface",
+  "drives": "none - local deterministic linter over the plugin's apps/ card specs and schemas/",
+  "wraps_kernel": false,
+  "scripted": true,
+  "script": "scripts/lint_surface.py",
+  "network": false,
+  "deterministic": true,
+  "fail_closed": true,
+  "enforces": [
+    "a composition rendering 'proposal' must also render 'patch' and 'receipt'",
+    "forbids_scores and attributed must be true (discrete lamps, attributed-not-asserted)",
+    "proposal status_vocabulary excludes granted/enabled/active/in-effect",
+    "every composition is fail_closed and drives the rvnd-governance server"
+  ],
+  "provenance": "Authored for loomground; validates RVND surface specs against the plugin schemas. No third-party skill source.",
+  "notes": "Progressive-disclosure: lean SKILL.md + references/ pair + shared plugin references. Uses optional jsonschema when present; plain checks always run. Commercial (RVND) tier of the open-core split.",
+  "tests": ["tests/test_rvnd_surface.py"],
+  "review": "pending Codex review"
+}

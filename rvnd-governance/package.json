@@ -1,0 +1,113 @@
+{
+  "$schema": "../schemas/loomground-package.schema.json",
+  "schemaVersion": 1,
+  "name": "rvnd-governance",
+  "version": "0.2.0",
+  "description": "The RVND governance layer - skills that teach an AI host to drive the RVND governance MCP server safely: query the lane, propose an action, let the server validate it, preview the effect, confirm, apply, and display the verdict, so a request is never shown as a grant. Drives the server; computes no verdict itself; fail-closed. Commercial (RVND) tier of the open-core split.",
+  "author": {
+    "name": "flxk1"
+  },
+  "keywords": [
+    "governance",
+    "policy",
+    "rvnd",
+    "loomground",
+    "mcp",
+    "oversight",
+    "audit",
+    "fail-closed",
+    "commercial"
+  ],
+  "skills": [
+    {
+      "name": "rvnd-govern",
+      "path": "skills/rvnd-govern",
+      "provides": [
+        "rvnd.govern"
+      ]
+    },
+    {
+      "name": "rvnd-decide",
+      "path": "skills/rvnd-decide",
+      "provides": [
+        "rvnd.decide"
+      ]
+    },
+    {
+      "name": "rvnd-audit",
+      "path": "skills/rvnd-audit",
+      "provides": [
+        "rvnd.audit"
+      ]
+    },
+    {
+      "name": "rvnd-incident",
+      "path": "skills/rvnd-incident",
+      "provides": [
+        "rvnd.incident"
+      ]
+    },
+    {
+      "name": "rvnd-build-surface",
+      "path": "skills/rvnd-build-surface",
+      "provides": [
+        "rvnd.build-surface"
+      ]
+    }
+  ],
+  "capabilities": {
+    "rvnd.govern": {
+      "mode": "read-write",
+      "humanConfirmation": true
+    },
+    "rvnd.decide": {
+      "mode": "read-write",
+      "humanConfirmation": true
+    },
+    "rvnd.audit": {
+      "mode": "read",
+      "humanConfirmation": false
+    },
+    "rvnd.incident": {
+      "mode": "read-write",
+      "humanConfirmation": true
+    },
+    "rvnd.build-surface": {
+      "mode": "read",
+      "humanConfirmation": false
+    }
+  },
+  "runtime": {
+    "python": ">=3.10",
+    "network": false,
+    "config": [],
+    "requires": [
+      "rvnd-governance-mcp-server"
+    ]
+  },
+  "adapters": {
+    "claude": {},
+    "codex": {
+      "interface": {
+        "displayName": "RVND Governance",
+        "shortDescription": "Drive the RVND governance MCP server safely",
+        "longDescription": "Five composable skills that teach an AI host to run consequential actions through RVND's governance cycle: query the lane, propose the action, let the server validate it, preview the effect, obtain human confirmation, apply, and display the verdict. The server decides and the host renders, so a request is never shown as a grant. Includes oversight sign-off, tamper-evident audit verification, incident response, and a linter that keeps governance surfaces honest.",
+        "developerName": "Flxk1",
+        "category": "Productivity",
+        "capabilities": [
+          "Governance cycle",
+          "Human oversight",
+          "Signed audit",
+          "Incident response",
+          "Local-first, fail-closed"
+        ],
+        "defaultPrompt": [
+          "Run this action through RVND's governance cycle.",
+          "Put this to a person for approve/hold/deny.",
+          "Verify this receipt against the signed chain."
+        ]
+      }
+    },
+    "generic": {}
+  }
+}
