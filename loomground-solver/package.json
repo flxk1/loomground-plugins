@@ -3,49 +3,18 @@
   "schemaVersion": 1,
   "name": "loomground-solver",
   "version": "0.2.0",
-  "description": "The Solver plugin — the universal reasoning kernel exposed as skills, in two lobes. Deductive/rule: extract deontic norms, compile them to Loomground .lg grammar, reason cases to a justified PASS/VIOLATION/ESCALATE verdict, resolve rule conflicts. Analytic/probabilistic: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, analyse risks. Thin wrappers over the installed loomground_solver; never a copied reasoner.",
+  "description": "Analytic and probabilistic reasoning skills over the Loomground Solver kernel: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, and analyse risks.",
   "author": {
     "name": "flxk1"
   },
   "keywords": [
     "solver",
-    "governance",
-    "rule-reasoning",
-    "deontic",
     "decision-theory",
     "bayesian",
     "loomground",
-    "policy"
+    "risk"
   ],
   "skills": [
-    {
-      "name": "extract-policy-norms",
-      "path": "skills/extract-policy-norms",
-      "provides": [
-        "governance.extract-norms"
-      ]
-    },
-    {
-      "name": "compile-loomground-policy",
-      "path": "skills/compile-loomground-policy",
-      "provides": [
-        "governance.compile-policy"
-      ]
-    },
-    {
-      "name": "reason-governance-rules",
-      "path": "skills/reason-governance-rules",
-      "provides": [
-        "governance.reason"
-      ]
-    },
-    {
-      "name": "resolve-rule-conflicts",
-      "path": "skills/resolve-rule-conflicts",
-      "provides": [
-        "governance.resolve-conflicts"
-      ]
-    },
     {
       "name": "opponent-modeler",
       "path": "skills/opponent-modeler",
@@ -90,22 +59,6 @@
     }
   ],
   "capabilities": {
-    "governance.extract-norms": {
-      "mode": "read",
-      "humanConfirmation": false
-    },
-    "governance.compile-policy": {
-      "mode": "read-write",
-      "humanConfirmation": true
-    },
-    "governance.reason": {
-      "mode": "read",
-      "humanConfirmation": false
-    },
-    "governance.resolve-conflicts": {
-      "mode": "read",
-      "humanConfirmation": false
-    },
     "solver.opponent-model": {
       "mode": "read",
       "humanConfirmation": false
@@ -136,7 +89,8 @@
     "network": false,
     "config": [],
     "requires": [
-      "loomground_solver"
+      "loomground-language",
+      "loomground-solver"
     ]
   },
   "adapters": {
@@ -144,22 +98,17 @@
     "codex": {
       "interface": {
         "displayName": "Loomground Solver",
-        "shortDescription": "Governance rule-reasoning and analytic decision reasoning over the Loomground Solver",
-        "longDescription": "Two lobes over one kernel: turn policy into runnable Loomground grammar and reason cases to a justified, replayable verdict with a bounded decision space; and reason under uncertainty — opponents, probabilities, strategy, liability, litigation and risk — with a named method behind every result. Wraps the installed loomground_solver; writes and authoritative policies are human-confirmed.",
+        "shortDescription": "Analytic decision reasoning over the Loomground Solver",
+        "longDescription": "Reason under uncertainty about opponents, probabilities, strategy, liability, litigation, and risk, with a named method behind every result. Thin wrappers delegate to the installed Loomground Solver kernel and fail closed when it is unavailable.",
         "developerName": "Flxk1",
         "category": "Productivity",
         "capabilities": [
-          "Governance rule-reasoning",
-          "Deontic norms",
           "Decision theory",
           "Bayesian estimation",
-          "Replayable verdicts",
+          "Risk analysis",
           "Local-first"
         ],
         "defaultPrompt": [
-          "Extract the rules from this regulation.",
-          "Is this action compliant with the policy?",
-          "Which rule wins when these two conflict?",
           "What's my best move here?",
           "How likely is liability given these facts?"
         ]

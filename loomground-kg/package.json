@@ -26,7 +26,7 @@
     "python": ">=3.10",
     "network": false,
     "config": ["skills/loomground-kg/config.example.json"],
-    "requires": []
+    "requires": ["versum"]
   },
   "adapters": {
     "claude": {},

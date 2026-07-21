@@ -28,6 +28,5 @@ decision space. Replayable.
 
 ## Pairing
 
-Analytic-lobe member; consumes `probability-tracker`. Its probabilistic estimate can feed the
-deductive `reason-governance-rules` where a rule's Tatbestand turns on a likelihood.
-
+Consumes `probability-tracker`. Its probabilistic estimate can feed the separately licensed RVND
+governance package when a rule's triggering conditions turn on a likelihood.
