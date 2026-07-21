@@ -5,8 +5,12 @@
   "wraps_kernel": false,
   "scripted": false,
   "fail_closed": true,
+  "loomground_language": "0.8.0a1",
+  "manifest": "manifest.yaml",
+  "grounding": "references/grounding.md; runtime containment (hold/suspend/seal/transfer) is OUTSIDE Loomground - only removing authority / adding prohibition / lowering grade is a Loomground proposal",
   "cycle_steps": ["hold", "revoke", "transfer", "apply", "display"],
   "invariants": [
+    "runtime containment is not a Loomground declaration; only an actual policy change proposes a construct",
     "tightening (freeze, revoke, seal) is immediate; loosening back needs a named approver and rationale",
     "revocation is a signed tombstone that cannot recall what already left the boundary",
     "a sealed folder builds no network request and is never routed to a cloud model",

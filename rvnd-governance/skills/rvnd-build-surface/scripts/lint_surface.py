@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Lint an RVND surface card or composition manifest against the plugin schemas.
+"""Lint an RVND surface card, composition manifest, or proposal envelope.
 
 Deterministic, offline, dependency-light. Reads one JSON object from stdin (or a
 file path argument; "-" also means stdin) and checks it against the plugin's
 schemas/ — surface-card.schema.json for a card, composition.schema.json for a
-composition. Chooses the schema by shape: a "card" key means a card, a "cards"
-or "skills" key means a composition.
+composition, proposal.schema.json for a governance proposal envelope. Chooses the
+schema by shape: a "card" key means a card, a "cards"/"skills" key means a
+composition, an "intent"/"loomground"/"proposal_id" key means a proposal.
 
 Beyond JSON-Schema shape, it enforces the invariants the schemas encode in prose
 so a surface cannot be built that shows a request as a grant:
@@ -25,6 +26,14 @@ from pathlib import Path
 
 SCHEMA_DIR = Path(__file__).resolve().parents[3] / "schemas"
 CARD_STATUS_FORBIDDEN = {"granted", "enabled", "active", "in-effect", "in effect"}
+# The real loomground-language 0.8.0a1 constructs: node classes, cords, declarations.
+# Anything not in this set is residual, never a construct.
+REAL_CONSTRUCTS = {
+    "actor", "human", "gate", "master",
+    "authority", "pipe", "egress",
+    "reservation", "quorum", "prohibition", "temporal",
+    "egress-obligation", "redress", "party", "delegation", "autonomy-grade",
+}
 
 
 def _read_input(argv: list[str]) -> str:
@@ -78,6 +87,26 @@ def _check_composition(doc: dict, errors: list[str]) -> None:
         errors.append("server must be 'rvnd-governance'")
 
 
+def _check_proposal(doc: dict, errors: list[str]) -> None:
+    _jsonschema_check(doc, _load_schema("proposal.schema.json"), errors)
+    # residual ledger must be present (may be empty) - never omitted
+    if "residual" not in doc or not isinstance(doc["residual"], list):
+        errors.append("proposal must carry a 'residual' ledger array (may be empty, never omitted)")
+    # constructs restricted to the real vocabulary - anything else is residual
+    constructs = (doc.get("loomground") or {}).get("constructs") or []
+    for c in constructs:
+        t = c.get("type") if isinstance(c, dict) else None
+        if t not in REAL_CONSTRUCTS:
+            errors.append(
+                f"loomground construct {t!r} is not a real 0.8.0a1 construct - "
+                "it must be residual, not approximated"
+            )
+    # version grounding: language version must be recorded
+    versions = doc.get("versions") or {}
+    if not versions.get("loomground_language"):
+        errors.append("versions.loomground_language is required (version grounding)")
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     try:
@@ -90,15 +119,18 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     errors: list[str] = []
-    if "card" in doc:
+    if "intent" in doc or "loomground" in doc or "proposal_id" in doc:
+        kind = "proposal"
+        _check_proposal(doc, errors)
+    elif "card" in doc:
         kind = "card"
         _check_card(doc, errors)
     elif "cards" in doc or "skills" in doc:
         kind = "composition"
         _check_composition(doc, errors)
     else:
-        print("error: cannot tell a card ('card') from a composition ('cards'/'skills')",
-              file=sys.stderr)
+        print("error: cannot tell a proposal ('intent'/'loomground') from a card ('card') "
+              "or a composition ('cards'/'skills')", file=sys.stderr)
         return 2
 
     if errors:
