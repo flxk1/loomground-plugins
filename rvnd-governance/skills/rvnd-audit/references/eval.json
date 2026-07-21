@@ -1,0 +1,19 @@
+{
+  "skill": "rvnd-audit",
+  "provides": "rvnd.audit",
+  "drives": "RVND Ed25519 signed hash chain + security_dashboard (security/v1) via the host's MCP client",
+  "wraps_kernel": false,
+  "scripted": false,
+  "fail_closed": true,
+  "read_only": true,
+  "cycle_steps": ["verify", "display"],
+  "invariants": [
+    "read-only: never appends, signs, or erases",
+    "attributed, not asserted - no verdict without rule, key, and approver",
+    "verification is a discrete lamp, not a score",
+    "the chain's limits (key-directory adversary, tombstone erasure) are always reported"
+  ],
+  "provenance": "Authored for loomground; drives the source-available RVND governance server. No third-party skill source.",
+  "notes": "Progressive-disclosure: lean SKILL.md + references/ pair + shared plugin references. Commercial (RVND) tier of the open-core split.",
+  "review": "pending Codex review"
+}

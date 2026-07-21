@@ -4,27 +4,39 @@
     "name": "flxk1"
   },
   "metadata": {
-    "description": "Loomground packages — currently the Versum knowledge-graph plugin: one provenance-safe write path plus a human-gated mental-model organiser.",
-    "version": "1.2.0"
+    "description": "Loomground packages \u2014 the Versum knowledge-graph plugins (write path, organiser, mental-model engine, enrichment loop, query + chat cockpit), the Solver plugin for governance rule-reasoning, and the RVND governance layer that drives the RVND governance MCP server.",
+    "version": "1.8.0"
   },
   "plugins": [
     {
       "name": "loomground-kg",
       "source": "./loomground-kg",
-      "description": "A local-first, read-only cockpit for querying the Loomground Versum knowledge graph.",
-      "version": "0.1.0"
+      "description": "A local-first, read-only cockpit and conversational query surface over the Loomground Versum knowledge graph. loomground-kg tracks the digest and routes work; loomground-kg-chat answers questions of the graph, grounded on every read.",
+      "version": "0.2.0"
     },
     {
       "name": "loomground-versum",
       "source": "./loomground-versum",
-      "description": "The Loomground Versum knowledge-graph plugin: the one write path into the graph and an organiser that places documents by the mental models they share with the corpus. loomground-knowledge-write admits a source (identity, dedup, sidecar, index); loomground-organise ranks concept-neighbour domains, a person confirms, then hands off to the write path. Configurable effort (deterministic / local-first / cloud); never auto-files.",
-      "version": "0.1.0"
+      "description": "The Loomground Versum knowledge-graph plugin: the one write path into the graph, an organiser that places documents by shared mental models, the mental-model engine that scans content into a grounded ConceptGraph and projects it to any modality, and an enrichment loop that grows the graph from research findings. Deterministic floor, model on the rails, local-first; never auto-writes.",
+      "version": "0.3.0"
+    },
+    {
+      "name": "loomground-solver",
+      "source": "./loomground-solver",
+      "description": "The Solver plugin \u2014 the universal reasoning kernel in two lobes. Deductive/rule: extract deontic norms, compile to Loomground .lg grammar, reason cases to a justified PASS/VIOLATION/ESCALATE verdict with a bounded decision space, resolve conflicts by reinstatement-sound defeasibility. Analytic/probabilistic: opponent modelling, probability tracking, strategic analysis, liability estimation, litigation-risk and risk analysis. Thin wrappers over the installed kernel.",
+      "version": "0.2.0"
     },
     {
       "name": "solver-addons",
       "source": "./solver-addons",
       "description": "Provider-neutral deterministic advice for deciding when optional Loomground Solver world-model and metacognition add-ons are useful. It reports scores, requirements, missing inputs, benefits and risks; it never retrieves data, selects providers, activates modules or authorizes actions.",
       "version": "0.1.0"
+    },
+    {
+      "name": "rvnd-governance",
+      "source": "./rvnd-governance",
+      "version": "0.2.0",
+      "description": "The RVND governance layer: five composable skills that teach an AI host to drive the RVND governance MCP server safely - rvnd-govern (the query/propose/validate/preview/confirm/apply/display cycle), rvnd-decide (human oversight sign-off), rvnd-audit (verify the Ed25519 signed chain), rvnd-incident (freeze/revoke/seal/transfer), rvnd-build-surface (compose and lint the MCP App cards). The server decides, the host renders; a request is never shown as a grant; fail-closed. Commercial (RVND) tier of the open-core split. Supersedes the 0.1.x kernel-wrapper design."
     }
   ]
 }
