@@ -1,0 +1,40 @@
+# Loomground manifest for rvnd-incident.
+# Tightens or recalls authority during an incident. Two distinct paths:
+#  - runtime containment (hold/suspend/seal) is OUTSIDE Loomground syntax - it is
+#    an RVND runtime action and is NOT proposed as a construct;
+#  - a policy change proposes a real construct (remove an authority cord, add a
+#    prohibition, lower a grade), which flows through the normal propose/validate
+#    /confirm/apply cycle.
+name: rvnd-incident
+loomground_language: 0.8.0a1
+loomground:
+  reads:
+    - actor
+    - party
+    - authority
+    - delegation
+    - gate
+    - pipe
+    - egress
+    - autonomy-grade
+    - prohibition
+  proposes:                       # only when the incident is an actual policy change
+    - prohibition
+    - authority                   # removal of an authority cord (attenuation)
+    - autonomy-grade              # lowering a grade ceiling
+  never_applies_directly: true
+  runtime_actions_outside_loomground:
+    - hold
+    - suspend
+    - seal-air-gap
+    - transfer-custody
+rvnd:
+  tools:
+    - rvnd_query
+    - rvnd_hold
+    - rvnd_revoke
+    - rvnd_transfer
+    - rvnd_propose
+    - rvnd_apply
+confirmation:
+  mutations: required             # tightening applies immediately; loosening back needs approval

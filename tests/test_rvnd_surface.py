@@ -71,3 +71,37 @@ def test_valid_proposal_card_passes():
 def test_unknown_shape_fails_closed():
     rc, _, err = _run({"nonsense": True})
     assert rc == 2 and "card" in err
+
+
+def _proposal(**over):
+    p = {
+        "proposal_id": "p1",
+        "intent": {"text": "Maria must approve external publication", "actor": "user_17", "host": "chat"},
+        "scope": {"boundary_id": "bnd_press_kit", "members": ["folder:press-kit"]},
+        "loomground": {"language_version": "0.8.0a1",
+                       "constructs": [{"type": "reservation", "kind": "external-publication"}]},
+        "residual": [],
+        "validation": {"well_formed": True},
+        "versions": {"loomground_language": "0.8.0a1"},
+        "confirmation": {"required": True},
+    }
+    p.update(over)
+    return p
+
+
+def test_valid_proposal_passes():
+    rc, out, err = _run(_proposal())
+    assert rc == 0, err
+    assert json.loads(out)["kind"] == "proposal"
+
+
+def test_proposal_invented_construct_rejected():
+    rc, _, err = _run(_proposal(loomground={
+        "language_version": "0.8.0a1",
+        "constructs": [{"type": "responsibly"}]}))
+    assert rc == 1 and "not a real" in err
+
+
+def test_proposal_missing_version_rejected():
+    rc, _, err = _run(_proposal(versions={}))
+    assert rc == 1 and "loomground_language" in err

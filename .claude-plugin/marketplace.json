@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Loomground packages \u2014 the Versum knowledge-graph plugins (write path, organiser, mental-model engine, enrichment loop, query + chat cockpit), the Solver plugin for governance rule-reasoning, and the RVND governance layer that drives the RVND governance MCP server.",
-    "version": "1.8.0"
+    "version": "1.9.0"
   },
   "plugins": [
     {
@@ -35,8 +35,8 @@
     {
       "name": "rvnd-governance",
       "source": "./rvnd-governance",
-      "version": "0.2.0",
-      "description": "The RVND governance layer: five composable skills that teach an AI host to drive the RVND governance MCP server safely - rvnd-govern (the query/propose/validate/preview/confirm/apply/display cycle), rvnd-decide (human oversight sign-off), rvnd-audit (verify the Ed25519 signed chain), rvnd-incident (freeze/revoke/seal/transfer), rvnd-build-surface (compose and lint the MCP App cards). The server decides, the host renders; a request is never shown as a grant; fail-closed. Commercial (RVND) tier of the open-core split. Supersedes the 0.1.x kernel-wrapper design."
+      "version": "0.3.0",
+      "description": "The RVND governance layer: five composable skills that teach an AI host to drive the RVND governance MCP server safely - rvnd-govern (query/propose/validate/preview/confirm/apply/display via a typed Loomground proposal envelope), rvnd-decide (human oversight sign-off), rvnd-audit (verify the Ed25519 signed chain), rvnd-incident (runtime containment vs policy change), rvnd-build-surface (compose and lint MCP App cards + proposal envelopes). Grounded in the real loomground-language 0.8.0a1 vocabulary with a residual ledger for unexpressible meaning; the skill never writes .lg; the server decides, the host renders; a request is never shown as a grant; fail-closed. Commercial (RVND) tier of the open-core split."
     }
   ]
 }

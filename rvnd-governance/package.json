@@ -2,8 +2,8 @@
   "$schema": "../schemas/loomground-package.schema.json",
   "schemaVersion": 1,
   "name": "rvnd-governance",
-  "version": "0.2.0",
-  "description": "The RVND governance layer - skills that teach an AI host to drive the RVND governance MCP server safely: query the lane, propose an action, let the server validate it, preview the effect, confirm, apply, and display the verdict, so a request is never shown as a grant. Drives the server; computes no verdict itself; fail-closed. Commercial (RVND) tier of the open-core split.",
+  "version": "0.3.0",
+  "description": "The RVND governance layer - skills that teach an AI host to drive the RVND governance MCP server safely: query the lane, propose the action as a typed Loomground envelope, let the server validate it, preview, confirm, apply, and display the verdict, so a request is never shown as a grant. Grounded in the real loomground-language 0.8.0a1 vocabulary; unexpressible meaning stays residual; the skill never writes .lg or computes a verdict; fail-closed. Commercial (RVND) tier of the open-core split.",
   "author": {
     "name": "flxk1"
   },

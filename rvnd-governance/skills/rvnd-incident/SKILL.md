@@ -12,6 +12,12 @@ Tightening is the safe direction and can be immediate. Loosening back — liftin
 a grant, opening a sealed folder — is a normal loosening: it needs a named approver and a rationale.
 Incidents do not get a shortcut around that.
 
+**Runtime containment is not a Loomground change.** A hold, a suspend, a seal, a custody transfer
+are RVND *runtime* actions — outside Loomground syntax. Do not present them as policy declarations.
+Only when the incident is an actual policy change — removing an authority cord, adding a
+`prohibition`, lowering a `grade` — does it become a Loomground proposal that flows through the
+normal propose → validate → confirm → apply cycle.
+
 ## What it does
 
 - **Hold / freeze** — stop an agent or an action now. A hold is immediate; it is the safe
@@ -37,4 +43,6 @@ Every incident action routes through the server into the per-folder Ed25519-sign
 
 - `references/reference.md` - each action, its direction, and what it can and cannot undo.
 - `../../references/protocol.md` - the shared protocol, Sign routing, tightening vs loosening.
+- `../../references/vocabulary.md` - which incident actions are runtime vs a real construct.
+- `manifest.yaml` - runtime actions (outside Loomground) vs the constructs it may propose.
 - `references/eval.json` - what it drives, guarantees, and review status.

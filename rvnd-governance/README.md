@@ -17,6 +17,19 @@ tightening vs loosening, Sign routing) and `references/catalogue.md` (the ten ca
 mapped onto the server's real operations, and how to discover the live tool surface instead of
 hardcoding it).
 
+## Grounding
+
+A skill is grounded in Loomground only when it produces or consumes typed governance objects — not
+when it merely prompts a model to "apply governance". The spine of that is the typed **proposal
+envelope** (`schemas/proposal.schema.json`): the skill assembles intent, scope, and runtime
+bindings and asks RVND to generate and validate the Loomground constructs; it never writes `.lg`.
+Every governance meaning is either a real construct or a visible **residual** — nothing in between
+is invented. `references/grounding.md` sets out the six grounding links (source, object, language,
+runtime, evidence, version) and the residual ledger; `references/vocabulary.md` pins the real
+`loomground-language` **0.8.0a1** constructs the skills are allowed to handle; `references/corpus.md`
+is the acceptance corpus, headed by the equivalence test (chat / CLI / sheet / `.lg` → one canonical
+observation). Each skill carries a `manifest.yaml` declaring the constructs it may read and propose.
+
 ## The five skills
 
 - **rvnd-govern** — the core cycle: put a consequential action through query → validate → confirm

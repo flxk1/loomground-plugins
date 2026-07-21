@@ -5,14 +5,21 @@
   "wraps_kernel": false,
   "scripted": false,
   "fail_closed": true,
+  "loomground_language": "0.8.0a1",
+  "manifest": "manifest.yaml",
   "cycle_steps": ["discover", "query", "propose", "validate", "preview", "confirm", "apply", "display"],
   "invariants": [
     "server decides, host renders - no host-side verdict",
+    "the skill never writes .lg; RVND generates/validates the constructs",
+    "unexpressible meaning stays in the residual ledger, never approximated into a construct",
+    "constructs restricted to the real 0.8.0a1 vocabulary (references/vocabulary.md)",
     "requested state is never rendered as granted",
     "loosening requires a new lane version, named approver, and rationale",
     "no governed action without a resolved principal (no-id wall)"
   ],
+  "grounding": "six links per references/grounding.md; proposal envelope schemas/proposal.schema.json",
+  "corpus": "references/corpus.md (14 classes + equivalence via canonical observation)",
   "provenance": "Authored for loomground; drives the source-available RVND governance server. No third-party skill source.",
   "notes": "Progressive-disclosure: lean SKILL.md + references/ pair + shared plugin references. Commercial (RVND) tier of the open-core split.",
-  "review": "pending Codex review"
+  "review": "pending Codex review; live-server corpus classes (2,5,6,7,8,9,12,13) need a running RVND server to exercise"
 }

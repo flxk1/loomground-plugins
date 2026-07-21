@@ -6,6 +6,9 @@
   "scripted": false,
   "fail_closed": true,
   "read_only": true,
+  "loomground_language": "0.8.0a1",
+  "manifest": "manifest.yaml",
+  "grounding": "references/grounding.md; audit explanation is grounded in the ordered trace + verdict join (auto/human/refused/reserved/prohibited; only auto releases), not generic prose",
   "cycle_steps": ["verify", "display"],
   "invariants": [
     "read-only: never appends, signs, or erases",

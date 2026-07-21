@@ -15,11 +15,17 @@ tool that keeps a surface honest before it is wired up.
 ## What it does
 
 1. **Choose** the cards for the flow from the five specs in `../../apps/` — context (query),
-   proposal (propose), patch (validate/preview), decision (confirm), receipt (display).
+   proposal (propose), patch (validate/preview), decision (confirm), receipt (display). Which cards
+   a surface needs follows from the construct types present: an authority editor when `authority` or
+   `grade` is present, a decision card when a `reservation` or `quorum` exists, a duty panel when an
+   `egress-obligation` is attached, a redress timeline when `redress` is declared, and a **residual
+   panel** whenever a proposal carries residual. The layout is an RVND presentation artifact that
+   references Loomground object identities — it is not itself Loomground.
 2. **Compose** them with the skills that drive them (`rvnd-govern`, `rvnd-decide`, `rvnd-audit`,
    `rvnd-incident`) into a manifest.
-3. **Lint** the manifest and each card with `scripts/lint_surface.py`, which enforces the schemas
-   in `../../schemas/`.
+3. **Lint** the manifest, each card, and any proposal envelope with `scripts/lint_surface.py`,
+   which enforces the schemas in `../../schemas/` (including `proposal.schema.json`: residual
+   present, constructs restricted to the real 0.8.0a1 vocabulary, version recorded).
 
 ## Run it
 
