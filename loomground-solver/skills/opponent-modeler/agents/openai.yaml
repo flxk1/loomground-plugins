@@ -1,0 +1,4 @@
+interface:
+  display_name: "Opponent Modeler"
+  short_description: "Model an adversary's likely move"
+  default_prompt: "Use $opponent-modeler to model this opponent and predict their likely move."

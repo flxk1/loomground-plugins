@@ -1,0 +1,9 @@
+{
+  "skill": "compile-loomground-policy",
+  "provides": "governance.compile-policy",
+  "wraps": "loomground_solver parse/reason_loomground via scripts/compile.py",
+  "scripted": true,
+  "fail_closed": true,
+  "provenance": "Authored for loomground; wraps the Apache-2.0 loomground_solver / versum engines. No third-party skill source.",
+  "notes": "Progressive-disclosure: lean SKILL.md + references/ pair."
+}

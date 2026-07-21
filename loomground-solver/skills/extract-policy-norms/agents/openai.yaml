@@ -1,0 +1,4 @@
+interface:
+  display_name: "Extract Policy Norms"
+  short_description: "Extract deontic norms from policy text"
+  default_prompt: "Use $extract-policy-norms to extract the deontic norms (obligation/prohibition/permission, Tatbestand, Rechtsfolge) from this policy."
