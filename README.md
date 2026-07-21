@@ -9,7 +9,6 @@ skill-host distributions.
 - `<package>/skills/` contains the portable skill source.
 - `schemas/loomground-package.schema.json` defines the package contract.
 - `tools/build_packages.py` validates packages and generates host distributions.
-- `.claude-plugin/marketplace.json` is the Claude marketplace index.
 
 Generated files under `dist/`, local workspace configuration, caches, and installed package
 copies do not belong in the repository.
