@@ -1,0 +1,12 @@
+{
+  "skill": "opponent-modeler",
+  "provides": "solver.opponent-model",
+  "wraps": "loomground_solver decision methods via scripts/run.py",
+  "scripted": true,
+  "fail_closed": true,
+  "provenance": "Authored for loomground; wraps the Apache-2.0 loomground_solver / versum engines. No third-party skill source.",
+  "notes": "Progressive-disclosure: lean SKILL.md + references/ pair.",
+  "tests": [
+    "tests/test_solver_scripts.py"
+  ]
+}

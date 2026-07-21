@@ -10,6 +10,10 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def canonical_packages():
+    return sorted(path.parent for path in ROOT.glob("*/package.json") if path.parent.parent == ROOT)
+
+
 class PackageBuildTests(unittest.TestCase):
     def test_all_canonical_packages_validate_and_build(self):
         result = subprocess.run(
@@ -19,7 +23,7 @@ class PackageBuildTests(unittest.TestCase):
             capture_output=True,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
-        for package in ("loomground-kg", "loomground-versum", "solver-addons"):
+        for package in (path.name for path in canonical_packages()):
             for target in ("claude", "codex", "generic"):
                 self.assertTrue((ROOT / "dist" / target / package / "skills").is_dir())
 
@@ -67,12 +71,15 @@ class PackageBuildTests(unittest.TestCase):
     def test_canonical_packages_match_json_schema(self):
         schema = json.loads((ROOT / "schemas/loomground-package.schema.json").read_text())
         validator = Draft202012Validator(schema)
-        for package in ("loomground-kg", "loomground-versum", "solver-addons"):
-            manifest = json.loads((ROOT / package / "package.json").read_text())
+        for package_dir in canonical_packages():
+            manifest = json.loads((package_dir / "package.json").read_text())
             errors = sorted(validator.iter_errors(manifest), key=lambda error: list(error.path))
-            self.assertEqual(errors, [], f"{package}: {[error.message for error in errors]}")
+            self.assertEqual(errors, [], f"{package_dir.name}: {[error.message for error in errors]}")
 
     def test_generated_packages_exclude_platform_metadata(self):
+        stale = ROOT / "dist/claude/removed-package"
+        stale.mkdir(parents=True, exist_ok=True)
+        (stale / "marker").write_text("stale", encoding="utf-8")
         subprocess.run(
             [sys.executable, "tools/build_packages.py", "--target", "all"],
             cwd=ROOT,
@@ -81,12 +88,20 @@ class PackageBuildTests(unittest.TestCase):
         )
         self.assertEqual(list((ROOT / "dist").rglob(".DS_Store")), [])
         self.assertEqual(list((ROOT / "dist").rglob("__pycache__")), [])
+        self.assertFalse(stale.exists())
 
     def test_runtime_dependencies_are_declared(self):
-        versum = json.loads((ROOT / "loomground-versum/package.json").read_text())
-        solver = json.loads((ROOT / "solver-addons/package.json").read_text())
-        self.assertEqual(versum["runtime"]["requires"], ["versum"])
-        self.assertEqual(solver["runtime"]["requires"], ["loomground-language", "loomground-solver"])
+        expected = {
+            "loomground-kg": ["versum"],
+            "loomground-solver": ["loomground-language", "loomground-solver"],
+            "loomground-versum": ["versum"],
+            "solver-addons": ["loomground-language", "loomground-solver"],
+        }
+        actual = {
+            package_dir.name: json.loads((package_dir / "package.json").read_text())["runtime"]["requires"]
+            for package_dir in canonical_packages()
+        }
+        self.assertEqual(actual, expected)
 
 
 if __name__ == "__main__":

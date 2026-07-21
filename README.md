@@ -24,7 +24,7 @@ python3 -m pip install -r requirements-dev.txt
 
 ```bash
 python3 tools/build_packages.py --target all
-python3 -m unittest discover -s tests
+python3 -m pytest -q
 ```
 
 Do not edit generated files under `dist/`. Use stable capability identifiers such as
