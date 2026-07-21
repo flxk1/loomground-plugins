@@ -1,0 +1,4 @@
+interface:
+  display_name: "Litigation Risk Assessor"
+  short_description: "Assess dispute exposure and strategy"
+  default_prompt: "Use $litigation-risk-assessor to assess the litigation risk and recommend settle or fight."

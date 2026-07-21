@@ -1,0 +1,4 @@
+interface:
+  display_name: "Compile Loomground Policy"
+  short_description: "Compile norms into a validated .lg policy"
+  default_prompt: "Use $compile-loomground-policy to compile these norms into a validated Loomground .lg policy."

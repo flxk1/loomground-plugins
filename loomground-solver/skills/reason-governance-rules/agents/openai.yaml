@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reason Governance Rules"
+  short_description: "Reason a case to a justified verdict"
+  default_prompt: "Use $reason-governance-rules to check this case against the policy and return the verdict and decision space."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Analyse Risks"
+  short_description: "Score and rank risks by impact x likelihood"
+  default_prompt: "Use $analyse-risks to analyse these risks and prioritise mitigations."
