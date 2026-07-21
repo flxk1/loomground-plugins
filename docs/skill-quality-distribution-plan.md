@@ -15,7 +15,7 @@ The reliability foundations are already strong (deterministic engine, fail-close
 
 The plan holds, because the packaging is already multi-target: each `package.json` declares `adapters.{claude, codex, generic}`, and `build_packages.py` emits `dist/claude` (`.claude-plugin/plugin.json`), `dist/codex` (`.codex-plugin/plugin.json` + interface), and `dist/generic` (INSTALL.md). All four quality improvements are platform-neutral: SKILL.md + references, lean descriptions, and evals carry across every target. Rules to stay broad:
 
-- Keep SKILL.md free of Claude-isms; the logic lives in the engine CLI, which is platform-agnostic. Per-platform triggers live in the adapter files (`agents/openai.yaml`, the plugin manifests), not in SKILL.md.
+- Keep SKILL.md free of Claude-isms; the logic lives in the engine CLI, which is platform-agnostic. Per-platform triggers live in the adapter files (`agents/interface.yaml`, the plugin manifests), not in SKILL.md.
 - Broadest reach of all: expose the `versum` and `loomground_solver` engines as an **MCP server**. Then any MCP-capable agent (not only skill-supporting hosts) can use them — the skills become one front-end among several.
 
 ## Distribution (open-core) — Q2
