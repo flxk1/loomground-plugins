@@ -37,7 +37,5 @@ an `ESCALATE` rather than a guess. Signed and replayable.
 
 ## Pairing
 
-The analytic half of the Solver, paired with the deductive governance lobe: opponent-modeler
-reasons under *uncertainty*, `reason-governance-rules` reasons under *obligation*. Feeds
-`strategic-analysis` and `probability-tracker`.
-
+This skill reasons under uncertainty and feeds `strategic-analysis` and `probability-tracker`.
+Questions of obligation hand off to the separately licensed RVND governance package.

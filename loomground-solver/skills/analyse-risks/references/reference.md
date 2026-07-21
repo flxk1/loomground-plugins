@@ -30,6 +30,5 @@ Replayable.
 
 ## Pairing
 
-Analytic-lobe member; consumes `probability-tracker` for evidence-based likelihoods. A risk that
-is really a rule violation hands off to the deductive `reason-governance-rules`.
-
+Consumes `probability-tracker` for evidence-based likelihoods. A risk that is really a rule
+violation hands off to the separately licensed RVND governance package.

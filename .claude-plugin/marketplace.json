@@ -4,7 +4,7 @@
     "name": "flxk1"
   },
   "metadata": {
-    "description": "Loomground packages (Apache-2.0): the Versum knowledge-graph plugins (write path, organiser, mental-model engine, enrichment loop, query + chat cockpit) and the Solver plugin (governance rule-reasoning + analytic decision methods). The RVND governance layer ships separately under the RVND licence in the flxk1/rvnd marketplace.",
+    "description": "Loomground packages (Apache-2.0): Versum knowledge-graph tools and analytic Solver decision methods. Governance policy authoring, authorization, enforcement, and audit ship separately under the RVND licence.",
     "version": "2.0.0"
   },
   "plugins": [
@@ -23,7 +23,7 @@
     {
       "name": "loomground-solver",
       "source": "./loomground-solver",
-      "description": "The Solver plugin — the universal reasoning kernel in two lobes. Deductive/rule: extract deontic norms, compile to Loomground .lg grammar, reason cases to a justified PASS/VIOLATION/ESCALATE verdict with a bounded decision space, resolve conflicts by reinstatement-sound defeasibility. Analytic/probabilistic: opponent modelling, probability tracking, strategic analysis, liability estimation, litigation-risk and risk analysis. Thin wrappers over the installed kernel.",
+      "description": "Analytic and probabilistic reasoning over the Loomground Solver kernel: opponent modelling, probability tracking, strategic analysis, liability estimation, litigation-risk assessment, and risk analysis. Thin wrappers over the installed kernel.",
       "version": "0.2.0"
     },
     {

@@ -29,6 +29,5 @@ probability or value, if wrong, flips the recommendation. Replayable.
 
 ## Pairing
 
-Analytic-lobe member; consumes `estimate-liability` and `probability-tracker`. A dispute that
-turns on a rule hands off to the deductive `reason-governance-rules` / `resolve-rule-conflicts`.
-
+Consumes `estimate-liability` and `probability-tracker`. A dispute that turns on a governance rule
+hands off to the separately licensed RVND governance package.

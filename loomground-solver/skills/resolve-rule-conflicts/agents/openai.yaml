@@ -1,4 +1,0 @@
-interface:
-  display_name: "Resolve Rule Conflicts"
-  short_description: "Resolve conflicting rules soundly"
-  default_prompt: "Use $resolve-rule-conflicts to resolve which rule wins here by reinstatement-sound defeasibility."

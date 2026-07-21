@@ -80,6 +80,14 @@ def reset_output(target: str, name: str) -> Path:
     return output
 
 
+def reset_targets(targets: tuple[str, ...]) -> None:
+    """Remove complete target trees so deleted packages cannot survive a full build."""
+    for target in targets:
+        output = DIST / target
+        if output.exists():
+            shutil.rmtree(output)
+
+
 def copy_shared(package_dir: Path, output: Path) -> None:
     ignore = shutil.ignore_patterns(".DS_Store", "__pycache__", "*.pyc", ".pytest_cache")
     shutil.copytree(package_dir / "skills", output / "skills", ignore=ignore)
@@ -168,10 +176,13 @@ def main() -> int:
         dirs = package_dirs(args.packages)
         if not dirs:
             raise PackageError("no canonical packages found")
-        for directory in dirs:
-            data = load_package(directory)
+        packages = [(directory, load_package(directory)) for directory in dirs]
+        for _, data in packages:
             print(f"validated {data['name']} {data['version']}")
-            if not args.validate_only:
+        if not args.validate_only:
+            if not args.packages:
+                reset_targets(targets)
+            for directory, data in packages:
                 for target in targets:
                     output = build(directory, data, target)
                     print(f"built {output.relative_to(ROOT)}")
