@@ -11,7 +11,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def canonical_packages():
-    return sorted(path.parent for path in ROOT.glob("*/package.json") if path.parent.parent == ROOT)
+    local = [path.parent for path in ROOT.glob("*/package.json") if path.parent.parent == ROOT]
+    externals = json.loads((ROOT / "externals.json").read_text()) if (ROOT / "externals.json").is_file() else {}
+    external = [(ROOT / rel).resolve() for rel in externals.values()]
+    return sorted(local + external, key=lambda path: path.name)
 
 
 class PackageBuildTests(unittest.TestCase):
@@ -27,18 +30,18 @@ class PackageBuildTests(unittest.TestCase):
             for target in ("claude", "codex", "generic"):
                 self.assertTrue((ROOT / "dist" / target / package / "skills").is_dir())
 
-    def test_validate_and_build_versum(self):
+    def test_validate_and_build_single_package(self):
         result = subprocess.run(
-            [sys.executable, "tools/build_packages.py", "loomground-versum", "--target", "all"],
+            [sys.executable, "tools/build_packages.py", "loomground-solver-addons", "--target", "all"],
             cwd=ROOT,
             text=True,
             capture_output=True,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         for target in ("claude", "codex", "generic"):
-            self.assertTrue((ROOT / "dist" / target / "loomground-versum" / "skills").is_dir())
-        manifest = json.loads((ROOT / "dist/codex/loomground-versum/.codex-plugin/plugin.json").read_text())
-        self.assertEqual(manifest["name"], "loomground-versum")
+            self.assertTrue((ROOT / "dist" / target / "loomground-solver-addons" / "skills").is_dir())
+        manifest = json.loads((ROOT / "dist/codex/loomground-solver-addons/.codex-plugin/plugin.json").read_text())
+        self.assertEqual(manifest["name"], "loomground-solver-addons")
         self.assertEqual(manifest["skills"], "./skills/")
 
     def test_bad_package_is_rejected(self):
@@ -55,14 +58,14 @@ class PackageBuildTests(unittest.TestCase):
 
     def test_generated_manifests_credit_flxk1_only(self):
         subprocess.run(
-            [sys.executable, "tools/build_packages.py", "loomground-versum", "--target", "all"],
+            [sys.executable, "tools/build_packages.py", "loomground-solver-addons", "--target", "all"],
             cwd=ROOT,
             check=True,
             capture_output=True,
         )
         paths = (
-            ROOT / "dist/claude/loomground-versum/.claude-plugin/plugin.json",
-            ROOT / "dist/codex/loomground-versum/.codex-plugin/plugin.json",
+            ROOT / "dist/claude/loomground-solver-addons/.claude-plugin/plugin.json",
+            ROOT / "dist/codex/loomground-solver-addons/.codex-plugin/plugin.json",
         )
         for path in paths:
             manifest = json.loads(path.read_text())
