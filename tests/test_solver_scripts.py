@@ -45,7 +45,13 @@ def test_probability_tracker_bayes():
     r = json.loads(out)["result"]
     assert r["choice"] == "guilty" and abs(r["scores"]["guilty"] - 0.658537) < 1e-4
 
-def test_fail_closed_without_kernel():
-    env = dict(os.environ, PYTHONPATH="/nonexistent-kernel-path")
-    rc, out, err = _run(SK/"analyse-risks/scripts/run.py", {"vectors": {"a": [1, 1]}}, env=env)
-    assert rc == 2 and "error" in err.lower()
+def test_fail_closed_without_kernel(tmp_path):
+    # A bare nonexistent PYTHONPATH entry cannot hide a kernel installed in
+    # site-packages; a stub package that raises on import shadows any install.
+    stub = tmp_path / "loomground_solver"
+    stub.mkdir()
+    (stub / "__init__.py").write_text("raise ImportError('kernel unavailable')\n")
+    env = dict(os.environ, PYTHONPATH=str(tmp_path))
+    for script in sorted(SK.glob("*/scripts/run.py")):
+        rc, out, err = _run(script, {"vectors": {"a": [1, 1]}}, env=env)
+        assert rc == 2 and "error" in err.lower(), (script, rc, out, err)
