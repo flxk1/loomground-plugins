@@ -8,25 +8,6 @@
   },
   "plugins": [
     {
-      "name": "loomground-kg",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/flxk1/loomground-kg.git"
-      },
-      "description": "A read-only cockpit and conversational query surface over the Loomground Versum knowledge graph.",
-      "version": "0.2.0",
-      "author": {
-        "name": "flxk1"
-      },
-      "keywords": [
-        "knowledge-graph",
-        "local-first",
-        "query",
-        "chat",
-        "versum"
-      ]
-    },
-    {
       "name": "loomground-language",
       "source": {
         "source": "url",
@@ -74,20 +55,22 @@
         "source": "url",
         "url": "https://github.com/flxk1/loomground-versum.git"
       },
-      "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop.",
-      "version": "0.3.0",
+      "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
+      "version": "0.4.0",
       "author": {
         "name": "flxk1"
       },
       "keywords": [
+        "chat",
+        "conceptgraph",
+        "enrichment",
         "knowledge-graph",
         "local-first",
+        "mental-model",
         "organise",
         "provenance",
-        "versum",
-        "mental-model",
-        "conceptgraph",
-        "enrichment"
+        "query",
+        "versum"
       ]
     }
   ]
