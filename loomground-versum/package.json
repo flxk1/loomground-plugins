@@ -76,7 +76,7 @@
     ]
   },
   "adapters": {
-    "claude": { "marketplaceSource": { "source": "github", "repo": "flxk1/loomground-versum" } },
+    "claude": { "marketplaceSource": { "source": "git", "url": "https://github.com/flxk1/loomground-versum.git" } },
     "codex": {
       "interface": {
         "displayName": "Loomground Versum",

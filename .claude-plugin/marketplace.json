@@ -74,8 +74,8 @@
     {
       "name": "loomground-versum",
       "source": {
-        "source": "github",
-        "repo": "flxk1/loomground-versum"
+        "source": "git",
+        "url": "https://github.com/flxk1/loomground-versum.git"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop.",
       "version": "0.3.0",
