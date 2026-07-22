@@ -9,7 +9,10 @@
   "plugins": [
     {
       "name": "loomground-kg",
-      "source": "./loomground-kg",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-kg.git"
+      },
       "description": "A read-only cockpit and conversational query surface over the Loomground Versum knowledge graph.",
       "version": "0.2.0",
       "author": {
@@ -41,7 +44,10 @@
     },
     {
       "name": "loomground-solver",
-      "source": "./loomground-solver",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-solver.git"
+      },
       "description": "Analytic and probabilistic reasoning skills over the Loomground Solver kernel: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, and analyse risks.",
       "version": "0.2.0",
       "author": {

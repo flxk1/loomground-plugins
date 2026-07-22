@@ -94,7 +94,7 @@
     ]
   },
   "adapters": {
-    "claude": {},
+    "claude": { "marketplaceSource": { "source": "url", "url": "https://github.com/flxk1/loomground-solver.git" } },
     "codex": {
       "interface": {
         "displayName": "Loomground Solver",
