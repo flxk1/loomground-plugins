@@ -6,12 +6,17 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-ORGANISE = ROOT / "loomground-versum/skills/loomground-organise/scripts/organise.py"
-KG_QUERY = ROOT / "loomground-kg/skills/loomground-kg/scripts/kg_query.py"
+# The skills live in-tree with their tools since the plugin migration; these
+# behavior tests run against the sibling checkouts and skip when absent.
+ORGANISE = ROOT.parent / "loomground-versum/skills/loomground-organise/scripts/organise.py"
+KG_QUERY = ROOT.parent / "loomground-kg/skills/loomground-kg/scripts/kg_query.py"
 
 
 class CliBehaviorTests(unittest.TestCase):
     def run_cli(self, *args):
+        script = Path(args[0])
+        if not script.exists():
+            self.skipTest(f"sibling checkout not available: {script}")
         return subprocess.run([sys.executable, *map(str, args)], text=True, capture_output=True)
 
     def test_organiser_rejects_missing_paths(self):

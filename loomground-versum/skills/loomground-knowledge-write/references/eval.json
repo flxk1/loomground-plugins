@@ -1,9 +1,0 @@
-{
-  "skill": "loomground-knowledge-write",
-  "provides": "knowledge.capture",
-  "wraps": "versum/write.py via python -m versum capture",
-  "scripted": false,
-  "fail_closed": true,
-  "provenance": "Authored for loomground; wraps the Apache-2.0 versum engine. No third-party skill source.",
-  "notes": "Progressive-disclosure: lean SKILL.md + references/ pair. Gate skill — thin wrapper over the engine."
-}

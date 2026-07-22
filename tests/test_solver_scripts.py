@@ -10,7 +10,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-SK = Path(__file__).resolve().parents[1] / "loomground-solver" / "skills"
+ROOT = Path(__file__).resolve().parents[1]
+_EXTERNALS = json.loads((ROOT / "externals.json").read_text()) if (ROOT / "externals.json").is_file() else {}
+SK = (ROOT / _EXTERNALS.get("loomground-solver", "loomground-solver")).resolve() / "skills"
 try:
     from loomground_solver import method as _kernel_method
 except ImportError:
@@ -52,6 +54,8 @@ def test_fail_closed_without_kernel(tmp_path):
     stub.mkdir()
     (stub / "__init__.py").write_text("raise ImportError('kernel unavailable')\n")
     env = dict(os.environ, PYTHONPATH=str(tmp_path))
-    for script in sorted(SK.glob("*/scripts/run.py")):
+    scripts = sorted(SK.glob("*/scripts/run.py"))
+    assert scripts, f"no solver scripts found under {SK}"
+    for script in scripts:
         rc, out, err = _run(script, {"vectors": {"a": [1, 1]}}, env=env)
         assert rc == 2 and "error" in err.lower(), (script, rc, out, err)
