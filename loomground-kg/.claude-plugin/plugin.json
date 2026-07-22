@@ -1,0 +1,15 @@
+{
+  "name": "loomground-kg",
+  "version": "0.2.0",
+  "description": "A read-only cockpit and conversational query surface over the Loomground Versum knowledge graph.",
+  "author": {
+    "name": "flxk1"
+  },
+  "keywords": [
+    "knowledge-graph",
+    "local-first",
+    "query",
+    "chat",
+    "versum"
+  ]
+}

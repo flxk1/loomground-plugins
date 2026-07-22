@@ -1,0 +1,94 @@
+{
+  "name": "loomground",
+  "owner": {
+    "name": "flxk1"
+  },
+  "metadata": {
+    "description": "Universal Loomground skill packages, installable on Claude, Codex, and generic skill hosts."
+  },
+  "plugins": [
+    {
+      "name": "loomground-kg",
+      "source": "./loomground-kg",
+      "description": "A read-only cockpit and conversational query surface over the Loomground Versum knowledge graph.",
+      "version": "0.2.0",
+      "author": {
+        "name": "flxk1"
+      },
+      "keywords": [
+        "knowledge-graph",
+        "local-first",
+        "query",
+        "chat",
+        "versum"
+      ]
+    },
+    {
+      "name": "loomground-skill",
+      "source": "./loomground-skill",
+      "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch: draft the .loom patch, litmus-classify each requirement as expressible, policy, or host, and validate against the reference implementation.",
+      "version": "0.1.0",
+      "author": {
+        "name": "flxk1"
+      },
+      "keywords": [
+        "loomground",
+        "governance",
+        "policy-graph",
+        "loom",
+        "validation"
+      ]
+    },
+    {
+      "name": "loomground-solver",
+      "source": "./loomground-solver",
+      "description": "Analytic and probabilistic reasoning skills over the Loomground Solver kernel: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, and analyse risks.",
+      "version": "0.2.0",
+      "author": {
+        "name": "flxk1"
+      },
+      "keywords": [
+        "solver",
+        "decision-theory",
+        "bayesian",
+        "loomground",
+        "risk"
+      ]
+    },
+    {
+      "name": "loomground-solver-addons",
+      "source": "./loomground-solver-addons",
+      "description": "Provider-neutral, deterministic advice for optional Loomground Solver add-ons.",
+      "version": "0.1.0",
+      "author": {
+        "name": "flxk1"
+      },
+      "keywords": [
+        "solver",
+        "world-model",
+        "metacognition",
+        "deterministic",
+        "provider-agnostic"
+      ]
+    },
+    {
+      "name": "loomground-versum",
+      "source": "./loomground-versum",
+      "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop.",
+      "version": "0.3.0",
+      "author": {
+        "name": "flxk1"
+      },
+      "keywords": [
+        "knowledge-graph",
+        "local-first",
+        "organise",
+        "provenance",
+        "versum",
+        "mental-model",
+        "conceptgraph",
+        "enrichment"
+      ]
+    }
+  ]
+}

@@ -90,12 +90,29 @@ class PackageBuildTests(unittest.TestCase):
         self.assertEqual(list((ROOT / "dist").rglob("__pycache__")), [])
         self.assertFalse(stale.exists())
 
+    def test_committed_claude_artifacts_are_in_sync(self):
+        marketplace = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text())
+        self.assertEqual(marketplace["owner"], {"name": "flxk1"})
+        listed = [plugin["name"] for plugin in marketplace["plugins"]]
+        self.assertEqual(listed, [path.name for path in canonical_packages()])
+        for package_dir in canonical_packages():
+            data = json.loads((package_dir / "package.json").read_text())
+            manifest = json.loads((package_dir / ".claude-plugin/plugin.json").read_text())
+            self.assertEqual(manifest["name"], data["name"])
+            self.assertEqual(manifest["version"], data["version"])
+            self.assertEqual(manifest["description"], data["description"])
+            entry = next(plugin for plugin in marketplace["plugins"] if plugin["name"] == data["name"])
+            self.assertEqual(entry["source"], f"./{data['name']}")
+            self.assertEqual(entry["version"], data["version"])
+            self.assertEqual(entry["description"], data["description"])
+
     def test_runtime_dependencies_are_declared(self):
         expected = {
             "loomground-kg": ["versum"],
+            "loomground-skill": ["loomground-language", "loomground-ref"],
             "loomground-solver": ["loomground-language", "loomground-solver"],
             "loomground-versum": ["versum"],
-            "solver-addons": ["loomground-language", "loomground-solver"],
+            "loomground-solver-addons": ["loomground-language", "loomground-solver"],
         }
         actual = {
             package_dir.name: json.loads((package_dir / "package.json").read_text())["runtime"]["requires"]
