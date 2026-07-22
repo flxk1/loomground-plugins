@@ -29,7 +29,7 @@ class PackageError(ValueError):
 def load_package(package_dir: Path) -> dict:
     path = package_dir / "package.json"
     if not path.is_file():
-        raise PackageError(f"missing {path.relative_to(ROOT)}")
+        raise PackageError(f"missing {path}")
     data = json.loads(path.read_text(encoding="utf-8"))
     schema_errors = sorted(SCHEMA_VALIDATOR.iter_errors(data), key=lambda error: list(error.path))
     if schema_errors:
@@ -199,10 +199,32 @@ def build(package_dir: Path, data: dict, target: str) -> Path:
     return output
 
 
+def external_package_dirs() -> dict[str, Path]:
+    """Canonical packages that live in their tool repositories (sibling checkouts).
+
+    externals.json maps package name to a path relative to this repository. The
+    siblings are required for a full build: failing loudly beats silently dropping
+    a package from the marketplace.
+    """
+    path = ROOT / "externals.json"
+    if not path.is_file():
+        return {}
+    mapping = json.loads(path.read_text(encoding="utf-8"))
+    dirs = {}
+    for name, rel in sorted(mapping.items()):
+        directory = (ROOT / rel).resolve()
+        if not (directory / "package.json").is_file():
+            raise PackageError(f"external package {name}: no package.json at {rel} (sibling checkout required)")
+        dirs[name] = directory
+    return dirs
+
+
 def package_dirs(names: list[str]) -> list[Path]:
+    externals = external_package_dirs()
     if names:
-        return [ROOT / name for name in names]
-    return sorted(path.parent for path in ROOT.glob("*/package.json") if path.parent.parent == ROOT)
+        return [externals.get(name, ROOT / name) for name in names]
+    local = [path.parent for path in ROOT.glob("*/package.json") if path.parent.parent == ROOT]
+    return sorted(local + list(externals.values()), key=lambda path: path.name)
 
 
 def main() -> int:
