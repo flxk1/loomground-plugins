@@ -58,14 +58,14 @@ class PackageBuildTests(unittest.TestCase):
 
     def test_generated_manifests_credit_flxk1_only(self):
         subprocess.run(
-            [sys.executable, "tools/build_packages.py", "loomground-solver-addons", "--target", "all"],
+            [sys.executable, "tools/build_packages.py", "loomground-skill", "--target", "all"],
             cwd=ROOT,
             check=True,
             capture_output=True,
         )
         paths = (
-            ROOT / "dist/claude/loomground-solver-addons/.claude-plugin/plugin.json",
-            ROOT / "dist/codex/loomground-solver-addons/.codex-plugin/plugin.json",
+            ROOT / "dist/claude/loomground-skill/.claude-plugin/plugin.json",
+            ROOT / "dist/codex/loomground-skill/.codex-plugin/plugin.json",
         )
         for path in paths:
             manifest = json.loads(path.read_text())
