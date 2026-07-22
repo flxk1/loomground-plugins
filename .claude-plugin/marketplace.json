@@ -27,9 +27,12 @@
       ]
     },
     {
-      "name": "loomground-skill",
-      "source": "./loomground-skill",
-      "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch: draft the .loom patch, litmus-classify each requirement as expressible, policy, or host, and validate against the reference implementation.",
+      "name": "loomground-language",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-language.git"
+      },
+      "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch: draft the .loom patch, litmus-classify each requirement as expressible, policy, or host, and validate against the reference implementation. Non-normative companion skill to the Loomground standard.",
       "version": "0.1.0",
       "author": {
         "name": "flxk1"

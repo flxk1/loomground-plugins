@@ -12,9 +12,10 @@ This repository is a Claude Code plugin marketplace — no build step needed:
 /plugin install loomground-versum@loomground
 ```
 
-Available plugins: `loomground-kg`, `loomground-skill`, `loomground-solver`,
+Available plugins: `loomground-kg`, `loomground-language`, `loomground-solver`,
 `loomground-versum`. (Solver add-on advice ships inside `loomground-solver` as the
-`advise-solver-addons` skill.)
+`advise-solver-addons` skill; the `.loom` patch-authoring skill ships inside
+`loomground-language`, invoked as `loomground`.)
 
 ## Install on Codex or a generic skill host
 
@@ -32,24 +33,22 @@ Codex bundles land in `dist/codex/<package>/`; generic hosts follow
 
 | Path | Role |
 | --- | --- |
-| `loomground-skill/` | Marketplace-local universal package: `package.json` (canonical manifest), `skills/` (portable skill source), `.claude-plugin/plugin.json` (generated, committed) |
-| `externals.json` | Packages whose canonical source lives in their tool repository (`loomground-kg`, `loomground-solver`, `loomground-versum`), as sibling-checkout paths |
+| `externals.json` | Every package's canonical source lives in its tool repository (`loomground-kg`, `loomground-language`, `loomground-solver`, `loomground-versum`), mapped here as sibling-checkout paths |
 | `.claude-plugin/marketplace.json` | Claude Code marketplace catalog (generated, committed) |
 | `schemas/` | The `loomground-package.schema.json` package contract |
 | `tools/` | `build_packages.py` — validates packages, generates host distributions and the committed Claude artifacts |
 | `tests/` | Package, build, and skill-script tests |
 | `docs/` | Planning and quality notes |
 
-`<package>/package.json` is the single source of truth for each package. For the migrated
-packages listed in `externals.json` it lives in the tool repository next to the skills it
-describes (plugin-lives-with-tool); rebuilding here requires those sibling checkouts. The
-Claude artifacts (`marketplace.json`, per-package `plugin.json`) are generated and
-**committed** — in this repository for local packages, in the tool repositories for external
-ones — because Claude Code installs from the repositories themselves; Codex and generic
-distributions are generated into `dist/`, which stays out of the repository. After editing any
-`package.json`, rerun `python3 tools/build_packages.py --target all` and commit the synced
-Claude artifacts in every repository the run touched — `tests/test_package_build.py` fails if
-they drift.
+Each package's `package.json` is its single source of truth and lives in the tool repository
+next to the skills it describes (plugin-lives-with-tool); this repository is the catalog and
+build front-end, and rebuilding here requires the sibling checkouts listed in
+`externals.json`. The Claude artifacts (`marketplace.json` here, `plugin.json` in each tool
+repository) are generated and **committed**, because Claude Code installs from the
+repositories themselves; Codex and generic distributions are generated into `dist/`, which
+stays out of the repository. After editing any `package.json`, rerun
+`python3 tools/build_packages.py --target all` and commit the synced Claude artifacts in
+every repository the run touched — `tests/test_package_build.py` fails if they drift.
 
 ## Test
 

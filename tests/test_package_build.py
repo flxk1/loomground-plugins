@@ -32,16 +32,16 @@ class PackageBuildTests(unittest.TestCase):
 
     def test_validate_and_build_single_package(self):
         result = subprocess.run(
-            [sys.executable, "tools/build_packages.py", "loomground-skill", "--target", "all"],
+            [sys.executable, "tools/build_packages.py", "loomground-versum", "--target", "all"],
             cwd=ROOT,
             text=True,
             capture_output=True,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         for target in ("claude", "codex", "generic"):
-            self.assertTrue((ROOT / "dist" / target / "loomground-skill" / "skills").is_dir())
-        manifest = json.loads((ROOT / "dist/codex/loomground-skill/.codex-plugin/plugin.json").read_text())
-        self.assertEqual(manifest["name"], "loomground-skill")
+            self.assertTrue((ROOT / "dist" / target / "loomground-versum" / "skills").is_dir())
+        manifest = json.loads((ROOT / "dist/codex/loomground-versum/.codex-plugin/plugin.json").read_text())
+        self.assertEqual(manifest["name"], "loomground-versum")
         self.assertEqual(manifest["skills"], "./skills/")
 
     def test_bad_package_is_rejected(self):
@@ -58,14 +58,14 @@ class PackageBuildTests(unittest.TestCase):
 
     def test_generated_manifests_credit_flxk1_only(self):
         subprocess.run(
-            [sys.executable, "tools/build_packages.py", "loomground-skill", "--target", "all"],
+            [sys.executable, "tools/build_packages.py", "loomground-versum", "--target", "all"],
             cwd=ROOT,
             check=True,
             capture_output=True,
         )
         paths = (
-            ROOT / "dist/claude/loomground-skill/.claude-plugin/plugin.json",
-            ROOT / "dist/codex/loomground-skill/.codex-plugin/plugin.json",
+            ROOT / "dist/claude/loomground-versum/.claude-plugin/plugin.json",
+            ROOT / "dist/codex/loomground-versum/.codex-plugin/plugin.json",
         )
         for path in paths:
             manifest = json.loads(path.read_text())
@@ -113,7 +113,7 @@ class PackageBuildTests(unittest.TestCase):
     def test_runtime_dependencies_are_declared(self):
         expected = {
             "loomground-kg": ["versum"],
-            "loomground-skill": ["loomground-language", "loomground-ref"],
+            "loomground-language": ["loomground-language", "loomground-ref"],
             "loomground-solver": ["loomground-language", "loomground-solver"],
             "loomground-versum": ["versum"],
         }
