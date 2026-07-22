@@ -32,16 +32,16 @@ class PackageBuildTests(unittest.TestCase):
 
     def test_validate_and_build_single_package(self):
         result = subprocess.run(
-            [sys.executable, "tools/build_packages.py", "loomground-solver-addons", "--target", "all"],
+            [sys.executable, "tools/build_packages.py", "loomground-skill", "--target", "all"],
             cwd=ROOT,
             text=True,
             capture_output=True,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         for target in ("claude", "codex", "generic"):
-            self.assertTrue((ROOT / "dist" / target / "loomground-solver-addons" / "skills").is_dir())
-        manifest = json.loads((ROOT / "dist/codex/loomground-solver-addons/.codex-plugin/plugin.json").read_text())
-        self.assertEqual(manifest["name"], "loomground-solver-addons")
+            self.assertTrue((ROOT / "dist" / target / "loomground-skill" / "skills").is_dir())
+        manifest = json.loads((ROOT / "dist/codex/loomground-skill/.codex-plugin/plugin.json").read_text())
+        self.assertEqual(manifest["name"], "loomground-skill")
         self.assertEqual(manifest["skills"], "./skills/")
 
     def test_bad_package_is_rejected(self):
@@ -116,7 +116,6 @@ class PackageBuildTests(unittest.TestCase):
             "loomground-skill": ["loomground-language", "loomground-ref"],
             "loomground-solver": ["loomground-language", "loomground-solver"],
             "loomground-versum": ["versum"],
-            "loomground-solver-addons": ["loomground-language", "loomground-solver"],
         }
         actual = {
             package_dir.name: json.loads((package_dir / "package.json").read_text())["runtime"]["requires"]
