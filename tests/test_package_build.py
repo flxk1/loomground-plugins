@@ -102,7 +102,8 @@ class PackageBuildTests(unittest.TestCase):
             self.assertEqual(manifest["version"], data["version"])
             self.assertEqual(manifest["description"], data["description"])
             entry = next(plugin for plugin in marketplace["plugins"] if plugin["name"] == data["name"])
-            self.assertEqual(entry["source"], f"./{data['name']}")
+            expected_source = data["adapters"]["claude"].get("marketplaceSource", f"./{data['name']}")
+            self.assertEqual(entry["source"], expected_source)
             self.assertEqual(entry["version"], data["version"])
             self.assertEqual(entry["description"], data["description"])
 

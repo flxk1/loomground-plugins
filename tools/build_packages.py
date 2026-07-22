@@ -133,7 +133,10 @@ def marketplace_manifest(packages: list[dict]) -> dict:
         "plugins": [
             {
                 "name": data["name"],
-                "source": f"./{data['name']}",
+                # A package whose claude adapter declares marketplaceSource lives in
+                # its tool repository; the marketplace points there instead of at the
+                # in-repo copy (plugin-lives-with-tool migration).
+                "source": data["adapters"]["claude"].get("marketplaceSource", f"./{data['name']}"),
                 "description": data["description"],
                 "version": data["version"],
                 "author": data["author"],
