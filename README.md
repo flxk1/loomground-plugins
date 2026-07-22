@@ -13,7 +13,8 @@ This repository is a Claude Code plugin marketplace — no build step needed:
 ```
 
 Available plugins: `loomground-kg`, `loomground-skill`, `loomground-solver`,
-`loomground-solver-addons`, `loomground-versum`.
+`loomground-versum`. (Solver add-on advice ships inside `loomground-solver` as the
+`advise-solver-addons` skill.)
 
 ## Install on Codex or a generic skill host
 
@@ -31,7 +32,7 @@ Codex bundles land in `dist/codex/<package>/`; generic hosts follow
 
 | Path | Role |
 | --- | --- |
-| `loomground-skill/`, `loomground-solver-addons/` | Marketplace-local universal packages: `package.json` (canonical manifest), `skills/` (portable skill source), `.claude-plugin/plugin.json` (generated, committed) |
+| `loomground-skill/` | Marketplace-local universal package: `package.json` (canonical manifest), `skills/` (portable skill source), `.claude-plugin/plugin.json` (generated, committed) |
 | `externals.json` | Packages whose canonical source lives in their tool repository (`loomground-kg`, `loomground-solver`, `loomground-versum`), as sibling-checkout paths |
 | `.claude-plugin/marketplace.json` | Claude Code marketplace catalog (generated, committed) |
 | `schemas/` | The `loomground-package.schema.json` package contract |

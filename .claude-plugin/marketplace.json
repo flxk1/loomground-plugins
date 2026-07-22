@@ -48,33 +48,21 @@
         "source": "url",
         "url": "https://github.com/flxk1/loomground-solver.git"
       },
-      "description": "Analytic and probabilistic reasoning skills over the Loomground Solver kernel: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, and analyse risks.",
-      "version": "0.2.0",
+      "description": "Analytic and probabilistic reasoning skills over the Loomground Solver kernel: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, analyse risks, and advise on optional add-ons.",
+      "version": "0.3.0",
       "author": {
         "name": "flxk1"
       },
       "keywords": [
-        "solver",
-        "decision-theory",
         "bayesian",
-        "loomground",
-        "risk"
-      ]
-    },
-    {
-      "name": "loomground-solver-addons",
-      "source": "./loomground-solver-addons",
-      "description": "Provider-neutral, deterministic advice for optional Loomground Solver add-ons.",
-      "version": "0.1.0",
-      "author": {
-        "name": "flxk1"
-      },
-      "keywords": [
-        "solver",
-        "world-model",
-        "metacognition",
+        "decision-theory",
         "deterministic",
-        "provider-agnostic"
+        "loomground",
+        "metacognition",
+        "provider-agnostic",
+        "risk",
+        "solver",
+        "world-model"
       ]
     },
     {
