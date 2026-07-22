@@ -1,0 +1,40 @@
+{
+  "$schema": "../schemas/loomground-package.schema.json",
+  "schemaVersion": 1,
+  "name": "loomground-skill",
+  "version": "0.1.0",
+  "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch: draft the .loom patch, litmus-classify each requirement as expressible, policy, or host, and validate against the reference implementation.",
+  "author": { "name": "flxk1" },
+  "keywords": ["loomground", "governance", "policy-graph", "loom", "validation"],
+  "skills": [
+    {
+      "name": "loomground",
+      "path": "skills/loomground",
+      "provides": ["governance.express"]
+    }
+  ],
+  "capabilities": {
+    "governance.express": { "mode": "write", "humanConfirmation": true }
+  },
+  "runtime": {
+    "python": ">=3.10",
+    "network": false,
+    "config": [],
+    "requires": ["loomground-language", "loomground-ref"]
+  },
+  "adapters": {
+    "claude": {},
+    "codex": {
+      "interface": {
+        "displayName": "Loomground",
+        "shortDescription": "Express governance requirements as verified .loom patches",
+        "longDescription": "Turn a natural-language AI-governance requirement into a verified Loomground policy-graph patch: draft the declarations, classify what is expressible versus a host concern, validate with the reference implementation, and report what the patch governs and what was handed off.",
+        "developerName": "flxk1",
+        "category": "Developer Tools",
+        "capabilities": ["Draft .loom patches", "Litmus classification", "Reference-implementation validation", "Host hand-off report"],
+        "defaultPrompt": ["Express this oversight requirement as a Loomground patch.", "Is this requirement governable in Loomground?", "Validate this .loom patch."]
+      }
+    },
+    "generic": {}
+  }
+}

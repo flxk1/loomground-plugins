@@ -123,6 +123,43 @@ def claude_manifest(data: dict) -> dict:
     }
 
 
+def marketplace_manifest(packages: list[dict]) -> dict:
+    return {
+        "name": "loomground",
+        "owner": {"name": "flxk1"},
+        "metadata": {
+            "description": "Universal Loomground skill packages, installable on Claude, Codex, and generic skill hosts.",
+        },
+        "plugins": [
+            {
+                "name": data["name"],
+                "source": f"./{data['name']}",
+                "description": data["description"],
+                "version": data["version"],
+                "author": data["author"],
+                "keywords": data.get("keywords", []),
+            }
+            for data in packages
+        ],
+    }
+
+
+def sync_claude_source_tree() -> None:
+    """Write the committed Claude artifacts into the source tree.
+
+    Claude Code installs marketplaces and plugins from the committed repository,
+    not from dist/, so every canonical package carries .claude-plugin/plugin.json
+    and the repository root carries .claude-plugin/marketplace.json. Codex and
+    generic hosts keep consuming the built distributions under dist/.
+    """
+    directories = package_dirs([])
+    packages = [load_package(directory) for directory in directories]
+    for directory, data in zip(directories, packages):
+        write_json(directory / ".claude-plugin" / "plugin.json", claude_manifest(data))
+    write_json(ROOT / ".claude-plugin" / "marketplace.json", marketplace_manifest(packages))
+    print(f"synced .claude-plugin/marketplace.json ({len(packages)} plugins) and per-package plugin.json")
+
+
 def codex_manifest(data: dict) -> dict:
     return {
         "name": data["name"],
@@ -186,6 +223,7 @@ def main() -> int:
                 for target in targets:
                     output = build(directory, data, target)
                     print(f"built {output.relative_to(ROOT)}")
+            sync_claude_source_tree()
         clean_generated_metadata()
     except (OSError, json.JSONDecodeError, KeyError, TypeError, PackageError) as exc:
         print(f"error: {exc}", file=sys.stderr)
