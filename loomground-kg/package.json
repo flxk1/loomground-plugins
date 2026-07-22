@@ -29,7 +29,7 @@
     "requires": ["versum"]
   },
   "adapters": {
-    "claude": {},
+    "claude": { "marketplaceSource": { "source": "url", "url": "https://github.com/flxk1/loomground-kg.git" } },
     "codex": {
       "interface": {
         "displayName": "Loomground KG",
