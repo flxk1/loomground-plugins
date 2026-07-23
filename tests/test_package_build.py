@@ -112,7 +112,7 @@ class PackageBuildTests(unittest.TestCase):
 
     def test_runtime_dependencies_are_declared(self):
         expected = {
-            "loomground-language": ["loomground-language", "loomground-ref"],
+            "loomground-language": ["loomground-language"],
             "loomground-solver": ["loomground-language", "loomground-solver"],
             "loomground-versum": ["versum"],
         }
