@@ -12,9 +12,9 @@ This repository is a Claude Code plugin marketplace — no build step needed:
 /plugin install loomground-versum@loomground
 ```
 
-Available plugins: `loomground-language`, `loomground-solver`, `loomground-versum`.
+Available plugins: `loomground-governance`, `loomground-solver`, `loomground-versum`.
 (Solver add-on advice ships inside `loomground-solver` as the `advise-solver-addons`
-skill; the `.loom` patch-authoring skill ships inside `loomground-language`, invoked
+skill; the `.loom` patch-authoring skill ships inside `loomground-governance`, invoked
 as `loomground`; the KG cockpit and chat skills ship inside `loomground-versum`.)
 
 ## Install on Codex or a generic skill host
@@ -33,7 +33,7 @@ Codex bundles land in `dist/codex/<package>/`; generic hosts follow
 
 | Path | Role |
 | --- | --- |
-| `externals.json` | Every package's canonical source lives in its tool repository (`loomground-language`, `loomground-solver`, `loomground-versum`), mapped here as sibling-checkout paths |
+| `externals.json` | Every package's canonical source lives in its tool repository (`loomground-governance`, `loomground-solver`, `loomground-versum`), mapped here as sibling-checkout paths |
 | `.claude-plugin/marketplace.json` | Claude Code marketplace catalog (generated, committed) |
 | `schemas/` | The `loomground-package.schema.json` package contract |
 | `tools/` | `build_packages.py` — validates packages, generates host distributions and the committed Claude artifacts |
