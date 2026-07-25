@@ -8,6 +8,26 @@
   },
   "plugins": [
     {
+      "name": "loomground-deontic",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-deontic.git"
+      },
+      "description": "Transcribe a natural-language norm into a verified deontic formula: split it into modality (O/P/F), bearer, and action; classify the Hohfeldian incident; resolve a 'right' as a claim or a liberty; validate with a bundled stdlib engine; and flag candidate conflicts. Transcribes and flags, never infers or resolves.",
+      "version": "0.1.0",
+      "author": {
+        "name": "flxk1"
+      },
+      "keywords": [
+        "loomground",
+        "deontic",
+        "norms",
+        "obligation",
+        "hohfeld",
+        "legal"
+      ]
+    },
+    {
       "name": "loomground-governance",
       "source": {
         "source": "url",
