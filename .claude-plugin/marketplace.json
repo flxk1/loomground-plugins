@@ -11,7 +11,8 @@
       "name": "loomground-deontic",
       "source": {
         "source": "url",
-        "url": "https://github.com/flxk1/loomground-deontic.git"
+        "url": "https://github.com/flxk1/loomground-deontic.git",
+        "sha": "780afd3fb8399f30c3817d3e17662b9e9745c3b3"
       },
       "description": "Transcribe a natural-language norm into a verified deontic formula: split it into modality (O/P/F), bearer, and action; classify the Hohfeldian incident; resolve a 'right' as a claim or a liberty; validate with a bundled stdlib engine; and flag candidate conflicts. Transcribes and flags, never infers or resolves.",
       "version": "0.1.0",
@@ -31,7 +32,8 @@
       "name": "loomground-governance",
       "source": {
         "source": "url",
-        "url": "https://github.com/flxk1/loomground-governance.git"
+        "url": "https://github.com/flxk1/loomground-governance.git",
+        "sha": "c3f5fad46c295a2ccebce12251abd3f6dc66765b"
       },
       "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch: draft the .lg patch, litmus-classify each requirement as expressible, policy, or host, and validate with the bundled validation engine. Non-normative companion skill to the Loomground standard.",
       "version": "0.1.0",
@@ -50,7 +52,8 @@
       "name": "loomground-ingest",
       "source": {
         "source": "url",
-        "url": "https://github.com/flxk1/loomground-ingest.git"
+        "url": "https://github.com/flxk1/loomground-ingest.git",
+        "sha": "bacfc16c25c39f19adc627d7c2a985e98c49b5d0"
       },
       "description": "Drive the Loomground ingest plane: dispatch a multimodal artifact to the registered ingester, lower it to a dimensioned subgraph (5D mental model / nD governance) with provenance and quarantine semantics, dry-run by default, and write to versum only through the gated writer once that seam is built.",
       "version": "0.1.0",
@@ -70,7 +73,8 @@
       "name": "loomground-solver",
       "source": {
         "source": "url",
-        "url": "https://github.com/flxk1/loomground-solver.git"
+        "url": "https://github.com/flxk1/loomground-solver.git",
+        "sha": "63131317d1c03e0e4e35a974721130508b8aae7b"
       },
       "description": "Analytic and probabilistic reasoning skills over the Loomground Solver kernel: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, analyse risks, and advise on optional add-ons.",
       "version": "0.3.0",
@@ -93,7 +97,8 @@
       "name": "loomground-versum",
       "source": {
         "source": "url",
-        "url": "https://github.com/flxk1/loomground-versum.git"
+        "url": "https://github.com/flxk1/loomground-versum.git",
+        "sha": "91340700427a3680c7595ecae892cf4571dacc87"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
       "version": "0.6.2",

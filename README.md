@@ -12,8 +12,8 @@ This repository is a Claude Code plugin marketplace — no build step needed:
 /plugin install loomground-versum@loomground
 ```
 
-Available plugins: `loomground-governance`, `loomground-ingest`, `loomground-solver`,
-`loomground-versum`. (Solver add-on advice ships inside `loomground-solver` as the
+Available plugins: `loomground-deontic`, `loomground-governance`,
+`loomground-ingest`, `loomground-solver`, `loomground-versum`. (Solver add-on advice ships inside `loomground-solver` as the
 `advise-solver-addons` skill; the `.loom` patch-authoring skill ships inside
 `loomground-governance`, invoked as `loomground`; the KG cockpit and chat skills ship
 inside `loomground-versum`; the ingest-plane skill ships inside `loomground-ingest`.)
@@ -55,7 +55,11 @@ every repository the run touched — `tests/test_package_build.py` fails if they
 
 ```bash
 python3 -m pytest -q
+python3 tools/release_gate.py  # required before release
 ```
+
+The complete release definition of done is in
+[`docs/RELEASE-DoD.md`](docs/RELEASE-DoD.md).
 
 Do not edit generated files (`dist/`, `.claude-plugin/`). Use stable capability identifiers such
 as `knowledge.capture` for relationships between packages, and keep user data and credentials

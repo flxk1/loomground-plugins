@@ -12,7 +12,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 _EXTERNALS = json.loads((ROOT / "externals.json").read_text()) if (ROOT / "externals.json").is_file() else {}
-SK = (ROOT / _EXTERNALS.get("loomground-solver", "loomground-solver")).resolve() / "skills"
+_SOLVER = _EXTERNALS.get("loomground-solver", {"path": "loomground-solver"})
+SK = (ROOT / _SOLVER["path"]).resolve() / "skills"
 try:
     from loomground_solver import method as _kernel_method
 except ImportError:

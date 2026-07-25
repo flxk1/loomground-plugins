@@ -18,12 +18,31 @@ TARGETS = ("claude", "codex", "generic")
 SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 CAPABILITY = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:\.[a-z][a-z0-9]*(?:-[a-z0-9]+)*)+$")
+GIT_SHA = re.compile(r"^[0-9a-f]{40}$")
 SCHEMA = json.loads((ROOT / "schemas" / "loomground-package.schema.json").read_text(encoding="utf-8"))
 SCHEMA_VALIDATOR = Draft202012Validator(SCHEMA)
 
 
 class PackageError(ValueError):
     pass
+
+
+def validate_marketplace_source(source: object, path: Path) -> None:
+    """Require remote plugin sources to resolve to one immutable Git commit."""
+    if isinstance(source, str):
+        if not source.startswith("./"):
+            raise PackageError(f"{path}: marketplaceSource path must start with ./")
+        return
+    if not isinstance(source, dict):
+        raise PackageError(f"{path}: marketplaceSource must be a relative path or source object")
+    source_type = source.get("source")
+    if source_type not in {"github", "url", "git-subdir"}:
+        raise PackageError(f"{path}: unsupported marketplaceSource type {source_type!r}")
+    sha = source.get("sha")
+    if not isinstance(sha, str) or not GIT_SHA.fullmatch(sha):
+        raise PackageError(
+            f"{path}: remote marketplaceSource must include a full 40-character lowercase commit sha"
+        )
 
 
 def load_package(package_dir: Path) -> dict:
@@ -123,7 +142,7 @@ def claude_manifest(data: dict) -> dict:
     }
 
 
-def marketplace_manifest(packages: list[dict]) -> dict:
+def marketplace_manifest(packages: list[dict], sources: dict[str, object]) -> dict:
     return {
         "name": "loomground",
         "owner": {"name": "flxk1"},
@@ -133,10 +152,10 @@ def marketplace_manifest(packages: list[dict]) -> dict:
         "plugins": [
             {
                 "name": data["name"],
-                # A package whose claude adapter declares marketplaceSource lives in
-                # its tool repository; the marketplace points there instead of at the
-                # in-repo copy (plugin-lives-with-tool migration).
-                "source": data["adapters"]["claude"].get("marketplaceSource", f"./{data['name']}"),
+                # Immutable release pins live in this marketplace repository.
+                # A source package cannot embed its own commit without changing
+                # that commit, so package-local metadata is not the lock authority.
+                "source": sources.get(data["name"], f"./{data['name']}"),
                 "description": data["description"],
                 "version": data["version"],
                 "author": data["author"],
@@ -159,7 +178,10 @@ def sync_claude_source_tree() -> None:
     packages = [load_package(directory) for directory in directories]
     for directory, data in zip(directories, packages):
         write_json(directory / ".claude-plugin" / "plugin.json", claude_manifest(data))
-    write_json(ROOT / ".claude-plugin" / "marketplace.json", marketplace_manifest(packages))
+    write_json(
+        ROOT / ".claude-plugin" / "marketplace.json",
+        marketplace_manifest(packages, external_marketplace_sources()),
+    )
     print(f"synced .claude-plugin/marketplace.json ({len(packages)} plugins) and per-package plugin.json")
 
 
@@ -199,6 +221,24 @@ def build(package_dir: Path, data: dict, target: str) -> Path:
     return output
 
 
+def external_config() -> dict[str, dict]:
+    path = ROOT / "externals.json"
+    if not path.is_file():
+        return {}
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    config = {}
+    for name, entry in raw.items():
+        if not isinstance(entry, dict) or not isinstance(entry.get("path"), str):
+            raise PackageError(f"external package {name}: expected path and immutable source")
+        validate_marketplace_source(entry.get("source"), path)
+        config[name] = entry
+    return config
+
+
+def external_marketplace_sources() -> dict[str, object]:
+    return {name: entry["source"] for name, entry in external_config().items()}
+
+
 def external_package_dirs() -> dict[str, Path]:
     """Canonical packages that live in their tool repositories (sibling checkouts).
 
@@ -206,12 +246,9 @@ def external_package_dirs() -> dict[str, Path]:
     siblings are required for a full build: failing loudly beats silently dropping
     a package from the marketplace.
     """
-    path = ROOT / "externals.json"
-    if not path.is_file():
-        return {}
-    mapping = json.loads(path.read_text(encoding="utf-8"))
     dirs = {}
-    for name, rel in sorted(mapping.items()):
+    for name, entry in sorted(external_config().items()):
+        rel = entry["path"]
         directory = (ROOT / rel).resolve()
         if not (directory / "package.json").is_file():
             raise PackageError(f"external package {name}: no package.json at {rel} (sibling checkout required)")
