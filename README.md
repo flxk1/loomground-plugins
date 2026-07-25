@@ -12,10 +12,11 @@ This repository is a Claude Code plugin marketplace — no build step needed:
 /plugin install loomground-versum@loomground
 ```
 
-Available plugins: `loomground-governance`, `loomground-solver`, `loomground-versum`.
-(Solver add-on advice ships inside `loomground-solver` as the `advise-solver-addons`
-skill; the `.loom` patch-authoring skill ships inside `loomground-governance`, invoked
-as `loomground`; the KG cockpit and chat skills ship inside `loomground-versum`.)
+Available plugins: `loomground-governance`, `loomground-ingest`, `loomground-solver`,
+`loomground-versum`. (Solver add-on advice ships inside `loomground-solver` as the
+`advise-solver-addons` skill; the `.loom` patch-authoring skill ships inside
+`loomground-governance`, invoked as `loomground`; the KG cockpit and chat skills ship
+inside `loomground-versum`; the ingest-plane skill ships inside `loomground-ingest`.)
 
 ## Install on Codex or a generic skill host
 
