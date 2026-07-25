@@ -1,5 +1,6 @@
 {
   "loomground-governance": "../loomground-governance",
+  "loomground-ingest": "../loomground-ingest",
   "loomground-solver": "../loomground-solver",
   "loomground-versum": "../loomground-versum"
 }

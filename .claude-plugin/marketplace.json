@@ -13,7 +13,7 @@
         "source": "url",
         "url": "https://github.com/flxk1/loomground-governance.git"
       },
-      "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch: draft the .loom patch, litmus-classify each requirement as expressible, policy, or host, and validate against the reference implementation. Non-normative companion skill to the Loomground standard.",
+      "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch: draft the .lg patch, litmus-classify each requirement as expressible, policy, or host, and validate with the bundled validation engine. Non-normative companion skill to the Loomground standard.",
       "version": "0.1.0",
       "author": {
         "name": "flxk1"
@@ -22,8 +22,28 @@
         "loomground",
         "governance",
         "policy-graph",
-        "loom",
+        "lg",
         "validation"
+      ]
+    },
+    {
+      "name": "loomground-ingest",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-ingest.git"
+      },
+      "description": "Drive the Loomground ingest plane: dispatch a multimodal artifact to the registered ingester, lower it to a dimensioned subgraph (5D mental model / nD governance) with provenance and quarantine semantics, dry-run by default, and write to versum only through the gated writer once that seam is built.",
+      "version": "0.1.0",
+      "author": {
+        "name": "flxk1"
+      },
+      "keywords": [
+        "loomground",
+        "ingest",
+        "versum",
+        "mental-model",
+        "subgraph",
+        "provenance"
       ]
     },
     {
@@ -56,7 +76,7 @@
         "url": "https://github.com/flxk1/loomground-versum.git"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
-      "version": "0.5.2",
+      "version": "0.6.2",
       "author": {
         "name": "flxk1"
       },
