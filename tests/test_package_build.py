@@ -8,13 +8,12 @@ from pathlib import Path
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+import build_packages
 
 
 def canonical_packages():
-    local = [path.parent for path in ROOT.glob("*/package.json") if path.parent.parent == ROOT]
-    externals = json.loads((ROOT / "externals.json").read_text()) if (ROOT / "externals.json").is_file() else {}
-    external = [(ROOT / rel).resolve() for rel in externals.values()]
-    return sorted(local + external, key=lambda path: path.name)
+    return sorted(build_packages.package_dirs([]), key=lambda path: path.name)
 
 
 class PackageBuildTests(unittest.TestCase):
@@ -55,6 +54,17 @@ class PackageBuildTests(unittest.TestCase):
                 capture_output=True,
             )
             self.assertNotEqual(result.returncode, 0)
+
+    def test_external_marketplace_sources_are_commit_locked(self):
+        sources = build_packages.external_marketplace_sources()
+        self.assertEqual(set(sources), {path.name for path in canonical_packages()})
+        for source in sources.values():
+            build_packages.validate_marketplace_source(source, ROOT / "externals.json")
+
+    def test_mutable_external_source_is_rejected(self):
+        mutable = {"source": "url", "url": "https://github.com/flxk1/example.git"}
+        with self.assertRaisesRegex(build_packages.PackageError, "full 40-character"):
+            build_packages.validate_marketplace_source(mutable, ROOT / "externals.json")
 
     def test_generated_manifests_credit_flxk1_only(self):
         subprocess.run(
@@ -98,6 +108,7 @@ class PackageBuildTests(unittest.TestCase):
         self.assertEqual(marketplace["owner"], {"name": "flxk1"})
         listed = [plugin["name"] for plugin in marketplace["plugins"]]
         self.assertEqual(listed, [path.name for path in canonical_packages()])
+        locked_sources = build_packages.external_marketplace_sources()
         for package_dir in canonical_packages():
             data = json.loads((package_dir / "package.json").read_text())
             manifest = json.loads((package_dir / ".claude-plugin/plugin.json").read_text())
@@ -105,23 +116,24 @@ class PackageBuildTests(unittest.TestCase):
             self.assertEqual(manifest["version"], data["version"])
             self.assertEqual(manifest["description"], data["description"])
             entry = next(plugin for plugin in marketplace["plugins"] if plugin["name"] == data["name"])
-            expected_source = data["adapters"]["claude"].get("marketplaceSource", f"./{data['name']}")
+            expected_source = locked_sources.get(data["name"], f"./{data['name']}")
             self.assertEqual(entry["source"], expected_source)
             self.assertEqual(entry["version"], data["version"])
             self.assertEqual(entry["description"], data["description"])
 
-    def test_runtime_dependencies_are_declared(self):
-        expected = {
-            "loomground-governance": ["loomground-governance"],
-            "loomground-ingest": ["loomground-ingest"],
-            "loomground-solver": ["loomground-governance", "loomground-solver"],
-            "loomground-versum": ["versum"],
-        }
-        actual = {
-            package_dir.name: json.loads((package_dir / "package.json").read_text())["runtime"]["requires"]
-            for package_dir in canonical_packages()
-        }
-        self.assertEqual(actual, expected)
+    def test_built_packages_preserve_canonical_runtime_declarations(self):
+        subprocess.run(
+            [sys.executable, "tools/build_packages.py", "--target", "generic"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        )
+        for package_dir in canonical_packages():
+            source = json.loads((package_dir / "package.json").read_text())
+            built = json.loads(
+                (ROOT / "dist/generic" / package_dir.name / "package.json").read_text()
+            )
+            self.assertEqual(built["runtime"], source["runtime"])
 
 
 if __name__ == "__main__":

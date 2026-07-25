@@ -1,7 +1,42 @@
 {
-  "loomground-deontic": "../loomground-deontic",
-  "loomground-governance": "../loomground-governance",
-  "loomground-ingest": "../loomground-ingest",
-  "loomground-solver": "../loomground-solver",
-  "loomground-versum": "../loomground-versum"
+  "loomground-deontic": {
+    "path": "../loomground-deontic",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-deontic.git",
+      "sha": "780afd3fb8399f30c3817d3e17662b9e9745c3b3"
+    }
+  },
+  "loomground-governance": {
+    "path": "../loomground-governance",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-governance.git",
+      "sha": "c3f5fad46c295a2ccebce12251abd3f6dc66765b"
+    }
+  },
+  "loomground-ingest": {
+    "path": "../loomground-ingest",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-ingest.git",
+      "sha": "bacfc16c25c39f19adc627d7c2a985e98c49b5d0"
+    }
+  },
+  "loomground-solver": {
+    "path": "../loomground-solver",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-solver.git",
+      "sha": "63131317d1c03e0e4e35a974721130508b8aae7b"
+    }
+  },
+  "loomground-versum": {
+    "path": "../loomground-versum",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-versum.git",
+      "sha": "91340700427a3680c7595ecae892cf4571dacc87"
+    }
+  }
 }
