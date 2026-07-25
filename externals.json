@@ -1,4 +1,5 @@
 {
+  "loomground-deontic": "../loomground-deontic",
   "loomground-governance": "../loomground-governance",
   "loomground-ingest": "../loomground-ingest",
   "loomground-solver": "../loomground-solver",
