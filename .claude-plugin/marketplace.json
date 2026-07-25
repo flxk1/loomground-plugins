@@ -15,7 +15,7 @@
         "sha": "780afd3fb8399f30c3817d3e17662b9e9745c3b3"
       },
       "description": "Transcribe a natural-language norm into a verified deontic formula: split it into modality (O/P/F), bearer, and action; classify the Hohfeldian incident; resolve a 'right' as a claim or a liberty; validate with a bundled stdlib engine; and flag candidate conflicts. Transcribes and flags, never infers or resolves.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "flxk1"
       },
@@ -55,8 +55,8 @@
         "url": "https://github.com/flxk1/loomground-ingest.git",
         "sha": "bacfc16c25c39f19adc627d7c2a985e98c49b5d0"
       },
-      "description": "Drive the Loomground ingest plane: dispatch a multimodal artifact to the registered ingester, lower it to a dimensioned subgraph (5D mental model / nD governance) with provenance and quarantine semantics, dry-run by default, and write to versum only through the gated writer once that seam is built.",
-      "version": "0.1.0",
+      "description": "Drive the network-free Loomground ingest plane: dispatch a post-acquisition artifact to the registered ingester, lower it to a dimensioned subgraph with provenance and quarantine semantics, dry-run by default, and write only through the host-injected, versioned Versum sink.",
+      "version": "0.1.1",
       "author": {
         "name": "flxk1"
       },
@@ -101,7 +101,7 @@
         "sha": "91340700427a3680c7595ecae892cf4571dacc87"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
-      "version": "0.6.2",
+      "version": "0.6.3",
       "author": {
         "name": "flxk1"
       },

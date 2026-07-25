@@ -28,6 +28,14 @@ def tracked_files() -> list[Path]:
 
 
 def main() -> int:
+    for command in (
+        [sys.executable, "tools/supply_chain_gate.py", "--self-test"],
+        [sys.executable, "tools/supply_chain_gate.py"],
+    ):
+        result = subprocess.run(command, cwd=ROOT)
+        if result.returncode:
+            fail("supply-chain license/SBOM gate failed")
+
     files = tracked_files()
     bad = [
         path.relative_to(ROOT)
