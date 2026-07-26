@@ -99,7 +99,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-versum.git",
-        "sha": "55c1f4c0c2702729946eda4b5566b89643ee0587"
+        "sha": "1da1106194ca2b5de29af61bcbb6908de9013567"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
       "version": "0.6.3",
