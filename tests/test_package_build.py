@@ -66,7 +66,7 @@ class PackageBuildTests(unittest.TestCase):
         with self.assertRaisesRegex(build_packages.PackageError, "full 40-character"):
             build_packages.validate_marketplace_source(mutable, ROOT / "externals.json")
 
-    def test_generated_manifests_credit_flxk1_only(self):
+    def test_generated_manifests_credit_contributors_only(self):
         subprocess.run(
             [sys.executable, "tools/build_packages.py", "loomground-versum", "--target", "all"],
             cwd=ROOT,
@@ -79,7 +79,7 @@ class PackageBuildTests(unittest.TestCase):
         )
         for path in paths:
             manifest = json.loads(path.read_text())
-            self.assertEqual(manifest["author"], {"name": "flxk1"})
+            self.assertEqual(manifest["author"], {"name": "Loomground Contributors"})
 
     def test_canonical_packages_match_json_schema(self):
         schema = json.loads((ROOT / "schemas/loomground-package.schema.json").read_text())
@@ -105,7 +105,7 @@ class PackageBuildTests(unittest.TestCase):
 
     def test_committed_claude_artifacts_are_in_sync(self):
         marketplace = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text())
-        self.assertEqual(marketplace["owner"], {"name": "flxk1"})
+        self.assertEqual(marketplace["owner"], {"name": "Loomground Contributors"})
         listed = [plugin["name"] for plugin in marketplace["plugins"]]
         self.assertEqual(listed, [path.name for path in canonical_packages()])
         locked_sources = build_packages.external_marketplace_sources()

@@ -4,7 +4,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-deontic.git",
-      "sha": "780afd3fb8399f30c3817d3e17662b9e9745c3b3"
+      "sha": "53e7dd35e83e8fc91741fc8610c24306df48dda8"
     }
   },
   "loomground-governance": {
@@ -12,7 +12,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-governance.git",
-      "sha": "c3f5fad46c295a2ccebce12251abd3f6dc66765b"
+      "sha": "3a2a931d130d1cb6a2f16d7e275479855d23eea6"
     }
   },
   "loomground-ingest": {
@@ -20,7 +20,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-ingest.git",
-      "sha": "bacfc16c25c39f19adc627d7c2a985e98c49b5d0"
+      "sha": "c82d616643a5ea72453ebb4c609dfa325cefc614"
     }
   },
   "loomground-solver": {
@@ -28,7 +28,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-solver.git",
-      "sha": "63131317d1c03e0e4e35a974721130508b8aae7b"
+      "sha": "8db76cdd4180e94fd7a631ce5b488a0b8df136f2"
     }
   },
   "loomground-versum": {
@@ -36,7 +36,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-versum.git",
-      "sha": "91340700427a3680c7595ecae892cf4571dacc87"
+      "sha": "ef0d7dd2929c8eabfbeb65831d044608a7cdaf4b"
     }
   }
 }

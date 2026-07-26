@@ -67,5 +67,5 @@ outside package directories.
 
 ## Authorship
 
-This work is authored by **flxk1** and was assisted by Claude and Codex. Claude and Codex are
+This work is authored by **Loomground Contributors** and was assisted by Claude and Codex. Claude and Codex are
 acknowledged as tools, not authors or co-authors.
