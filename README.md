@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Copyright 2026 flxk1 -->
+
 # Loomground plugins
 
 Universal skill packages for Loomground tools (Versum, Solver, KG), installable on **Claude
@@ -69,3 +72,6 @@ outside package directories.
 
 This work is authored by **Loomground Contributors** and was assisted by Claude and Codex. Claude and Codex are
 acknowledged as tools, not authors or co-authors.
+## License
+
+Apache License 2.0. See `LICENSE`, `LICENSES/Apache-2.0.txt`, and `NOTICE`.
