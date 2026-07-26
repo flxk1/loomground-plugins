@@ -1,10 +1,11 @@
 {
   "name": "loomground",
   "owner": {
-    "name": "flxk1"
+    "name": "Loomground Contributors"
   },
   "metadata": {
-    "description": "Universal Loomground skill packages, installable on Claude, Codex, and generic skill hosts."
+    "description": "Universal Loomground skill packages, installable on Claude, Codex, and generic skill hosts.",
+    "version": "0.1.0"
   },
   "plugins": [
     {
@@ -12,12 +13,12 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-deontic.git",
-        "sha": "780afd3fb8399f30c3817d3e17662b9e9745c3b3"
+        "sha": "53e7dd35e83e8fc91741fc8610c24306df48dda8"
       },
       "description": "Transcribe a natural-language norm into a verified deontic formula: split it into modality (O/P/F), bearer, and action; classify the Hohfeldian incident; resolve a 'right' as a claim or a liberty; validate with a bundled stdlib engine; and flag candidate conflicts. Transcribes and flags, never infers or resolves.",
       "version": "0.1.1",
       "author": {
-        "name": "flxk1"
+        "name": "Loomground Contributors"
       },
       "keywords": [
         "loomground",
@@ -33,12 +34,12 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-governance.git",
-        "sha": "c3f5fad46c295a2ccebce12251abd3f6dc66765b"
+        "sha": "3a2a931d130d1cb6a2f16d7e275479855d23eea6"
       },
       "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch: draft the .lg patch, litmus-classify each requirement as expressible, policy, or host, and validate with the bundled validation engine. Non-normative companion skill to the Loomground standard.",
       "version": "0.1.0",
       "author": {
-        "name": "flxk1"
+        "name": "Loomground Contributors"
       },
       "keywords": [
         "loomground",
@@ -53,12 +54,12 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-ingest.git",
-        "sha": "bacfc16c25c39f19adc627d7c2a985e98c49b5d0"
+        "sha": "c82d616643a5ea72453ebb4c609dfa325cefc614"
       },
       "description": "Drive the network-free Loomground ingest plane: dispatch a post-acquisition artifact to the registered ingester, lower it to a dimensioned subgraph with provenance and quarantine semantics, dry-run by default, and write only through the host-injected, versioned Versum sink.",
       "version": "0.1.1",
       "author": {
-        "name": "flxk1"
+        "name": "Loomground Contributors"
       },
       "keywords": [
         "loomground",
@@ -74,12 +75,12 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-solver.git",
-        "sha": "63131317d1c03e0e4e35a974721130508b8aae7b"
+        "sha": "8db76cdd4180e94fd7a631ce5b488a0b8df136f2"
       },
       "description": "Analytic and probabilistic reasoning skills over the Loomground Solver kernel: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, analyse risks, and advise on optional add-ons.",
       "version": "0.3.0",
       "author": {
-        "name": "flxk1"
+        "name": "Loomground Contributors"
       },
       "keywords": [
         "bayesian",
@@ -98,12 +99,12 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-versum.git",
-        "sha": "91340700427a3680c7595ecae892cf4571dacc87"
+        "sha": "ef0d7dd2929c8eabfbeb65831d044608a7cdaf4b"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
       "version": "0.6.3",
       "author": {
-        "name": "flxk1"
+        "name": "Loomground Contributors"
       },
       "keywords": [
         "chat",

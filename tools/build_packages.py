@@ -66,8 +66,8 @@ def load_package(package_dir: Path) -> dict:
         raise PackageError(f"{path}: directory and package name differ")
     if not SEMVER.fullmatch(data["version"]):
         raise PackageError(f"{path}: version must be strict semver")
-    if data["author"] != {"name": "flxk1"}:
-        raise PackageError(f"{path}: author must be flxk1")
+    if data["author"] != {"name": "Loomground Contributors"}:
+        raise PackageError(f"{path}: author must be Loomground Contributors")
     if not isinstance(data["skills"], list) or not data["skills"]:
         raise PackageError(f"{path}: at least one skill is required")
     provided = set()
@@ -145,9 +145,10 @@ def claude_manifest(data: dict) -> dict:
 def marketplace_manifest(packages: list[dict], sources: dict[str, object]) -> dict:
     return {
         "name": "loomground",
-        "owner": {"name": "flxk1"},
+        "owner": {"name": "Loomground Contributors"},
         "metadata": {
             "description": "Universal Loomground skill packages, installable on Claude, Codex, and generic skill hosts.",
+            "version": "0.1.0",
         },
         "plugins": [
             {

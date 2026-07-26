@@ -15,7 +15,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["name"],
-      "properties": { "name": { "const": "flxk1" } }
+      "properties": { "name": { "const": "Loomground Contributors" } }
     },
     "keywords": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
     "skills": {
