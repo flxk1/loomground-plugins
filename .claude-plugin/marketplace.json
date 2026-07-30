@@ -16,7 +16,7 @@
         "sha": "d8f2ccae223df1656011be9b10cfc1c201c2e730"
       },
       "description": "Transcribe a natural-language norm into a verified deontic formula: split it into modality (O/P/F), bearer, and action; classify the Hohfeldian incident; resolve a 'right' as a claim or a liberty; validate with a bundled stdlib engine; and flag candidate conflicts. Transcribes and flags, never infers or resolves.",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "author": {
         "name": "Loomground Contributors"
       },
@@ -102,7 +102,7 @@
         "sha": "1da1106194ca2b5de29af61bcbb6908de9013567"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
-      "version": "0.6.3",
+      "version": "0.6.4",
       "author": {
         "name": "Loomground Contributors"
       },
