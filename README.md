@@ -3,7 +3,7 @@
 
 # Loomground plugins
 
-Universal skill packages for Loomground tools (Versum, Solver, KG), installable on **Claude
+Universal skill packages for Loomground tools (deontic, governance, ingest, solver, versum), installable on **Claude
 Code**, **Codex**, and **generic skill hosts** from one canonical source.
 
 ## Install on Claude Code
@@ -17,7 +17,7 @@ This repository is a Claude Code plugin marketplace — no build step needed:
 
 Available plugins: `loomground-deontic`, `loomground-governance`,
 `loomground-ingest`, `loomground-solver`, `loomground-versum`. (Solver add-on advice ships inside `loomground-solver` as the
-`advise-solver-addons` skill; the `.loom` patch-authoring skill ships inside
+`advise-solver-addons` skill; the `.lg` patch-authoring skill ships inside
 `loomground-governance`, invoked as `loomground`; the KG cockpit and chat skills ship
 inside `loomground-versum`; the ingest-plane skill ships inside `loomground-ingest`.)
 
@@ -37,10 +37,10 @@ Codex bundles land in `dist/codex/<package>/`; generic hosts follow
 
 | Path | Role |
 | --- | --- |
-| `externals.json` | Every package's canonical source lives in its tool repository (`loomground-governance`, `loomground-solver`, `loomground-versum`), mapped here as sibling-checkout paths |
+| `externals.json` | Every package's canonical source lives in its tool repository (`loomground-deontic`, `loomground-governance`, `loomground-ingest`, `loomground-solver`, `loomground-versum`), mapped here as sibling-checkout paths |
 | `.claude-plugin/marketplace.json` | Claude Code marketplace catalog (generated, committed) |
 | `schemas/` | The `loomground-package.schema.json` package contract |
-| `tools/` | `build_packages.py` — validates packages, generates host distributions and the committed Claude artifacts |
+| `tools/` | `build_packages.py` — validates packages, generates host distributions and the committed Claude artifacts; `release_gate.py` and `supply_chain_gate.py` enforce the release and supply-chain gates |
 | `tests/` | Package, build, and skill-script tests |
 | `docs/` | Planning and quality notes |
 
