@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"   # supply_chain_gate.py uses tomllib (stdlib >= 3.11)
+      - name: Check out sibling repos at the commits pinned in externals.json
+        # build_packages.py resolves each external at the ../<name> path declared in
+        # externals.json, so the siblings must sit next to this checkout. Reading the
+        # pins from externals.json keeps the workflow correct across repins.
+        run: |
+          python - <<'EOF'
+          import json, pathlib, subprocess
+
+          for name, spec in json.loads(pathlib.Path("externals.json").read_text()).items():
+              url, sha = spec["source"]["url"], spec["source"]["sha"]
+              dest = pathlib.Path(spec["path"])
+              subprocess.run(["git", "init", "-q", str(dest)], check=True)
+              subprocess.run(["git", "-C", str(dest), "fetch", "-q", "--depth", "1", url, sha], check=True)
+              subprocess.run(["git", "-C", str(dest), "checkout", "-q", sha], check=True)
+              print(f"{name} @ {sha[:12]}")
+          EOF
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pip install pytest==9.1.1   # release gate runs pytest; not in requirements-dev.txt
+      - run: python -m pytest -q
+      - run: python tools/release_gate.py
