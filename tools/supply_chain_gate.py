@@ -68,7 +68,7 @@ def inventory() -> dict:
         for path, meta in sorted(raw.get("packages", {}).items()):
             if not path or not path.startswith("node_modules/"):
                 continue
-            add(items, path.removeprefix("node_modules/"), str(meta.get("version", "")),
+            add(items, path.rsplit("node_modules/", 1)[-1], str(meta.get("version", "")),
                 str(meta.get("license", "")), "package-lock.json")
     pyproject = ROOT / "pyproject.toml"
     if pyproject.is_file():
@@ -80,31 +80,31 @@ def inventory() -> dict:
             else:
                 runtime_external.add(norm(name))
     for req in (ROOT / "requirements-dev.txt", ROOT / "requirements-release.txt"):
-      if req.is_file():
-        for line in req.read_text(encoding="utf-8").splitlines():
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            name = re.split(r"\s*@\s*|[<>=!~]", line, maxsplit=1)[0]
-            if req.name == "requirements-release.txt":
-                version = line[len(name):].strip()
-                if not version.startswith("=="):
-                    raise ValueError(f"release dependency is not exactly pinned: {line!r}")
-                release_pins.add(norm(name))
-                add(items, name, version.removeprefix("=="), "", req.name)
-            elif norm(name).startswith(("loomground-", "rvnd-")):
-                match = re.fullmatch(
-                    r"[^ ]+\s*@\s*git\+https://[^ ]+@([0-9a-f]{40})", line)
-                if not match:
-                    raise ValueError(
-                        f"first-party dependency lacks exact 40-char VCS commit: {line!r}")
-                first_party_vcs.add(norm(name))
-                add(items, name, match.group(1), "", req.name)
-            else:
-                version = line[len(name):].strip()
-                if not version.startswith("=="):
-                    raise ValueError(f"development dependency is not exactly pinned: {line!r}")
-                add(items, name, version.removeprefix("=="), "", req.name)
+        if req.is_file():
+            for line in req.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                name = re.split(r"\s*@\s*|[<>=!~]", line, maxsplit=1)[0]
+                if req.name == "requirements-release.txt":
+                    version = line[len(name):].strip()
+                    if not version.startswith("=="):
+                        raise ValueError(f"release dependency is not exactly pinned: {line!r}")
+                    release_pins.add(norm(name))
+                    add(items, name, version.removeprefix("=="), "", req.name)
+                elif norm(name).startswith(("loomground-", "rvnd-")):
+                    match = re.fullmatch(
+                        r"[^ ]+\s*@\s*git\+https://[^ ]+@([0-9a-f]{40})", line)
+                    if not match:
+                        raise ValueError(
+                            f"first-party dependency lacks exact 40-char VCS commit: {line!r}")
+                    first_party_vcs.add(norm(name))
+                    add(items, name, match.group(1), "", req.name)
+                else:
+                    version = line[len(name):].strip()
+                    if not version.startswith("=="):
+                        raise ValueError(f"development dependency is not exactly pinned: {line!r}")
+                    add(items, name, version.removeprefix("=="), "", req.name)
     missing_pins = sorted(runtime_external - release_pins)
     extra_pins = sorted(release_pins - runtime_external)
     if missing_pins or extra_pins:
