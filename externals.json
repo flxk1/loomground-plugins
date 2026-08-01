@@ -4,7 +4,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-deontic.git",
-      "sha": "fd103e422f09a9e9613b50268372bba58787e295"
+      "sha": "6fc6df578a35be58924e8d3700fb992b24d68bbb"
     }
   },
   "loomground-governance": {
@@ -12,7 +12,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-governance.git",
-      "sha": "7e7bddde54f2bd8b72149896546a66820f2617e0"
+      "sha": "9e91cf8d4b8624fbf017b7a96ec53c3ce366d31e"
     }
   },
   "loomground-ingest": {
