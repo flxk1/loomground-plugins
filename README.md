@@ -21,6 +21,55 @@ Available plugins: `loomground-deontic`, `loomground-governance`,
 `loomground-governance`, invoked as `loomground`; the KG cockpit and chat skills ship
 inside `loomground-versum`; the ingest-plane skill ships inside `loomground-ingest`.)
 
+## The skills
+
+Each plugin is standalone — install just the one you want; it needs none of the others.
+After `/plugin marketplace add flxk1/loomground-plugins`, run the install line under each
+plugin (or `/plugin` to browse and click-install). 5 plugins, 17 skills.
+
+### loomground-governance  ·  `/plugin install loomground-governance@loomground`
+- **loomground** — Express an AI-governance requirement as a verified `.lg` policy-graph patch
+  (oversight, reservation, prohibition, separation-of-duty/quorum, redress, delegation,
+  disclosure); validate or fix a patch; judge whether a requirement is expressible.
+
+### loomground-deontic  ·  `/plugin install loomground-deontic@loomground`
+- **deontic** — Transcribe a natural-language norm into a verified deontic formula
+  `O/P/F(bearer : action)`; classify the Hohfeldian incident (claim, duty, privilege,
+  no-right, power, liability, immunity, disability).
+
+### loomground-ingest  ·  `/plugin install loomground-ingest@loomground`
+- **loomground-ingest** — Drive the ingest plane: turn an acquired artifact into a dimensioned
+  subgraph (nodes, edges, dimension, provenance, quarantine); dry-run by default; writes only
+  through a governed sink.
+
+### loomground-solver  ·  `/plugin install loomground-solver@loomground`
+- **analyse-risks** — Score and rank risks by impact × likelihood and prioritise mitigations.
+- **estimate-liability** — Estimate the conditional probability of liability as a calibrated
+  range (Bayesian); an organisational estimate, not legal advice.
+- **litigation-risk-assessor** — Quantify exposure, weigh merits, recommend settle vs fight.
+- **opponent-modeler** — Model an adversary — options, payoffs, likely move, exploitable tendencies.
+- **probability-tracker** — Maintain and update a calibrated probability as evidence arrives.
+- **strategic-analysis** — Analyse a competitive/adversarial position — moves, threats,
+  opportunities, plan — via decision methods and possible-worlds.
+- **advise-solver-addons** — Assess whether a Solver problem needs the world-model add-on, or
+  whether runs are ready for metacognitive analysis.
+
+### loomground-versum  ·  `/plugin install loomground-versum@loomground`
+- **loomground-kg** — The cockpit over the Versum knowledge graph: state, what grounds a claim,
+  what to run next, routing.
+- **loomground-kg-chat** — Conversational, read-only Q&A over the KG, grounded on every read,
+  local-model-first.
+- **loomground-knowledge-write** — The single write path into a KG; delegates every executable
+  write to the capture-to-kg writer. Never fetches.
+- **loomground-curate** — Coordinate-identity curation to mint the concept / mental-model layer
+  (whole KG or one domain); build domain canon.
+- **loomground-enrich** — Grow the graph from research findings — extract, validate, propose with
+  confidence; writes route through `loomground-knowledge-write`.
+- **loomground-organise** — Organise documents into a Versum by shared mental models, a person
+  confirming every placement.
+- **loomground-mental-model** — The mental-model engine: scan content into a grounded ConceptGraph
+  and project it to the format that answers the question.
+
 ## Install on Codex or a generic skill host
 
 Build the host distributions, then install from `dist/`:
