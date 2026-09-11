@@ -9,6 +9,52 @@
   },
   "plugins": [
     {
+      "name": "a2a-compliance",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/a2a-compliance.git",
+        "sha": "e91c67cdd1808b434139c188ec3a64f2314d9ee4"
+      },
+      "description": "An A2A (agent-to-agent) compliance-control protocol + a loomground-grounded compliance-fleet contract: compliance agents steer maker agents to keep them aligned to the operator's values, over query-state/issue-directive/hold/resume/halt (and report-state/ack/escalate back). Works fully with zero loomground and zero RVND; loomground value-grounding and RVND enforcement are both optional, universal enrichment planes.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "orchestration",
+        "a2a",
+        "compliance",
+        "fleet",
+        "loomground",
+        "multi-agent",
+        "values-alignment",
+        "human-in-the-loop"
+      ]
+    },
+    {
+      "name": "evidence-emitter",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/evidence-emitter.git",
+        "sha": "07af3e3f76e070afcfaf933b194f43f3cc5bfc93"
+      },
+      "description": "Emit and verify a signed, offline-verifiable governance-evidence package: compose the installed loomground assurance components (enforcement posture, effect reconciliation, norm freshness, obligation discharge, oversight certificate, governance certification, 5d-nd) into one DSSE/in-toto statement whose subject is digest-bound; absent components are marked, not faked. Attests a compliance-fleet decision or a privacy-shield scan report. Default dev signer has zero authenticity; production Ed25519 takes host key material — no key is minted or embedded.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "assurance",
+        "evidence",
+        "attestation",
+        "in-toto",
+        "dsse",
+        "governance",
+        "audit",
+        "offline-verifiable"
+      ]
+    },
+    {
       "name": "loomground-deontic",
       "source": {
         "source": "url",
@@ -185,7 +231,7 @@
         "url": "https://github.com/flxk1/loomground-versum.git",
         "sha": "b8d94ec4f899f165eb41ac55599c2845fca2afa6"
       },
-      "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research\u2192graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
+      "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
       "version": "0.13.0",
       "author": {
         "name": "Loomground Contributors"
@@ -201,6 +247,52 @@
         "provenance",
         "query",
         "versum"
+      ]
+    },
+    {
+      "name": "policy-compiler",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/policy-compiler.git",
+        "sha": "41f65f639fb5d5e408a164c76a20a6aa68581f39"
+      },
+      "description": "Compile a written policy into grounded deontic norms (O/P/F with bearer, action, conditions, cross-references), surfacing conflicts, undetermined rules, and unplaceable spans, and running test cases. Stops at a validated draft; activation is reserved. Delegates lowering to the loomground deontic/norm planes when present, degrading to advisory when absent. Output matches the compliance-fleet grounding seam.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "policy",
+        "deontic",
+        "compiler",
+        "governance",
+        "norms",
+        "obligation",
+        "loomground",
+        "rules"
+      ]
+    },
+    {
+      "name": "privacy-shield",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/privacy-shield.git",
+        "sha": "957458ec035d382aa6a11c0c6ceaa6cac6437aa5"
+      },
+      "description": "Span-by-span PII-cleaned overlay maker and egress lock: scan a folder, file, or text, produce an overlay that is the only thing meant to leave the machine, and decide egress by source classification. Regex/lexicon floor plus an optional local embedding/LLM layer; the value<->placeholder map stays local; every decision is audited. Works standalone with zero loomground and zero RVND; RVND enforcement is an optional skin.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "privacy",
+        "pii",
+        "redaction",
+        "egress",
+        "overlay",
+        "data-protection",
+        "local-first",
+        "governance"
       ]
     }
   ]
