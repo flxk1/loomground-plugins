@@ -1,4 +1,22 @@
 {
+  "a2a-compliance": {
+    "path": "../a2a-compliance",
+    "kind": "plugin",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/a2a-compliance.git",
+      "sha": "e91c67cdd1808b434139c188ec3a64f2314d9ee4"
+    }
+  },
+  "evidence-emitter": {
+    "path": "../evidence-emitter",
+    "kind": "plugin",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/evidence-emitter.git",
+      "sha": "07af3e3f76e070afcfaf933b194f43f3cc5bfc93"
+    }
+  },
   "loomground-deontic": {
     "path": "../loomground-deontic",
     "source": {
@@ -73,6 +91,24 @@
       "source": "url",
       "url": "https://github.com/flxk1/loomground-versum.git",
       "sha": "b8d94ec4f899f165eb41ac55599c2845fca2afa6"
+    }
+  },
+  "policy-compiler": {
+    "path": "../policy-compiler",
+    "kind": "plugin",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/policy-compiler.git",
+      "sha": "41f65f639fb5d5e408a164c76a20a6aa68581f39"
+    }
+  },
+  "privacy-shield": {
+    "path": "../privacy-shield",
+    "kind": "plugin",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/privacy-shield.git",
+      "sha": "957458ec035d382aa6a11c0c6ceaa6cac6437aa5"
     }
   }
 }
