@@ -1,0 +1,78 @@
+{
+  "loomground-deontic": {
+    "path": "../loomground-deontic",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-deontic.git",
+      "sha": "458b796c8caee14955a68c1bd4b94d2f271ae0dd"
+    }
+  },
+  "loomground-epistemic": {
+    "path": "../loomground-epistemic",
+    "kind": "plugin",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-epistemic.git",
+      "sha": "7c5dac171e2df91ae91d96c3ccbea22b27cdd667"
+    }
+  },
+  "loomground-factual": {
+    "path": "../loomground-factual",
+    "kind": "plugin",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-factual.git",
+      "sha": "4be819ec28c890e476b246e3ec616a5e1c3b857c"
+    }
+  },
+  "loomground-governance": {
+    "path": "../loomground-governance",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-governance.git",
+      "sha": "6048a8a18124f328b76f72d9e02bc4af124bf56f"
+    }
+  },
+  "loomground-ingest": {
+    "path": "../loomground-ingest",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-ingest.git",
+      "sha": "59d5223cc3eb0f4b667bd9e9d6b01442983b10d2"
+    }
+  },
+  "loomground-norm": {
+    "path": "../loomground-norm",
+    "kind": "plugin",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-norm.git",
+      "sha": "b7ff7e29b8b973dd999675322197100c8389abcc"
+    }
+  },
+  "loomground-solver": {
+    "path": "../loomground-solver",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-solver.git",
+      "sha": "24765f292e1efdaa033e51be6f890f4887e66738"
+    }
+  },
+  "loomground-topos": {
+    "path": "../loomground-topos",
+    "kind": "plugin",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-topos.git",
+      "sha": "a9f4f54cff8275726ea29139d7a8fabc22182747"
+    }
+  },
+  "loomground-versum": {
+    "path": "../loomground-versum",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/loomground-versum.git",
+      "sha": "b8d94ec4f899f165eb41ac55599c2845fca2afa6"
+    }
+  }
+}

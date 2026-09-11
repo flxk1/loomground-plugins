@@ -1,0 +1,207 @@
+{
+  "name": "loomground",
+  "owner": {
+    "name": "Loomground Contributors"
+  },
+  "metadata": {
+    "description": "Universal Loomground skill packages, installable on Claude, Codex, and generic skill hosts.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "loomground-deontic",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-deontic.git",
+        "sha": "458b796c8caee14955a68c1bd4b94d2f271ae0dd"
+      },
+      "description": "Transcribe a natural-language norm into a verified deontic formula: split it into modality (O/P/F), bearer, and action; classify the Hohfeldian incident; resolve a 'right' as a claim or a liberty; validate with a bundled stdlib engine; and flag candidate conflicts. Transcribes and flags, never infers or resolves.",
+      "version": "0.1.3",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "loomground",
+        "deontic",
+        "norms",
+        "obligation",
+        "hohfeld",
+        "legal"
+      ]
+    },
+    {
+      "name": "loomground-epistemic",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-epistemic.git",
+        "sha": "7c5dac171e2df91ae91d96c3ccbea22b27cdd667"
+      },
+      "description": "The epistemic plane's reader: who knows or believes what, at which certainty band (K/B, holder, proposition, certainty, source). The epistemic skill is the language card; the loomground MCP server carries epistemic_extract.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "loomground",
+        "epistemic",
+        "knowledge",
+        "belief",
+        "certainty",
+        "legal"
+      ]
+    },
+    {
+      "name": "loomground-factual",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-factual.git",
+        "sha": "4be819ec28c890e476b246e3ec616a5e1c3b857c"
+      },
+      "description": "The factual plane's reader: lower a plain assertion into subject, predicate, object with dimension, negation and quantification. The factual skill is the language card; the loomground MCP server carries factual_lower.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "loomground",
+        "factual",
+        "triples",
+        "lowering",
+        "legal"
+      ]
+    },
+    {
+      "name": "loomground-governance",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-governance.git",
+        "sha": "6048a8a18124f328b76f72d9e02bc4af124bf56f"
+      },
+      "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch: draft the .lg patch, litmus-classify each requirement as expressible, policy, or host, and validate with the bundled validation engine. Non-normative companion skill to the Loomground standard.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "loomground",
+        "governance",
+        "policy-graph",
+        "lg",
+        "validation"
+      ]
+    },
+    {
+      "name": "loomground-ingest",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-ingest.git",
+        "sha": "59d5223cc3eb0f4b667bd9e9d6b01442983b10d2"
+      },
+      "description": "Drive the network-free Loomground ingest plane: dispatch a post-acquisition artifact to the registered ingester, lower it to a dimensioned subgraph with provenance and quarantine semantics, dry-run by default, and write only through the host-injected, versioned Versum sink.",
+      "version": "0.1.1",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "loomground",
+        "ingest",
+        "versum",
+        "mental-model",
+        "subgraph",
+        "provenance"
+      ]
+    },
+    {
+      "name": "loomground-norm",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-norm.git",
+        "sha": "b7ff7e29b8b973dd999675322197100c8389abcc"
+      },
+      "description": "The norm plane's lift: running text to RuleFacet to a rendered deontic formula, in 24 EU languages. The norm skill is the lift card with the modal-phrase table; the loomground MCP server carries norm_extract.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "loomground",
+        "norm",
+        "rule-extraction",
+        "deontic",
+        "multilingual",
+        "legal"
+      ]
+    },
+    {
+      "name": "loomground-solver",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-solver.git",
+        "sha": "24765f292e1efdaa033e51be6f890f4887e66738"
+      },
+      "description": "Analytic and probabilistic reasoning skills over the Loomground Solver kernel: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, analyse risks, and advise on optional add-ons.",
+      "version": "0.3.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "bayesian",
+        "decision-theory",
+        "deterministic",
+        "loomground",
+        "metacognition",
+        "provider-agnostic",
+        "risk",
+        "solver",
+        "world-model"
+      ]
+    },
+    {
+      "name": "loomground-topos",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-topos.git",
+        "sha": "a9f4f54cff8275726ea29139d7a8fabc22182747"
+      },
+      "description": "lt, the legal-system topology language: systems, levels, organs, instruments, competences and their relations, with assertions by named organs. The topos skill is the language card; the loomground MCP server carries topos_parse.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "loomground",
+        "topos",
+        "legal-topology",
+        "authority",
+        "hierarchy",
+        "competence",
+        "language"
+      ]
+    },
+    {
+      "name": "loomground-versum",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/loomground-versum.git",
+        "sha": "b8d94ec4f899f165eb41ac55599c2845fca2afa6"
+      },
+      "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research\u2192graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
+      "version": "0.13.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "chat",
+        "conceptgraph",
+        "enrichment",
+        "knowledge-graph",
+        "local-first",
+        "mental-model",
+        "organise",
+        "provenance",
+        "query",
+        "versum"
+      ]
+    }
+  ]
+}
