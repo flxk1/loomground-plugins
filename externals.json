@@ -5,7 +5,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/a2a-compliance.git",
-      "sha": "52f4848192707205b772a7d87e189c9d5c3cf2fe"
+      "sha": "9d8d6d1ebd368cf8ed579e16d780f30ad9f6ed07"
     }
   },
   "evidence-emitter": {
@@ -14,7 +14,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/evidence-emitter.git",
-      "sha": "1cea0fd2c74dbb83220de4dc06f63f94c9c6248e"
+      "sha": "4869b1f90ad12bee25cd19da3bb8b56d69de598c"
     }
   },
   "loomground-deontic": {
@@ -99,7 +99,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/policy-compiler.git",
-      "sha": "6472521341554923e2116b31d247321b3f175c3a"
+      "sha": "74e7fc4c9180b53179272ba5ddc3f591f3ee09d0"
     }
   },
   "privacy-shield": {
@@ -108,7 +108,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/privacy-shield.git",
-      "sha": "90fb7b6fdea6f7c70761db240c8cbdff173fad0f"
+      "sha": "a774b39e64a9aff19dc08c03d5216edaa9eb327d"
     }
   }
 }
