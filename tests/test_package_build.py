@@ -67,7 +67,7 @@ class PackageBuildTests(unittest.TestCase):
             build_packages.validate_marketplace_source(source, ROOT / "externals.json")
 
     def test_mutable_external_source_is_rejected(self):
-        mutable = {"source": "url", "url": "https://github.com/flxk1/example.git"}
+        mutable = {"source": "url", "url": "https://example.invalid/repo.git"}
         with self.assertRaisesRegex(build_packages.PackageError, "full 40-character"):
             build_packages.validate_marketplace_source(mutable, ROOT / "externals.json")
 
