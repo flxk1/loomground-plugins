@@ -13,7 +13,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/a2a-compliance.git",
-        "sha": "52f4848192707205b772a7d87e189c9d5c3cf2fe"
+        "sha": "9d8d6d1ebd368cf8ed579e16d780f30ad9f6ed07"
       },
       "description": "Control maker agents over an A2A protocol with role authority and optional Loomground value grounding.",
       "version": "0.1.0",
@@ -36,7 +36,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/evidence-emitter.git",
-        "sha": "1cea0fd2c74dbb83220de4dc06f63f94c9c6248e"
+        "sha": "4869b1f90ad12bee25cd19da3bb8b56d69de598c"
       },
       "description": "Emit and verify a signed, offline-verifiable governance-evidence package: compose the installed loomground assurance components (enforcement posture, effect reconciliation, norm freshness, obligation discharge, oversight certificate, governance certification, 5d-nd) into one DSSE/in-toto statement whose subject is digest-bound; absent components are marked, not faked. Attests a compliance-fleet decision or a privacy-shield scan report. Default dev signer has zero authenticity; production Ed25519 takes host key material — no key is minted or embedded.",
       "version": "0.1.0",
@@ -254,7 +254,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/policy-compiler.git",
-        "sha": "6472521341554923e2116b31d247321b3f175c3a"
+        "sha": "74e7fc4c9180b53179272ba5ddc3f591f3ee09d0"
       },
       "description": "Compile a written policy into grounded deontic norms (O/P/F with bearer, action, conditions, cross-references), surfacing conflicts, undetermined rules, and unplaceable spans, and running test cases. Stops at a validated draft; activation is reserved. Delegates lowering to the loomground deontic/norm planes when present, degrading to advisory when absent. Output matches the compliance-fleet grounding seam.",
       "version": "0.2.0",
@@ -277,7 +277,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/privacy-shield.git",
-        "sha": "90fb7b6fdea6f7c70761db240c8cbdff173fad0f"
+        "sha": "a774b39e64a9aff19dc08c03d5216edaa9eb327d"
       },
       "description": "Detect PII and PHI locally, produce a clean overlay, and block unsafe egress before content reaches an external model.",
       "version": "1.0.0",
