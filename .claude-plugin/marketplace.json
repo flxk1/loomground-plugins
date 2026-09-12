@@ -13,7 +13,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/a2a-compliance.git",
-        "sha": "9d8d6d1ebd368cf8ed579e16d780f30ad9f6ed07"
+        "sha": "c21decf559854cf5ecbb9cc63f947381dac9fd47"
       },
       "description": "Control maker agents over an A2A protocol with role authority and optional Loomground value grounding.",
       "version": "0.1.0",
