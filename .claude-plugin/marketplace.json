@@ -254,10 +254,10 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/policy-compiler.git",
-        "sha": "41f65f639fb5d5e408a164c76a20a6aa68581f39"
+        "sha": "34d966ad08c1c30b5d74f91e3b4c2977152062fe"
       },
       "description": "Compile a written policy into grounded deontic norms (O/P/F with bearer, action, conditions, cross-references), surfacing conflicts, undetermined rules, and unplaceable spans, and running test cases. Stops at a validated draft; activation is reserved. Delegates lowering to the loomground deontic/norm planes when present, degrading to advisory when absent. Output matches the compliance-fleet grounding seam.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "Loomground Contributors"
       },
