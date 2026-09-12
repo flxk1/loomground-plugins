@@ -13,7 +13,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/a2a-compliance.git",
-        "sha": "d9060b89a39126a8dd51b4a1dab2cfa843ef6559"
+        "sha": "52f4848192707205b772a7d87e189c9d5c3cf2fe"
       },
       "description": "Control maker agents over an A2A protocol with role authority and optional Loomground value grounding.",
       "version": "0.1.0",
@@ -36,7 +36,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/evidence-emitter.git",
-        "sha": "07af3e3f76e070afcfaf933b194f43f3cc5bfc93"
+        "sha": "1cea0fd2c74dbb83220de4dc06f63f94c9c6248e"
       },
       "description": "Emit and verify a signed, offline-verifiable governance-evidence package: compose the installed loomground assurance components (enforcement posture, effect reconciliation, norm freshness, obligation discharge, oversight certificate, governance certification, 5d-nd) into one DSSE/in-toto statement whose subject is digest-bound; absent components are marked, not faked. Attests a compliance-fleet decision or a privacy-shield scan report. Default dev signer has zero authenticity; production Ed25519 takes host key material — no key is minted or embedded.",
       "version": "0.1.0",
@@ -59,7 +59,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-deontic.git",
-        "sha": "458b796c8caee14955a68c1bd4b94d2f271ae0dd"
+        "sha": "5ac270ecc7d451185d8c99c61951b8b7a5e600f9"
       },
       "description": "Transcribe a natural-language norm into a verified deontic formula: split it into modality (O/P/F), bearer, and action; classify the Hohfeldian incident; resolve a 'right' as a claim or a liberty; validate with a bundled stdlib engine; and flag candidate conflicts. Transcribes and flags, never infers or resolves.",
       "version": "0.1.3",
@@ -80,7 +80,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-epistemic.git",
-        "sha": "7c5dac171e2df91ae91d96c3ccbea22b27cdd667"
+        "sha": "dcc1df3f7f79f35ecd1f87437c22af3a68213e4f"
       },
       "description": "The epistemic plane's reader: who knows or believes what, at which certainty band (K/B, holder, proposition, certainty, source). The epistemic skill is the language card; the loomground MCP server carries epistemic_extract.",
       "version": "0.1.0",
@@ -101,7 +101,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-factual.git",
-        "sha": "4be819ec28c890e476b246e3ec616a5e1c3b857c"
+        "sha": "b0641b4b336589ade98b797c591acce2518c29ec"
       },
       "description": "The factual plane's reader: lower a plain assertion into subject, predicate, object with dimension, negation and quantification. The factual skill is the language card; the loomground MCP server carries factual_lower.",
       "version": "0.1.0",
@@ -121,7 +121,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-governance.git",
-        "sha": "6048a8a18124f328b76f72d9e02bc4af124bf56f"
+        "sha": "ec19e0528b83bcecf1fff6c61d0163f2c536f37d"
       },
       "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch: draft the .lg patch, litmus-classify each requirement as expressible, policy, or host, and validate with the bundled validation engine. Non-normative companion skill to the Loomground standard.",
       "version": "0.1.0",
@@ -141,7 +141,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-ingest.git",
-        "sha": "59d5223cc3eb0f4b667bd9e9d6b01442983b10d2"
+        "sha": "fe156fffe1e2a5c673544d468b353582f816d984"
       },
       "description": "Drive the network-free Loomground ingest plane: dispatch a post-acquisition artifact to the registered ingester, lower it to a dimensioned subgraph with provenance and quarantine semantics, dry-run by default, and write only through the host-injected, versioned Versum sink.",
       "version": "0.1.1",
@@ -162,7 +162,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-norm.git",
-        "sha": "b7ff7e29b8b973dd999675322197100c8389abcc"
+        "sha": "b7d08778e79f44b970ed8965639b31fc21df9cd3"
       },
       "description": "The norm plane's lift: running text to RuleFacet to a rendered deontic formula, in 24 EU languages. The norm skill is the lift card with the modal-phrase table; the loomground MCP server carries norm_extract.",
       "version": "0.1.0",
@@ -183,7 +183,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-solver.git",
-        "sha": "24765f292e1efdaa033e51be6f890f4887e66738"
+        "sha": "3d6b77a45179ad829c2933ad64e9005bf91ec06a"
       },
       "description": "Analytic and probabilistic reasoning skills over the Loomground Solver kernel: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, analyse risks, and advise on optional add-ons.",
       "version": "0.3.0",
@@ -207,7 +207,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-topos.git",
-        "sha": "a9f4f54cff8275726ea29139d7a8fabc22182747"
+        "sha": "73ced150c52a9ec11b2940222e6cc6f131b80789"
       },
       "description": "lt, the legal-system topology language: systems, levels, organs, instruments, competences and their relations, with assertions by named organs. The topos skill is the language card; the loomground MCP server carries topos_parse.",
       "version": "0.1.0",
@@ -229,7 +229,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-versum.git",
-        "sha": "b8d94ec4f899f165eb41ac55599c2845fca2afa6"
+        "sha": "16751334bcd9d7d8013b24fd473b468c7d5f5b8c"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
       "version": "0.13.0",
@@ -254,7 +254,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/policy-compiler.git",
-        "sha": "34d966ad08c1c30b5d74f91e3b4c2977152062fe"
+        "sha": "6472521341554923e2116b31d247321b3f175c3a"
       },
       "description": "Compile a written policy into grounded deontic norms (O/P/F with bearer, action, conditions, cross-references), surfacing conflicts, undetermined rules, and unplaceable spans, and running test cases. Stops at a validated draft; activation is reserved. Delegates lowering to the loomground deontic/norm planes when present, degrading to advisory when absent. Output matches the compliance-fleet grounding seam.",
       "version": "0.2.0",
@@ -277,7 +277,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/privacy-shield.git",
-        "sha": "c08d9720fa714ba142b288657d24fc13ed6c5f52"
+        "sha": "90fb7b6fdea6f7c70761db240c8cbdff173fad0f"
       },
       "description": "Detect PII and PHI locally, produce a clean overlay, and block unsafe egress before content reaches an external model.",
       "version": "1.0.0",
