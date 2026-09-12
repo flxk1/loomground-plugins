@@ -29,9 +29,9 @@ Generated packages land under `dist/` and remain untracked.
 
 ## Usage
 
-`externals.json` pins nine public source repositories by commit. Five sources carry a `package.json`; four language planes carry a committed Claude plugin manifest. `tools/build_packages.py` validates those sources and builds host-specific packages. `.claude-plugin/marketplace.json` is the committed Claude Code catalogue.
+`externals.json` pins 13 public source repositories by commit. Five sources carry a `package.json`; eight sources carry a committed Claude plugin manifest. `tools/build_packages.py` validates those sources and builds host-specific packages. `.claude-plugin/marketplace.json` is the committed Claude Code catalogue.
 
-The catalogue distributes 21 skills across governance, deontic transcription, ingest, solver analysis, Versum knowledge work, and the factual, epistemic, norm, and topos planes.
+The catalogue distributes 25 skills across governance, runtime controls, evidence, ingest, solver analysis, Versum knowledge work, and the language planes.
 
 ## Example
 
@@ -51,11 +51,11 @@ out: dist/codex/<package>/ contains the pinned skills and installation metadata
 
 ## Family
 
-Interfaces and authoring. Consumes committed skills from nine Loomground repositories at immutable pins. Produces installation packages for supported skill hosts. Plane execution remains in `loomground-mcp` and the source repositories.
+Interfaces and authoring. Consumes committed skills from 13 Loomground repositories at immutable pins. Produces installation packages for supported skill hosts. Plane execution remains in `loomground-mcp` and the source repositories.
 
 ## Status
 
-0.1.0 catalogue · 9 plugins · 21 skills · Python >=3.11 for release tooling.
+0.1.0 catalogue · 13 plugins · 25 skills · Python >=3.11 for release tooling.
 
 ## License
 

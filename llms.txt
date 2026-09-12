@@ -23,9 +23,9 @@ python3 tools/build_packages.py --target codex  # or: generic, all
 Generated packages land under `dist/` and remain untracked.
 
 ## Usage
-`externals.json` pins nine public source repositories by commit. Five sources carry a `package.json`; four language planes carry a committed Claude plugin manifest. `tools/build_packages.py` validates those sources and builds host-specific packages. `.claude-plugin/marketplace.json` is the committed Claude Code catalogue.
+`externals.json` pins 13 public source repositories by commit. Five sources carry a `package.json`; eight sources carry a committed Claude plugin manifest. `tools/build_packages.py` validates those sources and builds host-specific packages. `.claude-plugin/marketplace.json` is the committed Claude Code catalogue.
 
-The catalogue distributes 21 skills across governance, deontic transcription, ingest, solver analysis, Versum knowledge work, and the factual, epistemic, norm, and topos planes.
+The catalogue distributes 25 skills across governance, runtime controls, evidence, ingest, solver analysis, Versum knowledge work, and the language planes.
 
 ## Contracts
 | Surface | Contract |
@@ -36,6 +36,6 @@ The catalogue distributes 21 skills across governance, deontic transcription, in
 | release gate | JSON validity, supply-chain checks, generated-catalogue parity, tests |
 
 ## Family
-Interfaces and authoring. Consumes committed skills from nine Loomground repositories at immutable pins. Produces installation packages for supported skill hosts. Plane execution remains in `loomground-mcp` and the source repositories.
+Interfaces and authoring. Consumes committed skills from 13 Loomground repositories at immutable pins. Produces installation packages for supported skill hosts. Plane execution remains in `loomground-mcp` and the source repositories.
 
 Language: loomground — guide https://github.com/flxk1/loomground/blob/main/llms.txt (the .lg language an agent reads, emits, validates); catalogue https://github.com/flxk1/loomground/blob/main/CATALOGUE.json
