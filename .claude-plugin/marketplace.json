@@ -13,9 +13,9 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/a2a-compliance.git",
-        "sha": "e91c67cdd1808b434139c188ec3a64f2314d9ee4"
+        "sha": "d9060b89a39126a8dd51b4a1dab2cfa843ef6559"
       },
-      "description": "An A2A (agent-to-agent) compliance-control protocol + a loomground-grounded compliance-fleet contract: compliance agents steer maker agents to keep them aligned to the operator's values, over query-state/issue-directive/hold/resume/halt (and report-state/ack/escalate back). Works fully with zero loomground and zero RVND; loomground value-grounding and RVND enforcement are both optional, universal enrichment planes.",
+      "description": "Control maker agents over an A2A protocol with role authority and optional Loomground value grounding.",
       "version": "0.1.0",
       "author": {
         "name": "Loomground Contributors"
@@ -277,9 +277,9 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/privacy-shield.git",
-        "sha": "957458ec035d382aa6a11c0c6ceaa6cac6437aa5"
+        "sha": "c08d9720fa714ba142b288657d24fc13ed6c5f52"
       },
-      "description": "Span-by-span PII-cleaned overlay maker and egress lock: scan a folder, file, or text, produce an overlay that is the only thing meant to leave the machine, and decide egress by source classification. Regex/lexicon floor plus an optional local embedding/LLM layer; the value<->placeholder map stays local; every decision is audited. Works standalone with zero loomground and zero RVND; RVND enforcement is an optional skin.",
+      "description": "Detect PII and PHI locally, produce a clean overlay, and block unsafe egress before content reaches an external model.",
       "version": "1.0.0",
       "author": {
         "name": "Loomground Contributors"
