@@ -5,7 +5,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/a2a-compliance.git",
-      "sha": "e91c67cdd1808b434139c188ec3a64f2314d9ee4"
+      "sha": "d9060b89a39126a8dd51b4a1dab2cfa843ef6559"
     }
   },
   "evidence-emitter": {
@@ -108,7 +108,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/privacy-shield.git",
-      "sha": "957458ec035d382aa6a11c0c6ceaa6cac6437aa5"
+      "sha": "c08d9720fa714ba142b288657d24fc13ed6c5f52"
     }
   }
 }
