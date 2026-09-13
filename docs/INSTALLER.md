@@ -147,7 +147,9 @@ wheel Name/Version metadata. It rejects incompatible Python or platform locks.
 Installation uses only the signed wheels with
 `pip --no-index --no-deps` below an adjacent staging directory. It probes
 `loomground_mcp.server:main`, writes a relative launcher, then atomically swaps
-the stage into place. The prior install remains an absolute sibling backup:
+the stage into place. An adjacent process lock serializes installation and
+rollback for the same destination. The prior install remains an absolute sibling
+backup:
 
 ```bash
 loomground runtime rollback \
