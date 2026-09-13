@@ -46,6 +46,10 @@ def main() -> int:
             raise ValueError("runtime workflow must use GitHub attestation without repository secrets")
         if "generate_ephemeral_release_key.py" not in workflow or "trap 'rm -f" not in workflow:
             raise ValueError("runtime workflow must generate and remove one ephemeral signing key per artifact")
+        if "type: boolean\n        default: false" not in workflow:
+            raise ValueError("runtime publication must be an explicit workflow input that defaults off")
+        if "if: ${{ inputs.publish }}" not in workflow:
+            raise ValueError("runtime publish job must be gated by the explicit publish input")
     except (OSError, ValueError) as exc:
         print(f"RUNTIME RELEASE GATE FAIL: {exc}", file=sys.stderr)
         return 1

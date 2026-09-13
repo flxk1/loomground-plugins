@@ -8,7 +8,9 @@ import sys
 import tempfile
 import unittest
 import zipfile
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from unittest.mock import patch
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
@@ -22,6 +24,7 @@ from assemble_runtime_release import load_sources, verify_root_pins  # noqa: E40
 from generate_ephemeral_release_key import generate  # noqa: E402
 from lock_runtime_third_party import validate_hash_lock  # noqa: E402
 from loomground_installer.bundle import BundleError  # noqa: E402
+from loomground_installer.cli import main as cli_main  # noqa: E402
 from loomground_installer.onboarding import onboard  # noqa: E402
 from loomground_installer.runtime_bundle import (  # noqa: E402
     install_runtime_bundle,
@@ -185,6 +188,51 @@ class RuntimeBundleTests(unittest.TestCase):
                 onboard(bundle, public, destination, root / "output", ["openai"])
             self.assertFalse(destination.exists())
 
+    def test_onboarding_remote_handoff_contains_endpoint_but_no_secret(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            bundle, public = self._build(root)
+            output = root / "output"
+            onboard(
+                bundle,
+                public,
+                root / "runtime",
+                output,
+                ["openai", "n8n"],
+                server_url="https://loomground.example/mcp",
+            )
+            openai = json.loads((output / "hosts/openai.mcp-tool.json").read_text())
+            n8n = json.loads((output / "hosts/n8n.mcp-client.json").read_text())
+            self.assertEqual(openai["server_url"], "https://loomground.example/mcp")
+            self.assertEqual(n8n["parameters"]["SSE Endpoint"], "https://loomground.example/mcp")
+            for rendered in (openai, n8n):
+                serialized = json.dumps(rendered).casefold()
+                self.assertNotIn('"token":', serialized)
+                self.assertNotIn('"authorization":', serialized)
+                self.assertNotIn("bearer ey", serialized)
+
+    def test_interactive_onboarding_cancel_makes_no_changes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            destination = root / "runtime"
+            output = root / "output"
+            answers = [
+                str(root / "bundle"),
+                str(root / "public.pem"),
+                str(destination),
+                str(output),
+                "claude,cursor",
+                "Legal Plugin",
+                "no",
+            ]
+            with (
+                patch("loomground_installer.cli.sys.stdin.isatty", return_value=True),
+                patch("builtins.input", side_effect=answers),
+            ):
+                self.assertEqual(cli_main(["onboard"]), 1)
+            self.assertFalse(destination.exists())
+            self.assertFalse(output.exists())
+
     def test_onboarding_cli_does_not_overwrite_output(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -245,6 +293,25 @@ class RuntimeBundleTests(unittest.TestCase):
             rolled = rollback_runtime_install(destination, Path(replaced.backup), first_public)
             self.assertEqual(rolled.status, "rolled-back")
             self.assertEqual(rolled.version, "1.0.0")
+
+    def test_concurrent_identical_installs_serialize_without_backup(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            bundle, public = self._build(root)
+            destination = root / "installed"
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                receipts = list(executor.map(
+                    lambda _: install_runtime_bundle(bundle, public, destination),
+                    range(2),
+                ))
+            self.assertEqual(sorted(receipt.status for receipt in receipts), ["installed", "unchanged"])
+            self.assertTrue(all(receipt.backup is None for receipt in receipts))
+            self.assertFalse(any(root.glob(".installed.loomground-runtime-stage-*")))
+            self.assertFalse(any(root.glob(".installed.loomground-runtime-backup-*")))
+            self.assertEqual(
+                verify_runtime_bundle(destination / "bundle", public).digest,
+                receipts[0].bundle_digest,
+            )
 
     def test_incompatible_platform_is_rejected_before_install(self):
         with tempfile.TemporaryDirectory() as temporary:

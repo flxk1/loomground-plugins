@@ -16,6 +16,7 @@ import sys
 import tempfile
 import uuid
 import zipfile
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from email.parser import BytesParser
 from pathlib import Path, PurePosixPath
@@ -467,6 +468,42 @@ def _check_destination(destination: Path) -> None:
         raise BundleError("runtime destination parent must be a real existing directory")
 
 
+@contextmanager
+def _runtime_destination_lock(destination: Path):
+    """Serialize installation and rollback for one destination across processes."""
+    lock_path = destination.parent / f".{destination.name}.loomground-runtime.lock"
+    flags = os.O_RDWR | os.O_CREAT
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    try:
+        descriptor = os.open(lock_path, flags, 0o600)
+    except OSError as exc:
+        raise BundleError(f"cannot open runtime destination lock: {exc}") from exc
+    stream = os.fdopen(descriptor, "r+b", buffering=0)
+    try:
+        if stream.seek(0, os.SEEK_END) == 0:
+            stream.write(b"\0")
+        stream.seek(0)
+        if os.name == "nt":
+            import msvcrt
+
+            msvcrt.locking(stream.fileno(), msvcrt.LK_LOCK, 1)
+        else:
+            import fcntl
+
+            fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            stream.seek(0)
+            if os.name == "nt":
+                msvcrt.locking(stream.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+    finally:
+        stream.close()
+
+
 def _check_compatibility(bundle: VerifiedRuntimeBundle) -> None:
     current = sys.version_info[:2]
     if not bundle.python_minimum <= current < bundle.python_maximum_exclusive:
@@ -497,7 +534,9 @@ def _write_launcher(stage: Path) -> None:
     )
 
 
-def install_runtime_bundle(bundle_root: Path, public_key: Path, destination: Path) -> RuntimeInstallReceipt:
+def _install_runtime_bundle_unlocked(
+    bundle_root: Path, public_key: Path, destination: Path
+) -> RuntimeInstallReceipt:
     verified = verify_runtime_bundle(bundle_root, public_key)
     _check_compatibility(verified)
     _check_destination(destination)
@@ -579,7 +618,17 @@ def install_runtime_bundle(bundle_root: Path, public_key: Path, destination: Pat
     )
 
 
-def rollback_runtime_install(destination: Path, backup: Path, public_key: Path) -> RuntimeInstallReceipt:
+def install_runtime_bundle(
+    bundle_root: Path, public_key: Path, destination: Path
+) -> RuntimeInstallReceipt:
+    _check_destination(destination)
+    with _runtime_destination_lock(destination):
+        return _install_runtime_bundle_unlocked(bundle_root, public_key, destination)
+
+
+def _rollback_runtime_install_unlocked(
+    destination: Path, backup: Path, public_key: Path
+) -> RuntimeInstallReceipt:
     if not destination.is_absolute() or not backup.is_absolute() or destination.parent != backup.parent:
         raise BundleError("runtime destination and backup must be absolute siblings")
     if not backup.name.startswith(f".{destination.name}.loomground-runtime-backup-"):
@@ -602,3 +651,12 @@ def rollback_runtime_install(destination: Path, backup: Path, public_key: Path) 
         "rolled-back", str(destination), verified.digest, verified.runtime_name,
         verified.runtime_version, state.get("python", sys.executable), str(displaced),
     )
+
+
+def rollback_runtime_install(
+    destination: Path, backup: Path, public_key: Path
+) -> RuntimeInstallReceipt:
+    if not destination.is_absolute() or not destination.parent.is_dir():
+        raise BundleError("runtime destination must be absolute below an existing parent")
+    with _runtime_destination_lock(destination):
+        return _rollback_runtime_install_unlocked(destination, backup, public_key)

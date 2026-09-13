@@ -9,6 +9,11 @@ on:
         description: Exact loomground-mcp version to release
         required: true
         default: "0.1.0"
+      publish:
+        description: Publish after all builds pass (false keeps a draft)
+        required: true
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -158,6 +163,7 @@ jobs:
             --repo "$GITHUB_REPOSITORY" --clobber
 
   publish:
+    if: ${{ inputs.publish }}
     needs: [build, installer]
     runs-on: ubuntu-latest
     environment: runtime-release
