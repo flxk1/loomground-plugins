@@ -170,6 +170,66 @@ def _result_files(results: Path) -> list[dict]:
     return documents
 
 
+def verify_repository_results(
+    manifest: dict,
+    results: Path,
+    self_commit: str,
+    verify_evidence_files: bool = False,
+) -> list[dict]:
+    revisions = expected_revisions(manifest, self_commit)
+    repository_results = {}
+    for result in _result_files(results):
+        if result.get("kind") != "repository" or not isinstance(result.get("name"), str):
+            raise CertificationError("repository result set contains a non-repository result")
+        name = result["name"]
+        if name in repository_results:
+            raise CertificationError(f"duplicate repository result: {name}")
+        repository_results[name] = result
+    if set(repository_results) != set(revisions):
+        raise CertificationError("repository results do not exactly cover the ecosystem inventory")
+
+    certified = []
+    for name in sorted(revisions):
+        result = _exact_keys(
+            repository_results[name],
+            {"schema_version", "kind", "name", "commit", "status", "checks", "evidence_sha256"},
+            f"repository result {name}",
+        )
+        if result["schema_version"] != 1 or result["kind"] != "repository":
+            raise CertificationError(f"unsupported repository result for {name}")
+        if result["commit"] != revisions[name] or result["status"] != "passed":
+            raise CertificationError(f"repository result did not pass at the pinned revision: {name}")
+        if not isinstance(result["checks"], list) or not result["checks"]:
+            raise CertificationError(f"repository result has no checks: {name}")
+        if result["checks"] != sorted(set(result["checks"])):
+            raise CertificationError(f"repository checks must be uniquely sorted: {name}")
+        if not SHA256.fullmatch(str(result["evidence_sha256"])):
+            raise CertificationError(f"invalid repository evidence digest: {name}")
+        if verify_evidence_files:
+            evidence_path = results / "evidence" / f"{name}.json"
+            try:
+                actual_digest = hashlib.sha256(evidence_path.read_bytes()).hexdigest()
+            except OSError as exc:
+                raise CertificationError(f"missing repository evidence file: {name}") from exc
+            if actual_digest != result["evidence_sha256"]:
+                raise CertificationError(f"repository evidence file digest mismatch: {name}")
+            evidence = load_json(evidence_path)
+            if not isinstance(evidence, dict) or evidence.get("repository") != name or evidence.get("commit") != result["commit"]:
+                raise CertificationError(f"repository evidence identity mismatch: {name}")
+            if evidence.get("kind") == "native-test-evidence":
+                log_path = results / "logs" / f"{name}.log"
+                try:
+                    log_digest = hashlib.sha256(log_path.read_bytes()).hexdigest()
+                except OSError as exc:
+                    raise CertificationError(f"missing native test log: {name}") from exc
+                if log_digest != evidence.get("log_sha256"):
+                    raise CertificationError(f"native test log digest mismatch: {name}")
+            elif evidence.get("kind") != "github-check-evidence":
+                raise CertificationError(f"unsupported repository evidence kind: {name}")
+        certified.append(result)
+    return certified
+
+
 def certify(manifest: dict, results: Path, self_commit: str) -> dict:
     revisions = expected_revisions(manifest, self_commit)
     repository_results = {}
@@ -276,6 +336,7 @@ def main() -> int:
     parser.add_argument("--self-commit")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--verify-certificate", type=Path)
+    parser.add_argument("--repository-results-only", action="store_true")
     args = parser.parse_args()
     try:
         if args.verify_certificate:
@@ -289,6 +350,15 @@ def main() -> int:
         manifest = validate_manifest(load_json(args.manifest), load_json(args.runtime_sources))
         if args.results is None:
             print(f"ECOSYSTEM INVENTORY PASS: {len(manifest['repositories'])} repositories, {len(manifest['scenarios'])} scenarios")
+            return 0
+        if args.repository_results_only:
+            repositories = verify_repository_results(
+                manifest,
+                args.results,
+                args.self_commit or current_commit(),
+                verify_evidence_files=True,
+            )
+            print(f"ECOSYSTEM REPOSITORY RESULTS PASS: {len(repositories)}/41 repositories")
             return 0
         certificate = certify(manifest, args.results, args.self_commit or current_commit())
         payload = canonical_json(certificate) + b"\n"
