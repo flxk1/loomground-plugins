@@ -63,6 +63,9 @@ failed, duplicate, or mutated evidence cannot produce a passing certificate. See
 [docs/ECOSYSTEM-TESTING.md](docs/ECOSYSTEM-TESTING.md).
 The manual `ecosystem-repository-evidence` workflow collects native CI evidence
 and executes isolated native-test backfills for pins without historical checks.
+It then verifies and installs the published signed runtime, runs all eight
+cross-repository scenarios through MCP, and emits one digest-bound 41+8
+ecosystem certificate.
 
 Manual installation remains available:
 
