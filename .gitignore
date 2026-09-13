@@ -6,3 +6,5 @@ _to_delete/
 **/.pytest_cache/
 *.pyc
 _skill_bundles/
+/build/
+*.egg-info/
