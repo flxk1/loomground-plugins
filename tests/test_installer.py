@@ -17,11 +17,17 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from loomground_installer.bundle import (
+from loomground_installer.bundle import (  # noqa: E402
     ENVELOPE_NAME, PAYLOAD_TYPE, BundleError, canonical_json, dsse_pae,
     install_bundle, rollback_install, verify_bundle,
 )
-from loomground_installer.core import InstallerError, create_plan, doctor, load_profiles, resolve_hosts
+from loomground_installer.core import (  # noqa: E402
+    InstallerError,
+    create_plan,
+    doctor,
+    load_profiles,
+    resolve_hosts,
+)
 
 
 def fake_which(*available):
@@ -73,10 +79,16 @@ class InstallerTests(unittest.TestCase):
     def test_wheel_metadata_declares_the_cli(self):
         metadata = tomllib.loads((ROOT / "pyproject.toml").read_text())
         self.assertEqual(metadata["project"]["scripts"]["loomground"], "loomground_installer.cli:main")
-        self.assertEqual(metadata["project"]["dependencies"], ["cryptography>=46,<51"])
+        self.assertEqual(
+            metadata["project"]["dependencies"],
+            ["cryptography>=46,<51", "packaging>=24,<27"],
+        )
 
     def test_auto_detects_hosts_without_executing_them(self):
-        self.assertEqual(resolve_hosts(["auto"], fake_which("claude", "codex")), ("claude", "codex"))
+        self.assertEqual(
+            resolve_hosts(["auto"], fake_which("claude", "codex", "cursor", "n8n")),
+            ("claude", "codex", "cursor", "n8n"),
+        )
         self.assertEqual(resolve_hosts([], fake_which("codex")), ("codex",))
         with self.assertRaisesRegex(InstallerError, "no supported host"):
             resolve_hosts([], fake_which())
@@ -106,6 +118,16 @@ class InstallerTests(unittest.TestCase):
             checks = doctor(["codex"], fake_which("codex", "loomground-mcp"), environment={}, home=root)
             self.assertEqual({check.name: check.status for check in checks}["codex-mcp"], "ok")
             self.assertEqual(config.read_bytes(), before)
+
+    def test_remote_and_additional_host_plans_are_render_only(self):
+        plan = create_plan(
+            "compliance", ["cursor", "n8n", "openai", "generic"], fake_which("cursor", "n8n")
+        )
+        adapters = [operation for operation in plan.operations if operation.kind == "adapter"]
+        self.assertEqual([operation.host for operation in adapters], ["cursor", "n8n", "openai", "generic"])
+        self.assertFalse(any(operation.executable for operation in plan.operations))
+        checks = doctor(["openai", "generic"], fake_which("loomground-mcp"))
+        self.assertEqual([check.status for check in checks[1:]], ["unknown", "unknown"])
 
     def test_cli_plan_json_makes_no_home_files(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -175,7 +197,8 @@ class InstallerTests(unittest.TestCase):
             root = Path(temporary)
             private, _, public = keypair(root)
             first, second = root / "first", root / "second"
-            first.mkdir(); second.mkdir()
+            first.mkdir()
+            second.mkdir()
             first_digest = signed_bundle(first, private, b"one")
             signed_bundle(second, private, b"two")
             destination = root / "installed"
