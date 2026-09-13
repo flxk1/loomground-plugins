@@ -85,7 +85,10 @@ jobs:
           ref: ${{ matrix.dependency_commit }}
           path: dependency
       - name: Install only the certifier test toolchain
-        run: python -m pip install -r control/requirements-dev.txt
+        run: >-
+          python -m pip install
+          -r control/requirements-dev.txt
+          -r control/requirements-release.txt
       - name: Run the repository-native test suite and retain its log
         shell: bash
         env:
