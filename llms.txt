@@ -1,6 +1,6 @@
 # loomground-plugins
 
-> Distribute Loomground skills to Claude Code, Codex, and generic Agent Skills hosts from their canonical repositories.
+> Distribute Loomground skills and one signed runtime to Claude, Codex/OpenAI, Cursor, n8n, and generic MCP/Agent Skills hosts.
 
 ## Problem
 Without one catalogue, host packages drift from the skills and versions maintained beside each Loomground tool.
@@ -10,17 +10,20 @@ Claude Code:
 
 ```text
 /plugin marketplace add flxk1/loomground-plugins
-/plugin install loomground-governance@loomground
+/plugin install loomground-suite@loomground
 ```
 
-Codex or a generic Agent Skills host:
+Runtime and host adapters:
 
 ```bash
-python3 -m pip install -r requirements-dev.txt
-python3 tools/build_packages.py --target codex  # or: generic, all
+loomground runtime verify /path/to/runtime-bundle --public-key /path/to/release-public.pem
+loomground runtime install /path/to/runtime-bundle --public-key /path/to/release-public.pem --destination /absolute/runtime
+loomground adapter --host <local-host> --runtime-destination /absolute/runtime
+loomground adapter --host openai --server-url https://loomground.example/mcp
+loomground adapter --host n8n --server-url https://loomground.example/sse
 ```
 
-Generated packages land under `dist/` and remain untracked.
+`<local-host>` is one of `claude`, `codex`, `cursor`, or `generic`. The adapter command renders only; host configuration and credentials remain host-owned.
 
 ## Usage
 `externals.json` pins 13 public source repositories by commit. Five sources carry a `package.json`; eight sources carry a committed Claude plugin manifest. `tools/build_packages.py` validates those sources and builds host-specific packages. `.claude-plugin/marketplace.json` is the committed Claude Code catalogue.
@@ -33,6 +36,9 @@ The catalogue distributes 25 skills across governance, runtime controls, evidenc
 | source registry | `externals.json`: repository URL, immutable commit, sibling path |
 | package manifest | `<source>/package.json`, checked against `schemas/loomground-package.schema.json` |
 | Claude catalogue | `.claude-plugin/marketplace.json`, regenerated from the pinned sources |
+| suite | `plugins/loomground-suite`: control skill, MCP registration, action/receipt schemas |
+| runtime | DSSE/Ed25519-signed lock plus exact offline wheel set; transactional target install |
+| host adapters | pure renderers for Claude, Codex, Cursor, OpenAI, n8n and generic MCP |
 | release gate | JSON validity, supply-chain checks, generated-catalogue parity, tests |
 
 ## Family

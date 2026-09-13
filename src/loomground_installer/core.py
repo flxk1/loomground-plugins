@@ -18,7 +18,8 @@ from importlib import resources
 from pathlib import Path
 from typing import Callable, Iterable
 
-HOSTS = ("claude", "codex")
+HOSTS = ("claude", "codex", "cursor", "n8n", "openai", "generic")
+DETECTABLE_HOSTS = ("claude", "codex", "cursor", "n8n")
 MARKETPLACE = "flxk1/loomground-plugins"
 
 
@@ -79,7 +80,7 @@ def resolve_profile(name: str | None) -> tuple[str, tuple[str, ...]]:
 
 
 def detect_hosts(which: Callable[[str], str | None] = shutil.which) -> tuple[str, ...]:
-    return tuple(host for host in HOSTS if which(host))
+    return tuple(host for host in DETECTABLE_HOSTS if which(host))
 
 
 def resolve_hosts(requested: Iterable[str], which: Callable[[str], str | None] = shutil.which) -> tuple[str, ...]:
@@ -109,7 +110,7 @@ def create_plan(profile: str | None, hosts: Iterable[str], which: Callable[[str]
             description="Install the pinned loomground-mcp runtime in an isolated environment",
             instruction=None,
             executable=False,
-            reason="no signed runtime bundle or package-index release exists yet",
+            reason="no published signed runtime bundle exists yet",
         ))
     else:
         operations.append(Operation(
@@ -145,6 +146,38 @@ def create_plan(profile: str | None, hosts: Iterable[str], which: Callable[[str]
             instruction="codex plugin add loomground-suite@loomground",
             executable=False,
             reason="the repository marketplace must already be registered with Codex",
+        ))
+    if "cursor" in selected_hosts:
+        operations.append(Operation(
+            host="cursor",
+            kind="adapter",
+            description="Render Cursor's project or user MCP registration for the installed runtime",
+            instruction="loomground adapter --host cursor --runtime-destination <absolute-runtime>",
+            executable=False,
+        ))
+    if "n8n" in selected_hosts:
+        operations.append(Operation(
+            host="n8n",
+            kind="adapter",
+            description="Render n8n MCP Client Tool fields for an authenticated SSE deployment",
+            instruction="loomground adapter --host n8n --server-url https://<host>/sse",
+            executable=False,
+        ))
+    if "openai" in selected_hosts:
+        operations.append(Operation(
+            host="openai",
+            kind="adapter",
+            description="Render an OpenAI remote MCP tool definition with approval required",
+            instruction="loomground adapter --host openai --server-url https://<host>/mcp",
+            executable=False,
+        ))
+    if "generic" in selected_hosts:
+        operations.append(Operation(
+            host="generic",
+            kind="adapter",
+            description="Render a standard stdio MCP registration for the installed runtime",
+            instruction="loomground adapter --host generic --runtime-destination <absolute-runtime>",
+            executable=False,
         ))
 
     return InstallPlan(
@@ -189,11 +222,17 @@ def doctor(hosts: Iterable[str], which: Callable[[str], str | None] = shutil.whi
         runtime or "loomground-mcp is not on PATH",
     )]
     for host in selected_hosts:
+        if host in {"openai", "generic"}:
+            checks.append(Check(
+                f"host-{host}", "unknown",
+                "remote or generic client registration is not discoverable from the local host",
+            ))
+            continue
         executable = which(host)
         checks.append(Check(f"host-{host}", "ok" if executable else "missing", executable or f"{host} is not on PATH"))
         if host == "codex":
             checks.append(_codex_mcp_check(_codex_config_path(environment, home)))
-        else:
+        elif host == "claude":
             checks.append(Check(
                 "claude-marketplace",
                 "unknown",
