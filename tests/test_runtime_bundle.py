@@ -29,6 +29,7 @@ from loomground_installer.onboarding import onboard  # noqa: E402
 from loomground_installer.runtime_bundle import (  # noqa: E402
     install_runtime_bundle,
     rollback_runtime_install,
+    runtime_sbom,
     validate_runtime_lock,
     verify_runtime_bundle,
 )
@@ -343,6 +344,16 @@ class RuntimeBundleTests(unittest.TestCase):
         self.assertEqual(len(sources), 32)
         for stem in ("third-party-requirements", "build-requirements"):
             validate_hash_lock(ROOT / f"runtime/{stem}.in", ROOT / f"runtime/{stem}.txt")
+
+    def test_runtime_sbom_is_deterministic_and_github_attest_detectable(self):
+        document = runtime_sbom(lock("demo-1.0-py3-none-any.whl", "a" * 64))
+        self.assertEqual(document, runtime_sbom(lock("demo-1.0-py3-none-any.whl", "a" * 64)))
+        self.assertEqual(document["bomFormat"], "CycloneDX")
+        self.assertEqual(document["specVersion"], "1.6")
+        self.assertRegex(
+            document["serialNumber"],
+            r"^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+        )
 
     def test_root_pin_parity_and_ephemeral_key_generation(self):
         with tempfile.TemporaryDirectory() as temporary:

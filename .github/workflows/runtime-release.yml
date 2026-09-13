@@ -28,6 +28,8 @@ concurrency:
 jobs:
   prepare:
     runs-on: ubuntu-latest
+    outputs:
+      release-tag: ${{ steps.release.outputs.tag }}
     steps:
       - name: Require the default branch and a strict version
         env:
@@ -36,17 +38,26 @@ jobs:
           test "$GITHUB_REF" = "refs/heads/main"
           [[ "$RELEASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
       - name: Create an immutable-target draft release
+        id: release
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_VERSION: ${{ inputs.version }}
+          PUBLISH: ${{ inputs.publish }}
         run: |
-          tag="loomground-runtime-v${RELEASE_VERSION}"
+          if [ "$PUBLISH" = "true" ]; then
+            tag="loomground-runtime-v${RELEASE_VERSION}"
+            title="Loomground runtime ${RELEASE_VERSION}"
+          else
+            tag="loomground-runtime-validation-${GITHUB_RUN_ID}"
+            title="Loomground runtime ${RELEASE_VERSION} validation ${GITHUB_RUN_ID}"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
           if gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isDraft,targetCommitish >/tmp/release.json 2>/dev/null; then
             test "$(jq -r .isDraft /tmp/release.json)" = "true"
             test "$(jq -r .targetCommitish /tmp/release.json)" = "$GITHUB_SHA"
           else
             gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft \
-              --title "Loomground runtime ${RELEASE_VERSION}" \
+              --title "$title" \
               --notes "Attested, offline Loomground runtime bundles. Verify both the ZIP and its public key with GitHub artifact attestations before installation."
           fi
 
@@ -119,12 +130,12 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_TAG: ${{ needs.prepare.outputs.release-tag }}
           ARCHIVE: ${{ steps.bundle.outputs.archive }}
           CHECKSUM: ${{ steps.bundle.outputs.checksum }}
           PUBLIC_KEY: ${{ steps.bundle.outputs.public_key }}
         run: |
-          gh release upload "loomground-runtime-v${RELEASE_VERSION}" \
+          gh release upload "$RELEASE_TAG" \
             "$ARCHIVE" "$CHECKSUM" "$PUBLIC_KEY" \
             --repo "$GITHUB_REPOSITORY" --clobber
 
@@ -156,10 +167,10 @@ jobs:
       - name: Upload the attested installer wheel
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_TAG: ${{ needs.prepare.outputs.release-tag }}
           INSTALLER_WHEEL: ${{ steps.installer.outputs.wheel }}
         run: |
-          gh release upload "loomground-runtime-v${RELEASE_VERSION}" "$INSTALLER_WHEEL" \
+          gh release upload "$RELEASE_TAG" "$INSTALLER_WHEEL" \
             --repo "$GITHUB_REPOSITORY" --clobber
 
   publish:

@@ -27,6 +27,7 @@
     "pyjwt": "MIT",
     "pypdfium2": "BSD-3-Clause AND Apache-2.0",
     "python-multipart": "Apache-2.0",
+    "pywin32": "PSF-2.0",
     "referencing": "MIT",
     "rpds-py": "MIT",
     "sse-starlette": "BSD-3-Clause",

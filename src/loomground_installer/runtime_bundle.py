@@ -87,6 +87,11 @@ def normalize_name(value: str) -> str:
 
 
 def runtime_sbom(lock: dict) -> dict:
+    lock_digest = hashlib.sha256(canonical_json(lock)).hexdigest()
+    serial_number = uuid.uuid5(
+        uuid.NAMESPACE_URL,
+        f"https://github.com/flxk1/loomground-plugins/runtime-lock/{lock_digest}",
+    )
     components = []
     for package in sorted(lock["packages"], key=lambda item: normalize_name(item["name"])):
         source = package["source"]
@@ -113,6 +118,7 @@ def runtime_sbom(lock: dict) -> dict:
     return {
         "bomFormat": "CycloneDX",
         "specVersion": "1.6",
+        "serialNumber": f"urn:uuid:{serial_number}",
         "version": 1,
         "metadata": {
             "component": {
