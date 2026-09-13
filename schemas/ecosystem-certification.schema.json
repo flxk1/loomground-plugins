@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/flxk1/loomground-plugins/schemas/ecosystem-certification.schema.json",
+  "title": "Loomground ecosystem certification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "status", "manifest_sha256", "repositories", "scenarios", "certificate_sha256"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "loomground-ecosystem-certification"},
+    "status": {"const": "passed"},
+    "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "certificate_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "repositories": {
+      "type": "array",
+      "minItems": 41,
+      "maxItems": 41,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "commit", "checks", "evidence_sha256"],
+        "properties": {
+          "name": {"type": "string"},
+          "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "checks": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "assertions", "trace_sha256"],
+        "properties": {
+          "id": {"type": "string"},
+          "assertions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "trace_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}
