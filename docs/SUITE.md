@@ -32,6 +32,14 @@ codex plugin add loomground-suite@loomground
 Start a new task after installation so the host discovers the new skill and MCP
 server.
 
+For a first installation, `loomground onboard` combines signed-runtime
+installation with generation of reviewable host snippets and optional external
+Maker declarations. It does not merge those snippets into host files:
+
+```bash
+loomground onboard
+```
+
 The same installed runtime can be registered without copying it. Renderers are
 read-only and never place bearer tokens in their output:
 
@@ -112,13 +120,12 @@ and monitoring results are advisory signals.
 
 ## One-install completion boundary
 
-A self-contained release additionally requires a published signed runtime
-artifact containing `loomground-mcp` and every first-party wheel at the release
-pins. The repository now provides the offline bundle builder, verifier and
-transactional installer described in `docs/INSTALLER.md`; no production bundle
-or trust key has been published yet. Until one exists, the suite is a normal
-plugin installation for its skill and MCP registration, but not a
-self-contained runtime installation.
+A self-contained release consists of an attested installer wheel plus a signed
+platform runtime containing `loomground-mcp` and every first-party wheel at the
+release pins. The `runtime-release` workflow builds Linux, macOS and Windows on
+x86-64 and ARM64, using ephemeral per-artifact keys and GitHub OIDC/Sigstore
+provenance. Exact verification and installation commands are in
+`docs/RUNTIME-RELEASE.md`.
 
 The committed enforcement-receipt schema is the target host boundary. The
 current MCP functions plan, evaluate and preview; they do not mint production

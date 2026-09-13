@@ -8,11 +8,11 @@ import base64
 import hashlib
 import json
 import os
+import platform as platform_module
 import re
 import shutil
 import subprocess
 import sys
-import sysconfig
 import tempfile
 import uuid
 import zipfile
@@ -25,6 +25,7 @@ from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 from packaging.markers import default_environment
+from packaging.licenses import InvalidLicenseExpression, canonicalize_license_expression
 from packaging.requirements import InvalidRequirement, Requirement
 from packaging.version import InvalidVersion, Version
 
@@ -33,6 +34,7 @@ from .bundle import BundleError, canonical_json, dsse_pae
 RUNTIME_PAYLOAD_TYPE = "application/vnd.loomground.runtime-bundle.v1+json"
 RUNTIME_ENVELOPE_NAME = "runtime-manifest.dsse.json"
 RUNTIME_LOCK_NAME = "runtime-lock.json"
+RUNTIME_SBOM_NAME = "runtime-sbom.cdx.json"
 RUNTIME_STATE_NAME = ".loomground-runtime-install.json"
 MAX_ENVELOPE_BYTES = 8 * 1024 * 1024
 NAME = re.compile(r"^[A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*$")
@@ -46,6 +48,7 @@ class RuntimePackage:
     version: str
     wheel: str
     sha256: str
+    license: str
     source: dict
 
 
@@ -80,6 +83,54 @@ class RuntimeInstallReceipt:
 
 def normalize_name(value: str) -> str:
     return re.sub(r"[-_.]+", "-", value).lower()
+
+
+def runtime_sbom(lock: dict) -> dict:
+    components = []
+    for package in sorted(lock["packages"], key=lambda item: normalize_name(item["name"])):
+        source = package["source"]
+        if source["source"] == "git":
+            repository = urlparse(source["url"]).path.removesuffix(".git").strip("/")
+            bom_ref = f"pkg:github/{repository}@{source['commit']}"
+            properties = [{"name": "loomground:git-commit", "value": source["commit"]}]
+        else:
+            bom_ref = f"pkg:pypi/{normalize_name(package['name'])}@{package['version']}"
+            properties = []
+        components.append({
+            "type": "library",
+            "bom-ref": bom_ref,
+            "name": package["name"],
+            "version": package["version"],
+            "hashes": [{"alg": "SHA-256", "content": package["sha256"]}],
+            "licenses": [{"expression": package["license"]}],
+            "externalReferences": [{
+                "type": "vcs" if source["source"] == "git" else "distribution",
+                "url": source["url"],
+            }],
+            "properties": properties,
+        })
+    return {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.6",
+        "version": 1,
+        "metadata": {
+            "component": {
+                "type": "application",
+                "name": lock["runtime"]["name"],
+                "version": lock["runtime"]["version"],
+            }
+        },
+        "components": components,
+    }
+
+
+def runtime_platform() -> str:
+    """Return the concrete kernel/architecture pair used for bundle admission."""
+    system = platform_module.system().lower()
+    machine = platform_module.machine().lower().replace("x86-64", "x86_64")
+    if not system or not machine:
+        raise BundleError("cannot determine runtime OS and architecture")
+    return f"{system}-{machine}"
 
 
 def _safe_relative(value: object) -> PurePosixPath:
@@ -176,8 +227,12 @@ def validate_runtime_lock(lock: object) -> tuple[
     names: set[str] = set()
     wheels: set[str] = set()
     for raw in raw_packages:
-        if not isinstance(raw, dict) or set(raw) != {"name", "version", "wheel", "sha256", "source"}:
-            raise BundleError("each runtime package must contain name, version, wheel, sha256 and source")
+        if not isinstance(raw, dict) or set(raw) != {
+            "name", "version", "wheel", "sha256", "license", "source",
+        }:
+            raise BundleError(
+                "each runtime package must contain name, version, wheel, sha256, license and source"
+            )
         package_name = raw["name"]
         wheel = raw["wheel"]
         source = raw["source"]
@@ -203,6 +258,14 @@ def validate_runtime_lock(lock: object) -> tuple[
         wheels.add(wheel)
         if not isinstance(raw["sha256"], str) or not SHA256.fullmatch(raw["sha256"]):
             raise BundleError(f"runtime package {package_name} has an invalid sha256")
+        if not isinstance(raw["license"], str):
+            raise BundleError(f"runtime package {package_name} has an invalid license expression")
+        try:
+            license_expression = canonicalize_license_expression(raw["license"])
+        except InvalidLicenseExpression as exc:
+            raise BundleError(f"runtime package {package_name} has an invalid license expression") from exc
+        if license_expression != raw["license"]:
+            raise BundleError(f"runtime package {package_name} license expression is not canonical")
         if not isinstance(source, dict):
             raise BundleError(f"runtime package {package_name} has no source provenance")
         source_type = source.get("source")
@@ -227,7 +290,14 @@ def validate_runtime_lock(lock: object) -> tuple[
             or parsed_source.fragment
         ):
             raise BundleError(f"runtime package {package_name} provenance must use HTTPS")
-        packages.append(RuntimePackage(package_name, raw["version"], wheel, raw["sha256"], source))
+        packages.append(RuntimePackage(
+            package_name,
+            raw["version"],
+            wheel,
+            raw["sha256"],
+            license_expression,
+            source,
+        ))
     if "loomground-mcp" not in names:
         raise BundleError("runtime lock does not contain loomground-mcp")
     root = next(package for package in packages if normalize_name(package.name) == "loomground-mcp")
@@ -330,6 +400,11 @@ def verify_runtime_bundle(root: Path, public_key: Path) -> VerifiedRuntimeBundle
         raise BundleError(f"runtime bundle lacks regular {RUNTIME_LOCK_NAME}")
     if lock_path.read_bytes() != canonical_json(lock) + b"\n":
         raise BundleError("runtime lock file differs from signed lock")
+    sbom_path = root / RUNTIME_SBOM_NAME
+    if not sbom_path.is_file() or sbom_path.is_symlink():
+        raise BundleError(f"runtime bundle lacks regular {RUNTIME_SBOM_NAME}")
+    if sbom_path.read_bytes() != canonical_json(runtime_sbom(lock)) + b"\n":
+        raise BundleError("runtime SBOM differs from signed lock")
 
     records = statement.get("files")
     if not isinstance(records, list) or not records:
@@ -346,7 +421,9 @@ def verify_runtime_bundle(root: Path, public_key: Path) -> VerifiedRuntimeBundle
         size, digest = _file_digest(_regular_file(root, relative))
         if record.get("size") != size or record.get("sha256") != digest:
             raise BundleError(f"runtime bundle file digest mismatch: {value}")
-    required = {RUNTIME_LOCK_NAME} | {f"wheels/{package.wheel}" for package in packages}
+    required = {RUNTIME_LOCK_NAME, RUNTIME_SBOM_NAME} | {
+        f"wheels/{package.wheel}" for package in packages
+    }
     if expected != required:
         raise BundleError(f"runtime bundle records differ from lock: missing={sorted(required - expected)}, extra={sorted(expected - required)}")
     actual: set[str] = set()
@@ -396,7 +473,7 @@ def _check_compatibility(bundle: VerifiedRuntimeBundle) -> None:
         raise BundleError(
             f"runtime requires Python {bundle.python_minimum}..< {bundle.python_maximum_exclusive}; found {current}"
         )
-    platform = sysconfig.get_platform()
+    platform = runtime_platform()
     if "any" not in bundle.platforms and platform not in bundle.platforms:
         raise BundleError(f"runtime bundle does not support platform {platform}")
 

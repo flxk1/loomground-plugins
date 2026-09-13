@@ -18,7 +18,11 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tools"))
 
 import build_runtime_bundle  # noqa: E402
+from assemble_runtime_release import load_sources, verify_root_pins  # noqa: E402
+from generate_ephemeral_release_key import generate  # noqa: E402
+from lock_runtime_third_party import validate_hash_lock  # noqa: E402
 from loomground_installer.bundle import BundleError  # noqa: E402
+from loomground_installer.onboarding import onboard  # noqa: E402
 from loomground_installer.runtime_bundle import (  # noqa: E402
     install_runtime_bundle,
     rollback_runtime_install,
@@ -83,6 +87,7 @@ def lock(filename: str, digest: str, *, version: str = "1.0.0", platforms=None) 
             "version": version,
             "wheel": filename,
             "sha256": digest,
+            "license": "Apache-2.0",
             "source": {
                 "source": "git",
                 "url": "https://github.com/flxk1/loomground-mcp",
@@ -116,6 +121,7 @@ class RuntimeBundleTests(unittest.TestCase):
             verified = verify_runtime_bundle(bundle, public)
             self.assertEqual(verified.runtime_name, "loomground-mcp")
             self.assertEqual(len(verified.packages), 1)
+            self.assertTrue((bundle / "runtime-sbom.cdx.json").is_file())
             destination = root / "installed"
             receipt = install_runtime_bundle(bundle, public, destination)
             self.assertEqual(receipt.status, "installed")
@@ -142,6 +148,66 @@ class RuntimeBundleTests(unittest.TestCase):
             )
             self.assertEqual(cli.returncode, 0, cli.stderr)
             self.assertEqual(json.loads(cli.stdout)["runtime"], "loomground-mcp")
+
+    def test_onboarding_installs_runtime_and_emits_host_and_maker_handoff(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            bundle, public = self._build(root)
+            destination = root / "runtime"
+            output = root / "onboarding"
+            result = onboard(
+                bundle,
+                public,
+                destination,
+                output,
+                ["claude", "codex", "cursor"],
+                makers=["Legal Plugin", "Continuous Monitoring"],
+            )
+            self.assertEqual(result.status, "ready")
+            manifest = json.loads((output / "onboarding.json").read_text())
+            self.assertFalse(manifest["host_configuration_modified"])
+            self.assertFalse(manifest["secret_material_included"])
+            self.assertEqual([maker["role"] for maker in manifest["makers"]], ["maker", "maker"])
+            self.assertTrue((output / "hosts/claude.mcp.json").is_file())
+            self.assertTrue((output / "hosts/codex.mcp.toml").is_file())
+            self.assertIn(
+                str(destination / "bin/loomground-mcp"),
+                (output / "hosts/cursor.mcp.json").read_text(),
+            )
+            self.assertIn("Hard enforcement", (output / "NEXT-STEPS.md").read_text())
+
+    def test_onboarding_rejects_remote_host_without_endpoint_before_install(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            bundle, public = self._build(root)
+            destination = root / "runtime"
+            with self.assertRaisesRegex(BundleError, "require --server-url"):
+                onboard(bundle, public, destination, root / "output", ["openai"])
+            self.assertFalse(destination.exists())
+
+    def test_onboarding_cli_does_not_overwrite_output(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            bundle, public = self._build(root)
+            output = root / "output"
+            output.mkdir()
+            environment = dict(os.environ)
+            environment["PYTHONPATH"] = str(ROOT / "src")
+            cli = subprocess.run(
+                [
+                    sys.executable, "-m", "loomground_installer.cli", "onboard",
+                    "--bundle", str(bundle), "--public-key", str(public),
+                    "--destination", str(root / "runtime"), "--output", str(output),
+                    "--host", "claude", "--yes",
+                ],
+                cwd=ROOT,
+                env=environment,
+                text=True,
+                capture_output=True,
+            )
+            self.assertNotEqual(cli.returncode, 0)
+            self.assertIn("must not already exist", cli.stderr)
+            self.assertFalse((root / "runtime").exists())
 
     def test_wheel_tampering_and_dependency_omission_fail_closed(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -198,6 +264,37 @@ class RuntimeBundleTests(unittest.TestCase):
             invalid_source["packages"][0]["source"]["url"] = "https://user@example.test/repo#ref"
             with self.assertRaisesRegex(BundleError, "provenance must use HTTPS"):
                 validate_runtime_lock(invalid_source)
+            invalid_license = lock(filename, digest)
+            invalid_license["packages"][0]["license"] = "not a SPDX license"
+            with self.assertRaisesRegex(BundleError, "invalid license expression"):
+                validate_runtime_lock(invalid_license)
+
+    def test_committed_release_sources_and_hash_locks_validate_offline(self):
+        minimum, maximum, root, sources = load_sources(ROOT / "runtime/runtime-sources.json")
+        self.assertEqual((minimum, maximum), ((3, 12), (3, 13)))
+        self.assertEqual(root, "loomground-mcp")
+        self.assertEqual(len(sources), 32)
+        for stem in ("third-party-requirements", "build-requirements"):
+            validate_hash_lock(ROOT / f"runtime/{stem}.in", ROOT / f"runtime/{stem}.txt")
+
+    def test_root_pin_parity_and_ephemeral_key_generation(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            checkout = root / "mcp"
+            checkout.mkdir()
+            checkout.joinpath("requirements-dev.txt").write_text(
+                "plane @ git+https://github.com/flxk1/plane@" + "b" * 40 + "\n",
+                encoding="utf-8",
+            )
+            sources = (
+                {"name": "loomground-mcp", "url": "https://github.com/flxk1/loomground-mcp.git", "commit": "a" * 40},
+                {"name": "plane", "url": "https://github.com/flxk1/plane.git", "commit": "b" * 40},
+            )
+            verify_root_pins(checkout, sources, "loomground-mcp")
+            generated = generate(root, "runtime-test")
+            self.assertTrue(Path(generated["private_key"]).is_file())
+            self.assertTrue(Path(generated["public_key"]).is_file())
+            self.assertTrue(generated["key_id"].startswith("loomground-runtime-ephemeral-"))
 
 
 if __name__ == "__main__":

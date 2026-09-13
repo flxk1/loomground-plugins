@@ -35,10 +35,27 @@ loomground adapter --host cursor --runtime-destination /absolute/runtime
 loomground adapter --host n8n --server-url https://loomground.example/sse
 ```
 
+After downloading and verifying the GitHub-attested release assets, one guided
+command installs the runtime and creates merge-ready host files without changing
+existing host settings:
+
+```bash
+loomground onboard
+```
+
+For automation, pass `--bundle`, `--public-key`, `--destination`, `--output`,
+one or more `--host`, optional `--maker` names, and `--yes`. See
+[docs/INSTALLER.md](docs/INSTALLER.md#guided-onboarding).
+
 See [docs/INSTALLER.md](docs/INSTALLER.md) for profiles, current blockers and
 the signed profile/runtime bundle and transactional installation contracts.
 Bundle installation always requires an explicit destination and trusted
 Ed25519 public key; it does not edit Claude or Codex configuration.
+
+The runtime release pipeline builds Python 3.12 bundles for Linux, macOS and
+Windows on x86-64 and ARM64. GitHub OIDC/Sigstore attestations authenticate each
+bundle, checksum, ephemeral public key and installer wheel; no permanent release
+private key is stored. See [docs/RUNTIME-RELEASE.md](docs/RUNTIME-RELEASE.md).
 
 Manual installation remains available:
 

@@ -1,0 +1,11 @@
+cffi==2.1.1
+cryptography==50.0.1
+hatchling==1.32.0
+packaging==25.0
+pathspec==1.1.1
+pluggy==1.6.0
+pycparser==3.0
+setuptools==80.9.0
+tomlkit==0.15.1
+trove-classifiers==2026.6.1.19
+wheel==0.45.1
