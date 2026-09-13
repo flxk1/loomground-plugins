@@ -55,12 +55,12 @@ def main() -> int:
     try:
         directories = build_packages.package_dirs([])
         packages = [build_packages.load_package(path) for path in directories]
-        plugins = build_packages.external_plugin_manifests()
+        plugins = build_packages.all_plugin_manifests()
     except (OSError, KeyError, TypeError, ValueError) as exc:
         fail(str(exc))
 
     expected = build_packages.marketplace_manifest(
-        packages, build_packages.external_marketplace_sources(), plugins)
+        packages, build_packages.marketplace_sources(), plugins)
     actual = json.loads(
         (ROOT / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8")
     )

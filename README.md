@@ -11,6 +11,18 @@ Without one catalogue, host packages drift from the skills and versions maintain
 
 ## Install
 
+One host-facing entry point:
+
+```text
+Claude Code: /plugin install loomground-suite@loomground
+Codex:       codex plugin add loomground-suite@loomground
+```
+
+Register the corresponding marketplace first. The suite installs the central
+control skill and MCP registration; it does not yet install the executable
+runtime. See [docs/SUITE.md](docs/SUITE.md) for exact host commands, external
+plugin integration and the remaining one-install boundary.
+
 Safe bootstrap preview (does not change host configuration or install runtime
 components):
 
@@ -31,7 +43,7 @@ Claude Code:
 
 ```text
 /plugin marketplace add flxk1/loomground-plugins
-/plugin install loomground-governance@loomground
+/plugin install loomground-suite@loomground
 ```
 
 Codex or a generic Agent Skills host:
@@ -45,7 +57,7 @@ Generated packages land under `dist/` and remain untracked.
 
 ## Usage
 
-`externals.json` pins 13 public source repositories by commit. Five sources carry a `package.json`; eight sources carry a committed Claude plugin manifest. `tools/build_packages.py` validates those sources and builds host-specific packages. `.claude-plugin/marketplace.json` is the committed Claude Code catalogue.
+`externals.json` pins 13 public source repositories by commit. Five sources carry a `package.json`; eight sources carry a committed Claude plugin manifest. `tools/build_packages.py` validates those sources and builds host-specific packages. `.claude-plugin/marketplace.json` is the committed Claude Code catalogue; `loomground-suite` composes it without copying the repositories.
 
 The catalogue distributes 25 skills across governance, runtime controls, evidence, ingest, solver analysis, Versum knowledge work, and the language planes.
 
@@ -71,7 +83,7 @@ Interfaces and authoring. Consumes committed skills from 13 Loomground repositor
 
 ## Status
 
-0.1.0 catalogue · 13 plugins · 25 skills · Python >=3.11 for release tooling.
+0.1.0 catalogue · 13 source plugins + 1 suite entry point · 25 source skills + 1 control skill · Python >=3.11 for release tooling.
 
 ## License
 

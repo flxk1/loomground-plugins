@@ -1,0 +1,20 @@
+{
+  "name": "loomground",
+  "interface": {
+    "displayName": "Loomground"
+  },
+  "plugins": [
+    {
+      "name": "loomground-suite",
+      "source": {
+        "source": "local",
+        "path": "./plugins/loomground-suite"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

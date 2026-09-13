@@ -187,10 +187,10 @@ def sync_claude_source_tree() -> None:
     packages = [load_package(directory) for directory in directories]
     for directory, data in zip(directories, packages):
         write_json(directory / ".claude-plugin" / "plugin.json", claude_manifest(data))
-    plugins = external_plugin_manifests()
+    plugins = all_plugin_manifests()
     write_json(
         ROOT / ".claude-plugin" / "marketplace.json",
-        marketplace_manifest(packages, external_marketplace_sources(), plugins),
+        marketplace_manifest(packages, marketplace_sources(), plugins),
     )
     print(
         f"synced .claude-plugin/marketplace.json ({len(packages) + len(plugins)} plugins) "
@@ -302,6 +302,29 @@ def external_plugin_manifests() -> list[dict]:
     return manifests
 
 
+def local_plugin_manifests() -> list[dict]:
+    """Repository-owned meta plugins that compose, rather than copy, packages."""
+    root = ROOT / "plugins"
+    if not root.is_dir():
+        return []
+    return [
+        load_plugin_manifest(directory.name, directory)
+        for directory in sorted(root.iterdir(), key=lambda path: path.name)
+        if directory.is_dir() and (directory / ".claude-plugin" / "plugin.json").is_file()
+    ]
+
+
+def all_plugin_manifests() -> list[dict]:
+    return external_plugin_manifests() + local_plugin_manifests()
+
+
+def marketplace_sources() -> dict[str, object]:
+    sources = external_marketplace_sources()
+    for data in local_plugin_manifests():
+        sources[data["name"]] = f"./plugins/{data['name']}"
+    return sources
+
+
 def package_dirs(names: list[str]) -> list[Path]:
     externals = external_package_dirs()
     if names:
@@ -325,7 +348,7 @@ def main() -> int:
         for _, data in packages:
             print(f"validated {data['name']} {data['version']}")
         if not args.packages:
-            for data in external_plugin_manifests():
+            for data in all_plugin_manifests():
                 print(f"validated {data['name']} {data['version']} (plugin manifest)")
         if not args.validate_only:
             if not args.packages:
