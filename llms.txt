@@ -54,6 +54,11 @@ attested repository and scenario results with `--results`; certification fails
 when any result is missing, stale, failed, duplicated, or digest-invalid. Details:
 `docs/ECOSYSTEM-TESTING.md`.
 
+The manual `ecosystem-repository-evidence` workflow requires exactly one passing,
+revision-bound result for all 41 repositories. It consumes native GitHub checks
+where available and runs isolated native tests for the four historical pins that
+have no check-run evidence.
+
 ## Family
 Interfaces and authoring. Consumes committed skills from 13 Loomground repositories at immutable pins. Produces installation packages for supported skill hosts. Plane execution remains in `loomground-mcp` and the source repositories.
 

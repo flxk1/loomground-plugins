@@ -62,7 +62,27 @@ repository's native tests and the scenario adapters in isolated jobs, hash the
 full logs, and attach CI provenance to each result. A missing executor artifact is
 a hard failure, never an implicit pass.
 
-The central release gate currently validates the inventory, pin parity, schemas,
-negative cases and deterministic aggregation. Promotion to an ecosystem release
-must additionally supply the 41 repository results and eight scenario results;
-that fan-out CI executor is the next integration boundary.
+`ecosystem/repository-checks.json` names the native GitHub checks required for
+each exact revision. `tools/collect_github_evidence.py` queries GitHub directly,
+normalizes the matching check-run identifiers and conclusions, preserves that
+evidence, and emits a repository result only when every required check completed
+successfully at the exact commit. It ignores unrelated checks but never accepts a
+similarly named, stale, pending, skipped, or failed required check.
+
+The manually dispatched `ecosystem-repository-evidence` workflow exercises this
+against GitHub. The first observed baseline was 37/41. The pinned commits of
+`loomground-epistemic`, `loomground-factual`, `loomground-workspace`, and
+`oversight-certificate` have no GitHub check runs, so an isolated four-entry
+matrix checks out those exact revisions and runs their native Pytest suites. For
+`loomground-epistemic`, its exact `loomground-factual` dependency is checked out
+separately. Each successful log is hashed and bound to its repository result.
+
+The final job merges GitHub evidence and native backfill evidence, then requires
+exactly 41 unique passing results at the manifest revisions. No job may replace a
+missing result with an inventory assertion.
+
+The central release gate validates the inventory, check-contract parity, pin
+parity, schemas, negative cases and deterministic aggregation. Promotion to an
+ecosystem release must additionally supply all 41 repository results and eight
+scenario results. The complete repository executor is implemented; the eight
+cross-repository scenario adapters remain the next integration boundary.

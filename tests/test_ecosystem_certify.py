@@ -105,6 +105,16 @@ def test_certificate_rejects_missing_repository_result(manifests, tmp_path):
         ecosystem_certify.certify(manifest, tmp_path, "c" * 40)
 
 
+def test_repository_only_verification_accepts_exact_41_results(manifests, tmp_path):
+    ecosystem, runtime = manifests
+    manifest = ecosystem_certify.validate_manifest(ecosystem, runtime)
+    write_results(tmp_path, manifest, "2" * 40)
+    for path in tmp_path.glob("scenario-*.json"):
+        path.unlink()
+    results = ecosystem_certify.verify_repository_results(manifest, tmp_path, "2" * 40)
+    assert len(results) == 41
+
+
 def test_certificate_rejects_wrong_revision(manifests, tmp_path):
     ecosystem, runtime = manifests
     manifest = ecosystem_certify.validate_manifest(ecosystem, runtime)
