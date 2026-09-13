@@ -44,7 +44,15 @@ The catalogue distributes 25 skills across governance, runtime controls, evidenc
 | host adapters | pure renderers for Claude, Codex, Cursor, OpenAI, n8n and generic MCP |
 | onboarding | confirmed runtime install plus atomic, non-secret host and Maker handoff pack |
 | runtime release | six-platform Python 3.12 matrix; ephemeral Ed25519 keys; GitHub OIDC/Sigstore provenance |
+| ecosystem certification | all 41 public repositories at exact revisions plus eight cross-repository fail-closed scenarios |
 | release gate | JSON validity, supply-chain checks, generated-catalogue parity, tests |
+
+## Ecosystem certification
+`ecosystem/manifest.json` is the canonical test inventory. Validate it with
+`python tools/ecosystem_certify.py`. Aggregate a complete directory of signed or
+attested repository and scenario results with `--results`; certification fails
+when any result is missing, stale, failed, duplicated, or digest-invalid. Details:
+`docs/ECOSYSTEM-TESTING.md`.
 
 ## Family
 Interfaces and authoring. Consumes committed skills from 13 Loomground repositories at immutable pins. Produces installation packages for supported skill hosts. Plane execution remains in `loomground-mcp` and the source repositories.

@@ -31,6 +31,7 @@ def main() -> int:
     for command, description in (
         ([sys.executable, "tools/supply_chain_gate.py", "--self-test"], "supply-chain self-test"),
         ([sys.executable, "tools/supply_chain_gate.py"], "supply-chain license/SBOM gate"),
+        ([sys.executable, "tools/ecosystem_certify.py"], "ecosystem inventory gate"),
         ([sys.executable, "tools/runtime_release_gate.py"], "runtime release gate"),
     ):
         result = subprocess.run(command, cwd=ROOT)
