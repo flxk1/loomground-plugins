@@ -50,6 +50,8 @@ def main() -> int:
             raise ValueError("runtime publication must be an explicit workflow input that defaults off")
         if "if: ${{ inputs.publish }}" not in workflow:
             raise ValueError("runtime publish job must be gated by the explicit publish input")
+        if "loomground-runtime-validation-${GITHUB_RUN_ID}" not in workflow:
+            raise ValueError("draft-only validation must use a run-specific non-production tag")
     except (OSError, ValueError) as exc:
         print(f"RUNTIME RELEASE GATE FAIL: {exc}", file=sys.stderr)
         return 1
