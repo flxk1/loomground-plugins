@@ -17,6 +17,7 @@ import tempfile
 from pathlib import Path
 from urllib.parse import urlparse
 
+from packaging.markers import default_environment
 from packaging.requirements import InvalidRequirement, Requirement
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -207,6 +208,26 @@ def _download_third_party(requirements: Path, wheelhouse: Path) -> None:
     ])
 
 
+def locked_requirement_names(
+    requirements: Path,
+    environment: dict[str, str] | None = None,
+) -> tuple[set[str], set[str]]:
+    """Return every locked name and the subset active on the target runner."""
+    resolved_environment = environment or default_environment()
+    pins = [
+        Requirement(line.split(" \\", 1)[0])
+        for line in requirements.read_text(encoding="utf-8").splitlines()
+        if line and not line.startswith(("#", " "))
+    ]
+    all_names = {normalize_name(pin.name) for pin in pins}
+    active_names = {
+        normalize_name(pin.name)
+        for pin in pins
+        if pin.marker is None or pin.marker.evaluate(resolved_environment)
+    }
+    return all_names, active_names
+
+
 def load_licenses(path: Path) -> dict[str, str]:
     try:
         document = json.loads(path.read_text(encoding="utf-8"))
@@ -267,11 +288,7 @@ def assemble(
         verify_root_pins(root_checkout, sources, root_name)
         _download_third_party(requirements, wheelhouse)
 
-        third_party_names = {
-            normalize_name(Requirement(line.split(" \\", 1)[0]).name)
-            for line in requirements.read_text(encoding="utf-8").splitlines()
-            if line and not line.startswith(("#", " "))
-        }
+        third_party_names, active_third_party_names = locked_requirement_names(requirements)
         licenses = load_licenses(
             licenses_path or ROOT / "runtime" / "third-party-licenses.json"
         )
@@ -306,7 +323,7 @@ def assemble(
                 "source": source,
             })
         if {normalize_name(item["name"]) for item in packages} != (
-            set(provenance) | third_party_names
+            set(provenance) | active_third_party_names
         ):
             raise BundleError("built wheel set differs from pinned first- and third-party packages")
         root_record = next(
