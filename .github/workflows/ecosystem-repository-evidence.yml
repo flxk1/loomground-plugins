@@ -1,0 +1,140 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 flxk1
+name: ecosystem-repository-evidence
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: read
+
+concurrency:
+  group: ecosystem-repository-evidence-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  github-evidence:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Collect required native CI evidence at every pinned revision
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python tools/collect_github_evidence.py
+          --self-commit "$GITHUB_SHA"
+          --output "$RUNNER_TEMP/ecosystem-results"
+          --exclude loomground-epistemic
+          --exclude loomground-factual
+          --exclude loomground-workspace
+          --exclude oversight-certificate
+      - name: Preserve complete and partial evidence for diagnosis
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ecosystem-repository-github-${{ github.sha }}
+          path: ${{ runner.temp }}/ecosystem-results
+          if-no-files-found: error
+          retention-days: 30
+
+  native-backfill:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: loomground-epistemic
+            commit: 2c1dc8ea8278fe3d1aeffa470319573c53dee932
+            dependency: loomground-factual
+            dependency_commit: db60a0592eb7741732944f05279b27def0c9685b
+          - name: loomground-factual
+            commit: db60a0592eb7741732944f05279b27def0c9685b
+            dependency: ""
+            dependency_commit: ""
+          - name: loomground-workspace
+            commit: e6e5e7dae8dc11e089a11dc15f3b519d2e4750ad
+            dependency: ""
+            dependency_commit: ""
+          - name: oversight-certificate
+            commit: 8dbb4fa46042f12eeecaf37cb1ad095b838d7185
+            dependency: ""
+            dependency_commit: ""
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the certifier
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          path: control
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Check out the exact repository revision
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          repository: flxk1/${{ matrix.name }}
+          ref: ${{ matrix.commit }}
+          path: target
+      - name: Check out the exact declared dependency
+        if: ${{ matrix.dependency != '' }}
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          repository: flxk1/${{ matrix.dependency }}
+          ref: ${{ matrix.dependency_commit }}
+          path: dependency
+      - name: Install only the certifier test toolchain
+        run: python -m pip install -r control/requirements-dev.txt
+      - name: Run the repository-native test suite and retain its log
+        shell: bash
+        env:
+          REPOSITORY_NAME: ${{ matrix.name }}
+        run: |
+          set -o pipefail
+          if [ "$REPOSITORY_NAME" = "loomground-epistemic" ]; then
+            PYTHONPATH="$GITHUB_WORKSPACE/dependency/src:$GITHUB_WORKSPACE/target/src" \
+              python -m pytest -q target/tests 2>&1 | tee "$RUNNER_TEMP/native-test.log"
+          else
+            PYTHONPATH="$GITHUB_WORKSPACE/target/src" \
+              python -m pytest -q target/tests 2>&1 | tee "$RUNNER_TEMP/native-test.log"
+          fi
+      - name: Bind the successful native test log to the pinned revision
+        run: >-
+          python control/tools/emit_native_test_result.py
+          --name "${{ matrix.name }}"
+          --commit "${{ matrix.commit }}"
+          --log "$RUNNER_TEMP/native-test.log"
+          --output "$RUNNER_TEMP/ecosystem-results"
+      - name: Upload native evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ecosystem-repository-native-${{ matrix.name }}
+          path: ${{ runner.temp }}/ecosystem-results
+          if-no-files-found: error
+          retention-days: 30
+
+  verify-complete:
+    needs: [github-evidence, native-backfill]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Download and merge all repository evidence
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          pattern: ecosystem-repository-*
+          path: ${{ runner.temp }}/ecosystem-results
+          merge-multiple: true
+      - name: Require exactly one passing result for all 41 revisions
+        run: >-
+          python tools/ecosystem_certify.py
+          --results "$RUNNER_TEMP/ecosystem-results"
+          --self-commit "$GITHUB_SHA"
+          --repository-results-only
+      - name: Upload the complete 41-repository result set
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ecosystem-repositories-complete-${{ github.sha }}
+          path: ${{ runner.temp }}/ecosystem-results
+          if-no-files-found: error
+          retention-days: 90

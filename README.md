@@ -61,6 +61,8 @@ The ecosystem certification contract covers all 41 public Loomground repositorie
 at exact revisions and eight cross-repository failure scenarios. Missing, stale,
 failed, duplicate, or mutated evidence cannot produce a passing certificate. See
 [docs/ECOSYSTEM-TESTING.md](docs/ECOSYSTEM-TESTING.md).
+The manual `ecosystem-repository-evidence` workflow collects native CI evidence
+and executes isolated native-test backfills for pins without historical checks.
 
 Manual installation remains available:
 
