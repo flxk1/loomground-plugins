@@ -106,7 +106,7 @@ jobs:
             --public-key "$public_key" \
             --key-id "$key_id" \
             --expected-version "$RELEASE_VERSION"
-          python -c 'import hashlib,pathlib,sys; p=pathlib.Path(sys.argv[1]); pathlib.Path(sys.argv[2]).write_text(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}\n")' \
+          python -c 'import hashlib,pathlib,sys; p=pathlib.Path(sys.argv[1]); pathlib.Path(sys.argv[2]).write_bytes(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}\n".encode())' \
             "$output.zip" "$output.sha256"
           {
             echo "archive=$output.zip"
