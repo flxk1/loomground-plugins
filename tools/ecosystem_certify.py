@@ -175,10 +175,13 @@ def verify_repository_results(
     results: Path,
     self_commit: str,
     verify_evidence_files: bool = False,
+    allow_scenarios: bool = False,
 ) -> list[dict]:
     revisions = expected_revisions(manifest, self_commit)
     repository_results = {}
     for result in _result_files(results):
+        if allow_scenarios and result.get("kind") == "scenario":
+            continue
         if result.get("kind") != "repository" or not isinstance(result.get("name"), str):
             raise CertificationError("repository result set contains a non-repository result")
         name = result["name"]
@@ -228,6 +231,96 @@ def verify_repository_results(
                 raise CertificationError(f"unsupported repository evidence kind: {name}")
         certified.append(result)
     return certified
+
+
+def verify_scenario_results(
+    manifest: dict,
+    results: Path,
+    self_commit: str,
+    verify_trace_files: bool = False,
+) -> list[dict]:
+    contracts = {item["id"]: item for item in manifest["scenarios"]}
+    revisions = expected_revisions(manifest, self_commit)
+    scenario_results = {}
+    for result in _result_files(results):
+        if result.get("kind") == "repository":
+            continue
+        if result.get("kind") != "scenario" or not isinstance(result.get("id"), str):
+            raise CertificationError("scenario result set contains an invalid result")
+        identifier = result["id"]
+        if identifier in scenario_results:
+            raise CertificationError(f"duplicate scenario result: {identifier}")
+        scenario_results[identifier] = result
+    if set(scenario_results) != set(contracts):
+        raise CertificationError("scenario results do not exactly cover the scenario inventory")
+
+    verified = []
+    for identifier in sorted(contracts):
+        result = _exact_keys(
+            scenario_results[identifier],
+            {"schema_version", "kind", "id", "status", "assertions", "trace_sha256"},
+            f"scenario result {identifier}",
+        )
+        assertions = result["assertions"]
+        if (
+            result["schema_version"] != 1
+            or result["kind"] != "scenario"
+            or result["status"] != "passed"
+            or not isinstance(assertions, list)
+            or not assertions
+            or assertions != sorted(set(assertions))
+            or not SHA256.fullmatch(str(result["trace_sha256"]))
+        ):
+            raise CertificationError(f"invalid or non-passing scenario result: {identifier}")
+        if verify_trace_files:
+            trace_path = results / "traces" / f"{identifier}.json"
+            try:
+                trace_bytes = trace_path.read_bytes()
+            except OSError as exc:
+                raise CertificationError(f"missing scenario trace: {identifier}") from exc
+            if hashlib.sha256(trace_bytes).hexdigest() != result["trace_sha256"]:
+                raise CertificationError(f"scenario trace digest mismatch: {identifier}")
+            trace = _exact_keys(
+                load_json(trace_path),
+                {
+                    "schema_version", "kind", "id", "contract", "participant_revisions",
+                    "runtime_lock_sha256", "steps", "assertions",
+                },
+                f"scenario trace {identifier}",
+            )
+            contract = contracts[identifier]
+            expected_contract = {
+                "outcome": contract["outcome"],
+                "invariant": contract["invariant"],
+                "participants": contract["participants"],
+            }
+            expected_participants = {
+                name: revisions[name] for name in contract["participants"]
+            }
+            if (
+                trace["schema_version"] != 1
+                or trace["kind"] != "loomground-ecosystem-scenario-trace"
+                or trace["id"] != identifier
+                or trace["contract"] != expected_contract
+                or trace["participant_revisions"] != expected_participants
+                or trace["assertions"] != assertions
+                or not SHA256.fullmatch(str(trace["runtime_lock_sha256"]))
+                or not isinstance(trace["steps"], list)
+                or not trace["steps"]
+            ):
+                raise CertificationError(f"scenario trace contract mismatch: {identifier}")
+            for index, step in enumerate(trace["steps"]):
+                step = _exact_keys(
+                    step,
+                    {"component", "input_sha256", "output"},
+                    f"scenario trace {identifier} step[{index}]",
+                )
+                if not isinstance(step["component"], str) or not step["component"].strip():
+                    raise CertificationError(f"scenario trace component missing: {identifier}")
+                if not SHA256.fullmatch(str(step["input_sha256"])):
+                    raise CertificationError(f"scenario trace input digest invalid: {identifier}")
+        verified.append(result)
+    return verified
 
 
 def certify(manifest: dict, results: Path, self_commit: str) -> dict:
@@ -360,7 +453,21 @@ def main() -> int:
             )
             print(f"ECOSYSTEM REPOSITORY RESULTS PASS: {len(repositories)}/41 repositories")
             return 0
-        certificate = certify(manifest, args.results, args.self_commit or current_commit())
+        self_commit = args.self_commit or current_commit()
+        certificate = certify(manifest, args.results, self_commit)
+        verify_repository_results(
+            manifest,
+            args.results,
+            self_commit,
+            verify_evidence_files=True,
+            allow_scenarios=True,
+        )
+        verify_scenario_results(
+            manifest,
+            args.results,
+            self_commit,
+            verify_trace_files=True,
+        )
         payload = canonical_json(certificate) + b"\n"
         if args.output:
             args.output.parent.mkdir(parents=True, exist_ok=True)

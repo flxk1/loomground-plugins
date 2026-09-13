@@ -8,6 +8,7 @@ on:
 permissions:
   contents: read
   checks: read
+  attestations: read
 
 concurrency:
   group: ecosystem-repository-evidence-${{ github.ref }}
@@ -139,5 +140,111 @@ jobs:
         with:
           name: ecosystem-repositories-complete-${{ github.sha }}
           path: ${{ runner.temp }}/ecosystem-results
+          if-no-files-found: error
+          retention-days: 90
+
+  scenarios:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the certifier
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Check out the exact non-runtime legal plane
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          repository: flxk1/loomground-legal
+          ref: 30c8ce2cc563f18d238451aa0444c516b038c0d0
+          path: legal
+      - name: Download the published Linux runtime and released installer
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/runtime-assets"
+          gh release download loomground-runtime-v0.1.0 \
+            --repo "$GITHUB_REPOSITORY" \
+            --dir "$RUNNER_TEMP/runtime-assets" \
+            --pattern 'loomground-runtime-0.1.0-linux-x86_64-py312.zip' \
+            --pattern 'loomground-runtime-0.1.0-linux-x86_64-py312.sha256' \
+            --pattern 'loomground-runtime-0.1.0-linux-x86_64-py312-public.pem' \
+            --pattern 'loomground_installer-0.4.0-py3-none-any.whl'
+      - name: Verify release provenance and checksum
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for asset in "$RUNNER_TEMP/runtime-assets"/*; do
+            gh attestation verify "$asset" \
+              --repo "$GITHUB_REPOSITORY" \
+              --signer-workflow flxk1/loomground-plugins/.github/workflows/runtime-release.yml \
+              --source-ref refs/heads/main
+          done
+          cd "$RUNNER_TEMP/runtime-assets"
+          sha256sum -c loomground-runtime-0.1.0-linux-x86_64-py312.sha256
+      - name: Install the signed offline runtime transactionally
+        shell: bash
+        run: |
+          unzip -q "$RUNNER_TEMP/runtime-assets/loomground-runtime-0.1.0-linux-x86_64-py312.zip" \
+            -d "$RUNNER_TEMP/runtime-bundle"
+          python -m venv "$RUNNER_TEMP/installer"
+          "$RUNNER_TEMP/installer/bin/pip" install \
+            --no-index \
+            --find-links "$RUNNER_TEMP/runtime-bundle/wheels" \
+            "$RUNNER_TEMP/runtime-assets/loomground_installer-0.4.0-py3-none-any.whl"
+          "$RUNNER_TEMP/installer/bin/loomground" runtime install "$RUNNER_TEMP/runtime-bundle" \
+            --public-key "$RUNNER_TEMP/runtime-assets/loomground-runtime-0.1.0-linux-x86_64-py312-public.pem" \
+            --destination "$RUNNER_TEMP/runtime-installed"
+      - name: Install only the controller test toolchain
+        run: >-
+          python -m pip install
+          -r requirements-dev.txt
+          -r requirements-release.txt
+      - name: Execute all eight ecosystem scenarios through the published MCP runtime
+        run: >-
+          python tools/run_ecosystem_scenarios.py
+          --runtime-lib "$RUNNER_TEMP/runtime-installed/lib"
+          --runtime-destination "$RUNNER_TEMP/runtime-installed"
+          --legal-src "$GITHUB_WORKSPACE/legal/src"
+          --output "$RUNNER_TEMP/scenario-results"
+          --scratch "$RUNNER_TEMP/scenario-scratch"
+          --self-commit "$GITHUB_SHA"
+      - name: Upload scenario results and digest-bound traces
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ecosystem-scenarios-${{ github.sha }}
+          path: ${{ runner.temp }}/scenario-results
+          if-no-files-found: error
+          retention-days: 90
+
+  certify:
+    needs: [verify-complete, scenarios]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Download the complete repository evidence
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: ecosystem-repositories-complete-${{ github.sha }}
+          path: ${{ runner.temp }}/ecosystem-results
+      - name: Download the complete scenario evidence
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: ecosystem-scenarios-${{ github.sha }}
+          path: ${{ runner.temp }}/ecosystem-results
+      - name: Mint and independently verify the complete certificate
+        run: |
+          python tools/ecosystem_certify.py \
+            --results "$RUNNER_TEMP/ecosystem-results" \
+            --self-commit "$GITHUB_SHA" \
+            --output "$RUNNER_TEMP/ecosystem-certification.json"
+          python tools/ecosystem_certify.py \
+            --verify-certificate "$RUNNER_TEMP/ecosystem-certification.json"
+      - name: Upload the complete ecosystem certificate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ecosystem-certification-${{ github.sha }}
+          path: ${{ runner.temp }}/ecosystem-certification.json
           if-no-files-found: error
           retention-days: 90
