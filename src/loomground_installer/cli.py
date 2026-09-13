@@ -6,12 +6,17 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
 from pathlib import Path
 
 from . import __version__
+from .adapters import HOSTS as ADAPTER_HOSTS, render_adapter
 from .bundle import BundleError, install_bundle, rollback_install, verify_bundle
-from .core import InstallerError, create_plan, doctor, load_profiles
+from .core import HOSTS, InstallerError, create_plan, doctor, load_profiles
+from .runtime_bundle import (
+    install_runtime_bundle,
+    rollback_runtime_install,
+    verify_runtime_bundle,
+)
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -22,11 +27,11 @@ def _parser() -> argparse.ArgumentParser:
 
     plan = commands.add_parser("plan", help="print an installation plan without changing the system")
     plan.add_argument("--profile", choices=profiles)
-    plan.add_argument("--host", action="append", default=[], choices=("auto", "claude", "codex"))
+    plan.add_argument("--host", action="append", default=[], choices=("auto",) + HOSTS)
     plan.add_argument("--json", action="store_true")
 
     check = commands.add_parser("doctor", help="inspect installation state without changing the system")
-    check.add_argument("--host", action="append", default=[], choices=("auto", "claude", "codex"))
+    check.add_argument("--host", action="append", default=[], choices=("auto",) + HOSTS)
     check.add_argument("--json", action="store_true")
 
     bundle = commands.add_parser("bundle", help="verify or transactionally install a signed profile bundle")
@@ -42,6 +47,25 @@ def _parser() -> argparse.ArgumentParser:
     rollback.add_argument("--destination", type=Path, required=True)
     rollback.add_argument("--backup", type=Path, required=True)
     rollback.add_argument("--public-key", type=Path, required=True)
+
+    runtime = commands.add_parser("runtime", help="verify or transactionally install a signed offline runtime")
+    runtime_commands = runtime.add_subparsers(dest="runtime_command", required=True)
+    runtime_verify = runtime_commands.add_parser("verify")
+    runtime_verify.add_argument("bundle", type=Path)
+    runtime_verify.add_argument("--public-key", type=Path, required=True)
+    runtime_install = runtime_commands.add_parser("install")
+    runtime_install.add_argument("bundle", type=Path)
+    runtime_install.add_argument("--public-key", type=Path, required=True)
+    runtime_install.add_argument("--destination", type=Path, required=True)
+    runtime_rollback = runtime_commands.add_parser("rollback")
+    runtime_rollback.add_argument("--destination", type=Path, required=True)
+    runtime_rollback.add_argument("--backup", type=Path, required=True)
+    runtime_rollback.add_argument("--public-key", type=Path, required=True)
+
+    adapter = commands.add_parser("adapter", help="render a host registration without changing host files")
+    adapter.add_argument("--host", choices=ADAPTER_HOSTS, required=True)
+    adapter.add_argument("--runtime-destination", type=Path)
+    adapter.add_argument("--server-url")
     return parser
 
 
@@ -81,6 +105,32 @@ def main(argv: list[str] | None = None) -> int:
             return _print_plan(args)
         if args.command == "doctor":
             return _print_doctor(args)
+        if args.command == "adapter":
+            print(json.dumps(render_adapter(
+                args.host,
+                runtime_destination=args.runtime_destination,
+                server_url=args.server_url,
+            ), indent=2))
+            return 0
+        if args.command == "runtime":
+            if args.runtime_command == "verify":
+                verified = verify_runtime_bundle(args.bundle, args.public_key)
+                print(json.dumps({
+                    "status": "verified",
+                    "runtime": verified.runtime_name,
+                    "version": verified.runtime_version,
+                    "key_id": verified.key_id,
+                    "bundle_digest": verified.digest,
+                    "packages": len(verified.packages),
+                    "platforms": list(verified.platforms),
+                }, indent=2))
+                return 0
+            if args.runtime_command == "install":
+                runtime_result = install_runtime_bundle(args.bundle, args.public_key, args.destination)
+            else:
+                runtime_result = rollback_runtime_install(args.destination, args.backup, args.public_key)
+            print(json.dumps(runtime_result.to_dict(), indent=2))
+            return 0
         if args.bundle_command == "verify":
             result = verify_bundle(args.bundle, args.public_key)
             print(json.dumps({
