@@ -32,12 +32,40 @@ codex plugin add loomground-suite@loomground
 Start a new task after installation so the host discovers the new skill and MCP
 server.
 
-The current plugin assumes that the `loomground-mcp` executable is already on
-`PATH`. Run `loomground doctor --host claude` or `--host codex` before relying
-on it. The public planes are not all released on a package index, so the
-repository does not offer an unpinned network bootstrap. A plugin installation
-that succeeds while `loomground-mcp` is absent has installed the interface, not
-the executable runtime.
+The same installed runtime can be registered without copying it. Renderers are
+read-only and never place bearer tokens in their output:
+
+```bash
+loomground adapter --host claude --runtime-destination /absolute/runtime
+loomground adapter --host codex  --runtime-destination /absolute/runtime
+loomground adapter --host cursor --runtime-destination /absolute/runtime
+loomground adapter --host generic --runtime-destination /absolute/runtime
+
+loomground adapter --host openai --server-url https://loomground.example/mcp
+loomground adapter --host n8n   --server-url https://loomground.example/sse
+```
+
+Claude, Codex and Cursor use the runtime's local stdio launcher. OpenAI API
+clients use remote MCP; n8n's MCP Client Tool uses an SSE endpoint. Remote
+adapters require HTTPS except for an explicit loopback address. Their bearer
+token must be bound from the host's credential store after rendering.
+
+This is one runtime and one protocol surface, not one identical installation
+mechanism: plugin marketplaces, JSON/TOML MCP configuration, API tool objects
+and n8n credentials remain host-owned.
+
+“One runtime” means one versioned dependency lock and protocol surface. Release
+engineering may publish separate signed artifacts for OS/architecture and
+Python compatibility; each installation still verifies and installs exactly one
+closed bundle without resolving packages from the network.
+
+The plugin manifest assumes that the `loomground-mcp` executable is on `PATH`.
+The signed runtime installer instead writes
+`<destination>/bin/loomground-mcp`; either add that directory to the host's PATH
+or use the renderer to produce an absolute command. Run `loomground doctor
+--host claude` or `--host codex` before relying on the PATH form. A plugin
+installation that succeeds while the command is absent has installed the
+interface, not the executable runtime.
 
 ## External skills and agents
 
@@ -84,11 +112,13 @@ and monitoring results are advisory signals.
 
 ## One-install completion boundary
 
-A genuine self-contained installation additionally requires a signed runtime
+A self-contained release additionally requires a published signed runtime
 artifact containing `loomground-mcp` and every first-party wheel at the release
-pins, plus a host adapter that installs or selects that artifact transactionally.
-Until that artifact exists, the suite is a normal plugin installation for its
-skill and MCP registration, but not a self-contained runtime installation.
+pins. The repository now provides the offline bundle builder, verifier and
+transactional installer described in `docs/INSTALLER.md`; no production bundle
+or trust key has been published yet. Until one exists, the suite is a normal
+plugin installation for its skill and MCP registration, but not a
+self-contained runtime installation.
 
 The committed enforcement-receipt schema is the target host boundary. The
 current MCP functions plan, evaluate and preview; they do not mint production

@@ -3,7 +3,8 @@
 
 # loomground-plugins
 
-Distribute Loomground skills to Claude Code, Codex, and generic Agent Skills hosts from their canonical repositories.
+Distribute Loomground skills and one pinned runtime to Claude, Codex/OpenAI,
+Cursor, n8n and generic MCP/Agent Skills hosts from their canonical repositories.
 
 ## Problem
 
@@ -30,12 +31,14 @@ components):
 python3 -m pip install .
 loomground plan --profile compliance --host auto
 loomground doctor --host auto
+loomground adapter --host cursor --runtime-destination /absolute/runtime
+loomground adapter --host n8n --server-url https://loomground.example/sse
 ```
 
 See [docs/INSTALLER.md](docs/INSTALLER.md) for profiles, current blockers and
-the signed-bundle and transactional installation contract. Bundle installation
-always requires an explicit destination and trusted Ed25519 public key; it does
-not edit Claude or Codex configuration.
+the signed profile/runtime bundle and transactional installation contracts.
+Bundle installation always requires an explicit destination and trusted
+Ed25519 public key; it does not edit Claude or Codex configuration.
 
 Manual installation remains available:
 

@@ -9,7 +9,7 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-import build_packages
+import build_packages  # noqa: E402
 
 
 def canonical_packages():
