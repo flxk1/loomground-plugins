@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "default": "compliance",
+  "profiles": {
+    "compliance": [
+      "a2a-compliance",
+      "evidence-emitter",
+      "loomground-governance",
+      "loomground-solver",
+      "policy-compiler",
+      "privacy-shield"
+    ],
+    "core": [
+      "loomground-deontic",
+      "loomground-epistemic",
+      "loomground-factual",
+      "loomground-governance",
+      "loomground-ingest",
+      "loomground-norm",
+      "loomground-solver",
+      "loomground-topos"
+    ],
+    "knowledge": [
+      "loomground-epistemic",
+      "loomground-factual",
+      "loomground-governance",
+      "loomground-ingest",
+      "loomground-solver",
+      "loomground-versum"
+    ],
+    "full": [
+      "a2a-compliance",
+      "evidence-emitter",
+      "loomground-deontic",
+      "loomground-epistemic",
+      "loomground-factual",
+      "loomground-governance",
+      "loomground-ingest",
+      "loomground-norm",
+      "loomground-solver",
+      "loomground-topos",
+      "loomground-versum",
+      "policy-compiler",
+      "privacy-shield"
+    ]
+  }
+}

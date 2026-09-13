@@ -11,6 +11,20 @@ Without one catalogue, host packages drift from the skills and versions maintain
 
 ## Install
 
+Safe bootstrap preview (does not change host configuration or install runtime
+components):
+
+```bash
+python3 -m pip install .
+loomground plan --profile compliance --host auto
+loomground doctor --host auto
+```
+
+See [docs/INSTALLER.md](docs/INSTALLER.md) for profiles, current blockers and
+the transactional installation contract.
+
+Manual installation remains available:
+
 Claude Code:
 
 ```text
