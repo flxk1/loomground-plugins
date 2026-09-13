@@ -26,6 +26,8 @@ from loomground_installer.runtime_bundle import (  # noqa: E402
     RUNTIME_ENVELOPE_NAME,
     RUNTIME_LOCK_NAME,
     RUNTIME_PAYLOAD_TYPE,
+    RUNTIME_SBOM_NAME,
+    runtime_sbom,
     validate_runtime_lock,
     verify_runtime_bundle,
 )
@@ -90,6 +92,7 @@ def build(lock_path: Path, wheelhouse: Path, output: Path, signing_key: Path, ke
     try:
         (stage / "wheels").mkdir()
         (stage / RUNTIME_LOCK_NAME).write_bytes(canonical_json(lock) + b"\n")
+        (stage / RUNTIME_SBOM_NAME).write_bytes(canonical_json(runtime_sbom(lock)) + b"\n")
         for package in packages:
             source = wheelhouse / package.wheel
             if source.is_symlink():

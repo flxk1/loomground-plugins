@@ -6,12 +6,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from . import __version__
 from .adapters import HOSTS as ADAPTER_HOSTS, render_adapter
 from .bundle import BundleError, install_bundle, rollback_install, verify_bundle
 from .core import HOSTS, InstallerError, create_plan, doctor, load_profiles
+from .onboarding import onboard
 from .runtime_bundle import (
     install_runtime_bundle,
     rollback_runtime_install,
@@ -66,7 +68,63 @@ def _parser() -> argparse.ArgumentParser:
     adapter.add_argument("--host", choices=ADAPTER_HOSTS, required=True)
     adapter.add_argument("--runtime-destination", type=Path)
     adapter.add_argument("--server-url")
+
+    onboarding = commands.add_parser(
+        "onboard", help="install one verified runtime and create host handoff files"
+    )
+    onboarding.add_argument("--bundle", type=Path)
+    onboarding.add_argument("--public-key", type=Path)
+    onboarding.add_argument("--destination", type=Path)
+    onboarding.add_argument("--output", type=Path)
+    onboarding.add_argument("--host", action="append", default=[], choices=ADAPTER_HOSTS)
+    onboarding.add_argument("--server-url")
+    onboarding.add_argument("--maker", action="append", default=[])
+    onboarding.add_argument("--yes", action="store_true", help="skip the final confirmation")
     return parser
+
+
+def _prompt(current: object | None, label: str, *, path: bool = False):
+    if current is not None:
+        return current
+    if not sys.stdin.isatty():
+        raise BundleError(f"{label} is required in non-interactive mode")
+    value = input(f"{label}: ").strip()
+    if not value:
+        raise BundleError(f"{label} is required")
+    return Path(value).expanduser().absolute() if path else value
+
+
+def _run_onboarding(args: argparse.Namespace) -> int:
+    bundle = _prompt(args.bundle, "Signed runtime bundle", path=True)
+    public_key = _prompt(args.public_key, "Attested public key", path=True)
+    destination = _prompt(args.destination, "Runtime destination", path=True)
+    output = _prompt(args.output, "New onboarding-pack directory", path=True)
+    hosts = args.host
+    if not hosts:
+        raw_hosts = _prompt(None, f"Hosts ({', '.join(ADAPTER_HOSTS)}; comma-separated)")
+        hosts = [value.strip() for value in raw_hosts.split(",") if value.strip()]
+    if set(hosts) & {"openai", "n8n"} and not args.server_url:
+        args.server_url = _prompt(None, "Authenticated Loomground HTTPS endpoint")
+    makers = args.maker
+    if not makers and sys.stdin.isatty() and not args.yes:
+        raw_makers = input("Existing skills/agents to mediate (comma-separated, optional): ").strip()
+        makers = [value.strip() for value in raw_makers.split(",") if value.strip()]
+    if not args.yes:
+        if not sys.stdin.isatty():
+            raise BundleError("non-interactive onboarding requires --yes")
+        print(f"Runtime destination: {destination}")
+        print(f"Onboarding pack: {output}")
+        print(f"Hosts: {', '.join(hosts)}")
+        print("Existing host configuration will not be modified.")
+        if input("Proceed? [y/N] ").strip().casefold() not in {"y", "yes"}:
+            print("Cancelled; no changes made.")
+            return 1
+    result = onboard(
+        bundle, public_key, destination, output, hosts,
+        server_url=args.server_url, makers=makers,
+    )
+    print(json.dumps(result.to_dict(), indent=2))
+    return 0
 
 
 def _print_plan(args: argparse.Namespace) -> int:
@@ -112,6 +170,8 @@ def main(argv: list[str] | None = None) -> int:
                 server_url=args.server_url,
             ), indent=2))
             return 0
+        if args.command == "onboard":
+            return _run_onboarding(args)
         if args.command == "runtime":
             if args.runtime_command == "verify":
                 verified = verify_runtime_bundle(args.bundle, args.public_key)
