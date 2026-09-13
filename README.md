@@ -21,7 +21,9 @@ loomground doctor --host auto
 ```
 
 See [docs/INSTALLER.md](docs/INSTALLER.md) for profiles, current blockers and
-the transactional installation contract.
+the signed-bundle and transactional installation contract. Bundle installation
+always requires an explicit destination and trusted Ed25519 public key; it does
+not edit Claude or Codex configuration.
 
 Manual installation remains available:
 

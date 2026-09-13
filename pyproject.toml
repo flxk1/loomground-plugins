@@ -7,14 +7,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "loomground-installer"
-version = "0.1.0"
+version = "0.2.0"
 description = "Non-mutating installation planner and diagnostics for Loomground"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
 license-files = ["LICENSES/Apache-2.0.txt", "NOTICE"]
 authors = [{name = "Loomground Contributors"}]
-dependencies = []
+dependencies = ["cryptography>=46,<51"]
 
 [project.scripts]
 loomground = "loomground_installer.cli:main"

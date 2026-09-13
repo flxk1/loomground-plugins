@@ -30,7 +30,7 @@ jobs:
               subprocess.run(["git", "-C", str(dest), "checkout", "-q", sha], check=True)
               print(f"{name} @ {sha[:12]}")
           EOF
-      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pip install -r requirements-release.txt -r requirements-dev.txt
       - run: python -m pip install pytest==9.1.1   # release gate runs pytest; not in requirements-dev.txt
       - run: python -m pytest -q
       - run: python tools/release_gate.py
