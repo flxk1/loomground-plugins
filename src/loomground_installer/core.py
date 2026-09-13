@@ -129,22 +129,22 @@ def create_plan(profile: str | None, hosts: Iterable[str], which: Callable[[str]
             instruction=f"Run inside Claude Code: /plugin marketplace add {MARKETPLACE}",
             executable=False,
         ))
-        operations.extend(Operation(
+        operations.append(Operation(
             host="claude",
             kind="plugin",
-            description=f"Install {plugin} from the Loomground marketplace",
-            instruction=f"Run inside Claude Code: /plugin install {plugin}@loomground",
+            description=f"Install the Loomground Suite entry point for the {profile_name} profile",
+            instruction="Run inside Claude Code: /plugin install loomground-suite@loomground",
             executable=False,
-        ) for plugin in plugins)
+        ))
 
     if "codex" in selected_hosts:
         operations.append(Operation(
             host="codex",
-            kind="plugin-bundle",
-            description=f"Install the {profile_name} Codex plugin bundle and register loomground-mcp",
-            instruction=None,
+            kind="plugin",
+            description=f"Install the Loomground Suite entry point for the {profile_name} profile",
+            instruction="codex plugin add loomground-suite@loomground",
             executable=False,
-            reason="the Codex profile bundle is validated by the repository but not yet published",
+            reason="the repository marketplace must already be registered with Codex",
         ))
 
     return InstallPlan(

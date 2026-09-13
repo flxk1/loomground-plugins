@@ -1,0 +1,25 @@
+{
+  "name": "loomground-suite",
+  "version": "0.1.0",
+  "description": "Route agent work through Loomground's pinned skills, policy controls, evidence and A2A compliance tools.",
+  "author": {
+    "name": "Loomground Contributors"
+  },
+  "keywords": [
+    "loomground",
+    "governance",
+    "compliance",
+    "policy-control",
+    "mcp"
+  ],
+  "mcpServers": {
+    "loomground": {
+      "command": "loomground-mcp",
+      "args": [
+        "serve",
+        "--transport",
+        "stdio"
+      ]
+    }
+  }
+}

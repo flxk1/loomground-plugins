@@ -17,7 +17,7 @@ def canonical_packages():
 
 
 def plugin_manifests():
-    return build_packages.external_plugin_manifests()
+    return build_packages.all_plugin_manifests()
 
 
 class PackageBuildTests(unittest.TestCase):
@@ -61,7 +61,9 @@ class PackageBuildTests(unittest.TestCase):
 
     def test_external_marketplace_sources_are_commit_locked(self):
         sources = build_packages.external_marketplace_sources()
-        expected = {path.name for path in canonical_packages()} | {data["name"] for data in plugin_manifests()}
+        expected = {path.name for path in canonical_packages()} | {
+            data["name"] for data in build_packages.external_plugin_manifests()
+        }
         self.assertEqual(set(sources), expected)
         for source in sources.values():
             build_packages.validate_marketplace_source(source, ROOT / "externals.json")
@@ -115,7 +117,7 @@ class PackageBuildTests(unittest.TestCase):
         plugins = plugin_manifests()
         expected = [path.name for path in canonical_packages()] + [data["name"] for data in plugins]
         self.assertEqual(listed, sorted(expected))
-        locked_sources = build_packages.external_marketplace_sources()
+        locked_sources = build_packages.marketplace_sources()
         for package_dir in canonical_packages():
             data = json.loads((package_dir / "package.json").read_text())
             manifest = json.loads((package_dir / ".claude-plugin/plugin.json").read_text())
@@ -133,6 +135,18 @@ class PackageBuildTests(unittest.TestCase):
             self.assertEqual(entry["keywords"], data.get("keywords", []))
             if "mcpServers" in data:
                 self.assertEqual(data["mcpServers"], build_packages.MCP_SERVERS)
+
+    def test_suite_is_one_local_entry_point_with_valid_contract_schemas(self):
+        suite = ROOT / "plugins/loomground-suite"
+        codex = json.loads((suite / ".codex-plugin/plugin.json").read_text())
+        claude = json.loads((suite / ".claude-plugin/plugin.json").read_text())
+        mcp = json.loads((suite / ".mcp.json").read_text())
+        self.assertEqual(codex["name"], "loomground-suite")
+        self.assertEqual(claude["mcpServers"], mcp["mcpServers"])
+        self.assertEqual(mcp["mcpServers"], build_packages.MCP_SERVERS)
+        for name in ("action-intent.schema.json", "enforcement-receipt.schema.json"):
+            schema = json.loads((suite / "schemas" / name).read_text())
+            Draft202012Validator.check_schema(schema)
 
     def test_plugin_manifest_without_sibling_is_rejected(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as temporary:
