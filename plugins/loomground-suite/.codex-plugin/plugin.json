@@ -1,0 +1,40 @@
+{
+  "name": "loomground-suite",
+  "version": "0.1.0",
+  "description": "Route agent work through Loomground's pinned skills, policy controls, evidence and A2A compliance tools.",
+  "author": {
+    "name": "Loomground Contributors",
+    "url": "https://github.com/flxk1"
+  },
+  "homepage": "https://github.com/flxk1/loomground-plugins",
+  "repository": "https://github.com/flxk1/loomground-plugins",
+  "license": "Apache-2.0",
+  "keywords": [
+    "loomground",
+    "governance",
+    "compliance",
+    "policy-control",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Loomground Suite",
+    "shortDescription": "Govern agent actions with Loomground.",
+    "longDescription": "One control surface for the public Loomground family: discover pinned skills, evaluate policy and privacy constraints, plan A2A compliance, admit an action for host enforcement and reconcile its effects.",
+    "developerName": "Loomground Contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Skills",
+      "MCP tools",
+      "Policy control",
+      "Compliance evidence"
+    ],
+    "websiteURL": "https://github.com/flxk1/loomground-plugins",
+    "defaultPrompt": [
+      "Govern this agent action with Loomground.",
+      "Show the Loomground controls for this workflow.",
+      "Route this plugin through policy control."
+    ]
+  },
+  "mcpServers": "./.mcp.json"
+}
