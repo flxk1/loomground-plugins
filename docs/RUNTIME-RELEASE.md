@@ -19,9 +19,11 @@ CycloneDX 1.6 SBOM generated from the signed package names, versions, hashes,
 SPDX license expressions and source URLs; GitHub binds that SBOM to the ZIP with
 a separate SBOM attestation.
 
-The draft release becomes public only after all six builds, internal
-verification and GitHub attestations succeed. The `runtime-release` environment
-is the host-owned approval boundary for the final publish job.
+The workflow defaults to draft-only. A run with `publish: false` builds,
+attests and uploads every asset but skips the publish job. A separate deliberate
+run with `publish: true` may make the draft public only after all six builds,
+internal verification and GitHub attestations succeed. The `runtime-release`
+environment is the host-owned approval boundary for that final publish job.
 
 ## User verification
 
@@ -72,7 +74,8 @@ is a separate explicit adapter step.
 ## Release operation
 
 From the repository's Actions page, run `runtime-release` on `main` with the
-exact `loomground-mcp` version. The workflow creates a draft tag
-`loomground-runtime-v<version>`, uploads only attested assets and publishes only
-after the complete matrix succeeds. A failed run leaves a draft for inspection;
-it never publishes a partial platform set.
+exact `loomground-mcp` version and leave `publish` disabled for validation. The
+workflow creates a draft tag `loomground-runtime-v<version>` and uploads only
+attested assets. After independent verification, rerun the same version with
+`publish` enabled. A failed run leaves a draft for inspection; it never
+publishes a partial platform set.
