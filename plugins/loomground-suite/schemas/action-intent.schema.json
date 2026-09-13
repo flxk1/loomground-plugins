@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://loomground.dev/schemas/action-intent.schema.json",
+  "title": "Loomground action intent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "intentId",
+    "maker",
+    "action",
+    "authority",
+    "expectedEffects"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "loomground.action-intent/1"
+    },
+    "intentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "maker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "component", "version"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "component": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "target", "inputDigest"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "target": {"type": "string", "minLength": 1},
+        "inputDigest": {"$ref": "#/$defs/sha256"},
+        "dataDestinations": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "reversible": {"type": "boolean"}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["principal", "requestedGrade"],
+      "properties": {
+        "principal": {"type": "string", "minLength": 1},
+        "requestedGrade": {"type": "string", "minLength": 1}
+      }
+    },
+    "policyDigest": {"$ref": "#/$defs/sha256"},
+    "expectedEffects": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

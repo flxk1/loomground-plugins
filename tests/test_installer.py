@@ -64,7 +64,8 @@ class InstallerTests(unittest.TestCase):
     def test_full_profile_is_exact_marketplace(self):
         profiles = load_profiles()["profiles"]
         marketplace = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text())
-        self.assertEqual(set(profiles["full"]), {entry["name"] for entry in marketplace["plugins"]})
+        listed = {entry["name"] for entry in marketplace["plugins"]}
+        self.assertEqual(set(profiles["full"]), listed - {"loomground-suite"})
         for names in profiles.values():
             self.assertEqual(names, sorted(set(names)))
             self.assertLessEqual(set(names), set(profiles["full"]))
@@ -88,7 +89,11 @@ class InstallerTests(unittest.TestCase):
         self.assertFalse(any(operation.executable for operation in plan.operations))
         self.assertEqual(
             [operation.kind for operation in plan.operations[1:]],
-            ["marketplace"] + ["plugin"] * len(plan.plugins),
+            ["marketplace", "plugin"],
+        )
+        self.assertEqual(
+            plan.operations[-1].instruction,
+            "Run inside Claude Code: /plugin install loomground-suite@loomground",
         )
 
     def test_doctor_reads_codex_config_without_changing_it(self):

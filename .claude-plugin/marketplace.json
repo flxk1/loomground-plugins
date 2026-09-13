@@ -203,6 +203,22 @@
       ]
     },
     {
+      "name": "loomground-suite",
+      "source": "./plugins/loomground-suite",
+      "description": "Route agent work through Loomground's pinned skills, policy controls, evidence and A2A compliance tools.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "loomground",
+        "governance",
+        "compliance",
+        "policy-control",
+        "mcp"
+      ]
+    },
+    {
       "name": "loomground-topos",
       "source": {
         "source": "url",

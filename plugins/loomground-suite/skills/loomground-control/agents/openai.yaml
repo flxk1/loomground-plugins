@@ -1,0 +1,4 @@
+interface:
+  display_name: "Loomground Control"
+  short_description: "Put agent actions through Loomground policy control."
+  default_prompt: "Route this agent action through Loomground policy control and show the decision evidence."
