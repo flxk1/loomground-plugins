@@ -21,9 +21,12 @@ loomground runtime install /path/to/runtime-bundle --public-key /path/to/release
 loomground adapter --host <local-host> --runtime-destination /absolute/runtime
 loomground adapter --host openai --server-url https://loomground.example/mcp
 loomground adapter --host n8n --server-url https://loomground.example/sse
+loomground onboard  # guided runtime install plus non-mutating host/maker handoff
 ```
 
 `<local-host>` is one of `claude`, `codex`, `cursor`, or `generic`. The adapter command renders only; host configuration and credentials remain host-owned.
+
+`onboard` verifies and installs one already-obtained runtime bundle, then writes a new reviewable onboarding directory with per-host merge files and optional Maker declarations. It never edits host configuration, stores credentials, or converts a Maker declaration into enforcement. Hard enforcement requires the Loomground adapter to own the Maker's only effect path.
 
 ## Usage
 `externals.json` pins 13 public source repositories by commit. Five sources carry a `package.json`; eight sources carry a committed Claude plugin manifest. `tools/build_packages.py` validates those sources and builds host-specific packages. `.claude-plugin/marketplace.json` is the committed Claude Code catalogue.
@@ -39,6 +42,8 @@ The catalogue distributes 25 skills across governance, runtime controls, evidenc
 | suite | `plugins/loomground-suite`: control skill, MCP registration, action/receipt schemas |
 | runtime | DSSE/Ed25519-signed lock plus exact offline wheel set; transactional target install |
 | host adapters | pure renderers for Claude, Codex, Cursor, OpenAI, n8n and generic MCP |
+| onboarding | confirmed runtime install plus atomic, non-secret host and Maker handoff pack |
+| runtime release | six-platform Python 3.12 matrix; ephemeral Ed25519 keys; GitHub OIDC/Sigstore provenance |
 | release gate | JSON validity, supply-chain checks, generated-catalogue parity, tests |
 
 ## Family

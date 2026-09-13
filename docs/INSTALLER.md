@@ -81,8 +81,8 @@ host-specific configuration adapters have their own rollback-tested contracts.
 
 Release builders assemble already-built wheels under one lock. Every lock entry
 contains the distribution name, version, wheel filename, SHA-256 digest and
-source provenance. The lock must contain `loomground-mcp`; its entry point is
-fixed to `loomground_mcp.server:main`.
+canonical SPDX license expression plus source provenance. The lock must contain
+`loomground-mcp`; its entry point is fixed to `loomground_mcp.server:main`.
 
 Releases publish a signed bundle for each required OS/architecture and Python
 compatibility range. A pure-Python `any` bundle may cover multiple systems;
@@ -101,13 +101,14 @@ installer selects nothing dynamically and rejects a non-matching bundle.
     "minimum": [3, 11],
     "maximum_exclusive": [3, 15]
   },
-  "platforms": ["macosx-15.0-arm64"],
+  "platforms": ["darwin-arm64"],
   "packages": [
     {
       "name": "loomground-mcp",
       "version": "<released-version>",
       "wheel": "<exact-wheel-filename>.whl",
       "sha256": "<64 lowercase hex characters>",
+      "license": "Apache-2.0",
       "source": {
         "source": "git",
         "url": "https://github.com/flxk1/loomground-mcp",
@@ -118,7 +119,7 @@ installer selects nothing dynamically and rejects a non-matching bundle.
 }
 ```
 
-The release key stays outside the repository:
+For an offline/manual build, the release key stays outside the repository:
 
 ```bash
 python3 tools/build_runtime_bundle.py \
@@ -140,9 +141,10 @@ loomground runtime install /path/to/loomground-runtime \
   --destination /absolute/path/loomground-runtime
 ```
 
-The installer verifies the DSSE/Ed25519 envelope, canonical lock, complete file
-set, wheel hashes and wheel Name/Version metadata. It rejects incompatible
-Python or platform locks. Installation uses only the signed wheels with
+The installer verifies the DSSE/Ed25519 envelope, canonical lock, generated
+CycloneDX SBOM, complete file set, canonical SPDX licenses, wheel hashes and
+wheel Name/Version metadata. It rejects incompatible Python or platform locks.
+Installation uses only the signed wheels with
 `pip --no-index --no-deps` below an adjacent staging directory. It probes
 `loomground_mcp.server:main`, writes a relative launcher, then atomically swaps
 the stage into place. The prior install remains an absolute sibling backup:
@@ -156,7 +158,45 @@ loomground runtime rollback \
 
 The executable is `<destination>/bin/loomground-mcp`. Host registration remains
 separate so installing a runtime cannot silently edit Codex or Claude settings.
-No production runtime artifact or release trust key is committed here.
+
+## Guided onboarding
+
+`loomground onboard` asks for the signed runtime directory, its independently
+attested public key, a new runtime destination, a new onboarding-pack directory,
+the target hosts and optional existing agent/skill names. It shows the write
+targets and requires confirmation before installation. The non-interactive form
+is explicit and suitable for managed deployment:
+
+```bash
+loomground onboard \
+  --bundle /downloads/loomground-runtime-0.1.0-darwin-arm64-py312 \
+  --public-key /downloads/loomground-runtime-0.1.0-darwin-arm64-py312-public.pem \
+  --destination /opt/loomground/runtime \
+  --output /opt/loomground/onboarding \
+  --host claude --host codex --host cursor \
+  --maker "Legal Plugin" --maker "Continuous Monitoring" \
+  --yes
+```
+
+The output contains `onboarding.json`, `NEXT-STEPS.md` and one merge-ready file
+plus a full adapter descriptor per selected host. Neither output nor runtime
+contains credentials. Existing host files are never opened or changed, and the
+output directory must be new, so the user reviews every host merge.
+
+Claude and Codex users then install the `loomground-suite` plugin normally; the
+runtime and plugin remain separate trust surfaces. Existing skills and agents
+remain installed in their native host and act as Makers: they submit normalized
+action intents to Loomground, consume policy/admission decisions, dispatch only
+the admitted digest through the credential-owning adapter, then reconcile the
+effect and evidence. Naming a Maker in the wizard records this contract; it does
+not rewrite or sandbox that external agent. Enforcement is hard only when the
+agent has no direct target credential or alternate execution path.
+
+Official GitHub releases do not use a permanent release key. Each platform job
+creates a one-artifact Ed25519 key, deletes the private half and publishes the
+public half together with GitHub OIDC/Sigstore attestations. Users first verify
+the ZIP and public key against the exact workflow identity, then pass that
+public key to this installer. See `docs/RUNTIME-RELEASE.md`.
 
 ## Host adapters
 

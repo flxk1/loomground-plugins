@@ -7,8 +7,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "loomground-installer"
-version = "0.3.0"
-description = "Non-mutating installation planner and diagnostics for Loomground"
+version = "0.4.0"
+description = "Verified runtime installation and host onboarding for Loomground"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
