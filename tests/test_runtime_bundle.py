@@ -20,7 +20,11 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tools"))
 
 import build_runtime_bundle  # noqa: E402
-from assemble_runtime_release import load_sources, verify_root_pins  # noqa: E402
+from assemble_runtime_release import (  # noqa: E402
+    load_sources,
+    locked_requirement_names,
+    verify_root_pins,
+)
 from generate_ephemeral_release_key import generate  # noqa: E402
 from lock_runtime_third_party import validate_hash_lock  # noqa: E402
 from loomground_installer.bundle import BundleError  # noqa: E402
@@ -354,6 +358,27 @@ class RuntimeBundleTests(unittest.TestCase):
             document["serialNumber"],
             r"^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
         )
+
+    def test_locked_requirement_names_apply_platform_markers(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            requirements = Path(temporary) / "requirements.txt"
+            requirements.write_text(
+                'portable==1.0 \\\n    --hash=sha256:' + "a" * 64 + '\n'
+                'windows-only==2.0; sys_platform == "win32" \\\n'
+                '    --hash=sha256:' + "b" * 64 + '\n',
+                encoding="utf-8",
+            )
+            all_names, linux_names = locked_requirement_names(
+                requirements,
+                {"sys_platform": "linux"},
+            )
+            _, windows_names = locked_requirement_names(
+                requirements,
+                {"sys_platform": "win32"},
+            )
+            self.assertEqual(all_names, {"portable", "windows-only"})
+            self.assertEqual(linux_names, {"portable"})
+            self.assertEqual(windows_names, {"portable", "windows-only"})
 
     def test_root_pin_parity_and_ephemeral_key_generation(self):
         with tempfile.TemporaryDirectory() as temporary:
