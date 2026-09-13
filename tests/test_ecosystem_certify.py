@@ -45,6 +45,36 @@ def write_results(directory: Path, manifest: dict, self_commit: str) -> None:
         (directory / f"scenario-{identifier}.json").write_text(json.dumps(result), encoding="utf-8")
 
 
+def write_scenario_traces(directory: Path, manifest: dict, self_commit: str) -> None:
+    revisions = ecosystem_certify.expected_revisions(manifest, self_commit)
+    trace_dir = directory / "traces"
+    trace_dir.mkdir()
+    for scenario in manifest["scenarios"]:
+        identifier = scenario["id"]
+        trace = {
+            "schema_version": 1,
+            "kind": "loomground-ecosystem-scenario-trace",
+            "id": identifier,
+            "contract": {
+                "outcome": scenario["outcome"],
+                "invariant": scenario["invariant"],
+                "participants": scenario["participants"],
+            },
+            "participant_revisions": {
+                name: revisions[name] for name in scenario["participants"]
+            },
+            "runtime_lock_sha256": "7" * 64,
+            "steps": [{"component": "test", "input_sha256": "8" * 64, "output": {"passed": True}}],
+            "assertions": ["expected-outcome", "fail-closed"],
+        }
+        trace_bytes = ecosystem_certify.canonical_json(trace) + b"\n"
+        (trace_dir / f"{identifier}.json").write_bytes(trace_bytes)
+        result_path = directory / f"scenario-{identifier}.json"
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+        result["trace_sha256"] = hashlib.sha256(trace_bytes).hexdigest()
+        result_path.write_text(json.dumps(result), encoding="utf-8")
+
+
 def test_manifest_covers_all_repositories_and_runtime_pins(manifests):
     ecosystem, runtime = manifests
     manifest = ecosystem_certify.validate_manifest(ecosystem, runtime)
@@ -113,6 +143,32 @@ def test_repository_only_verification_accepts_exact_41_results(manifests, tmp_pa
         path.unlink()
     results = ecosystem_certify.verify_repository_results(manifest, tmp_path, "2" * 40)
     assert len(results) == 41
+
+
+def test_scenario_verification_binds_traces_to_contract_and_revisions(manifests, tmp_path):
+    ecosystem, runtime = manifests
+    manifest = ecosystem_certify.validate_manifest(ecosystem, runtime)
+    self_commit = "3" * 40
+    write_results(tmp_path, manifest, self_commit)
+    write_scenario_traces(tmp_path, manifest, self_commit)
+    results = ecosystem_certify.verify_scenario_results(
+        manifest, tmp_path, self_commit, verify_trace_files=True
+    )
+    assert len(results) == 8
+
+
+def test_scenario_verification_rejects_mutated_trace(manifests, tmp_path):
+    ecosystem, runtime = manifests
+    manifest = ecosystem_certify.validate_manifest(ecosystem, runtime)
+    self_commit = "4" * 40
+    write_results(tmp_path, manifest, self_commit)
+    write_scenario_traces(tmp_path, manifest, self_commit)
+    path = next((tmp_path / "traces").glob("*.json"))
+    path.write_bytes(path.read_bytes() + b" ")
+    with pytest.raises(ecosystem_certify.CertificationError, match="trace digest mismatch"):
+        ecosystem_certify.verify_scenario_results(
+            manifest, tmp_path, self_commit, verify_trace_files=True
+        )
 
 
 def test_certificate_rejects_wrong_revision(manifests, tmp_path):

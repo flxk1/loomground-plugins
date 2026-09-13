@@ -57,7 +57,11 @@ when any result is missing, stale, failed, duplicated, or digest-invalid. Detail
 The manual `ecosystem-repository-evidence` workflow requires exactly one passing,
 revision-bound result for all 41 repositories. It consumes native GitHub checks
 where available and runs isolated native tests for the four historical pins that
-have no check-run evidence.
+have no check-run evidence. It also verifies and installs the published signed
+runtime, checks its 32 Git pins, executes all eight scenarios through MCP, binds
+each trace to its contract and participant revisions, and emits one independently
+verified 41+8 certificate. This certifies the tested pins and scenarios, not every
+possible deployment or an effect path the Loomground adapter does not own.
 
 ## Family
 Interfaces and authoring. Consumes committed skills from 13 Loomground repositories at immutable pins. Produces installation packages for supported skill hosts. Plane execution remains in `loomground-mcp` and the source repositories.

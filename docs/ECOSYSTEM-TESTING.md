@@ -16,15 +16,18 @@ repositories. The canonical inventory is `ecosystem/manifest.json`.
 3. **Repository evidence:** one and only one passing result for every pinned
    repository. The result binds the commit, sorted check names and the SHA-256 of
    its external evidence.
-4. **System evidence:** one and only one passing result for every declared
-   cross-repository scenario. Every repository participates in at least one
-   scenario.
+4. **System evidence:** one and only one passing result and digest-bound trace
+   for every declared cross-repository scenario. Each trace binds the declared
+   outcome, invariant, participant revisions, runtime lock and real tool steps.
+   Every repository participates in at least one scenario contract.
 5. **Certificate integrity:** canonical JSON produces a deterministic certificate
    digest. Any later mutation invalidates it.
 
 The eight initial scenarios exercise cross-host parity, conflicting jurisdiction,
 erasure and reingestion, single-use maker admission, PII egress denial, policy
 freshness, tripwire quarantine, and reconciliation of an unpermitted effect.
+`tools/run_ecosystem_scenarios.py` executes them against the published signed
+runtime rather than replacing execution with fixture results.
 
 ## Commands
 
@@ -77,12 +80,20 @@ matrix checks out those exact revisions and runs their native Pytest suites. For
 `loomground-epistemic`, its exact `loomground-factual` dependency is checked out
 separately. Each successful log is hashed and bound to its repository result.
 
-The final job merges GitHub evidence and native backfill evidence, then requires
-exactly 41 unique passing results at the manifest revisions. No job may replace a
+The workflow also downloads the released Linux runtime and installer, verifies
+their GitHub attestations and checksum, performs the signed transactional install,
+checks its 32 Git source pins, and runs all eight scenarios through its MCP
+surface. The final job merges this with GitHub and native-backfill evidence,
+requires exactly 41 unique passing repository results and eight traces, then
+mints and independently verifies the complete certificate. No job may replace a
 missing result with an inventory assertion.
 
 The central release gate validates the inventory, check-contract parity, pin
 parity, schemas, negative cases and deterministic aggregation. Promotion to an
-ecosystem release must additionally supply all 41 repository results and eight
-scenario results. The complete repository executor is implemented; the eight
-cross-repository scenario adapters remain the next integration boundary.
+ecosystem release must additionally supply all 41 repository results and all
+eight scenario traces. Both executors are implemented by the manual workflow.
+
+This certifies the tested pins and scenarios. It does not prove every possible
+composition, external host implementation, policy corpus or live credential
+boundary. Production enforcement still requires the adapter to own the only
+effect path.
