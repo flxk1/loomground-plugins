@@ -29,8 +29,8 @@ def load_pins(path: Path) -> list[Requirement]:
         if not line or line.startswith("#"):
             continue
         requirement = Requirement(line)
-        if requirement.url or requirement.marker or requirement.extras:
-            raise ValueError(f"third-party pin must be a plain package==version: {line}")
+        if requirement.url or requirement.extras:
+            raise ValueError(f"third-party pin must be a package==version with an optional marker: {line}")
         specifiers = list(requirement.specifier)
         if len(specifiers) != 1 or specifiers[0].operator != "==" or "*" in specifiers[0].version:
             raise ValueError(f"third-party pin must contain one exact version: {line}")

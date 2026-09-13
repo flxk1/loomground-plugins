@@ -20,10 +20,13 @@ SPDX license expressions and source URLs; GitHub binds that SBOM to the ZIP with
 a separate SBOM attestation.
 
 The workflow defaults to draft-only. A run with `publish: false` builds,
-attests and uploads every asset but skips the publish job. A separate deliberate
-run with `publish: true` may make the draft public only after all six builds,
-internal verification and GitHub attestations succeed. The `runtime-release`
-environment is the host-owned approval boundary for that final publish job.
+attests and uploads every asset to a run-specific
+`loomground-runtime-validation-<run-id>` draft and skips the publish job. It
+cannot create or mutate the production version tag. A separate deliberate run
+with `publish: true` uses `loomground-runtime-v<version>` and may make that draft
+public only after all six builds, internal verification and GitHub attestations
+succeed. The `runtime-release` environment is the host-owned approval boundary
+for that final publish job.
 
 ## User verification
 
@@ -75,7 +78,8 @@ is a separate explicit adapter step.
 
 From the repository's Actions page, run `runtime-release` on `main` with the
 exact `loomground-mcp` version and leave `publish` disabled for validation. The
-workflow creates a draft tag `loomground-runtime-v<version>` and uploads only
-attested assets. After independent verification, rerun the same version with
-`publish` enabled. A failed run leaves a draft for inspection; it never
-publishes a partial platform set.
+workflow creates a run-specific validation draft and uploads only attested
+assets. After independent verification, rerun the same version with `publish`
+enabled to create and, after the protected environment approval, publish the
+production tag. A failed run leaves its draft for inspection; it never
+publishes a partial platform set or reserves the production tag.
