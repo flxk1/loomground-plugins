@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "vendored_path": "ecosystem/vendor/catalogue.json",
+      "source_repo": "loomground",
+      "source_path": "CATALOGUE.json",
+      "note": "source_commit is not repeated here; it is read from ecosystem/manifest.json's own revision pin for source_repo, which is already validated by ecosystem_certify.validate_manifest. Duplicating the commit here would create a second pin to drift out of sync."
+    },
+    {
+      "vendored_path": "ecosystem/vendor/skills-index.json",
+      "source_repo": "loomground-mcp",
+      "source_path": "src/loomground_mcp/skills/index.json",
+      "note": "NOT a byte-for-byte copy of the upstream file: the upstream index also carries skill records for private repositories outside the 41 public ecosystem/manifest.json inventory. Vendoring those into this public repository would leak private-repo names, descriptions, paths, commit SHAs, and blob URLs. This file is the public projection at the pinned commit: every record marked private, or whose repo is outside the 41-repo inventory, is dropped before it is committed here, not merely filtered downstream. tests/test_ecosystem_parity_matrix.py asserts zero such records remain and that no known private repo name appears anywhere under ecosystem/vendor/."
+    },
+    {
+      "vendored_path": "ecosystem/vendor/a2a-compliance-roles/*.json",
+      "source_repo": "a2a-compliance",
+      "source_path": "a2a_compliance/roles/*.json",
+      "note": "eight role manifests, copied verbatim."
+    }
+  ]
+}

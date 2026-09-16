@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/flxk1/loomground-plugins/schemas/parity-matrix.schema.json",
+  "title": "Loomground ecosystem CI parity matrix",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "row_count", "sources", "rows", "matrix_sha256"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "loomground-ecosystem-parity-matrix"},
+    "row_count": {"const": 41},
+    "sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ecosystem_manifest_sha256", "catalogue", "skills_index", "roles", "marketplace"],
+      "properties": {
+        "ecosystem_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "catalogue": {"$ref": "#/$defs/vendorFileSource"},
+        "skills_index": {"$ref": "#/$defs/vendorFileSource"},
+        "roles": {"$ref": "#/$defs/vendorDirSource"},
+        "marketplace": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": {"const": ".claude-plugin/marketplace.json"},
+            "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        }
+      }
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 41,
+      "maxItems": 41,
+      "items": {"$ref": "#/$defs/row"}
+    },
+    "matrix_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "vendorFileSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_repo", "source_commit", "vendored_path", "vendored_sha256"],
+      "properties": {
+        "source_repo": {"type": "string", "minLength": 1},
+        "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "vendored_path": {"type": "string", "minLength": 1},
+        "vendored_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "vendorDirSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_repo", "source_commit", "vendored_dir", "vendored_sha256"],
+      "properties": {
+        "source_repo": {"type": "string", "minLength": 1},
+        "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "vendored_dir": {"type": "string", "minLength": 1},
+        "vendored_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "cell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["present", "value", "reason"],
+      "properties": {
+        "present": {"type": "boolean"},
+        "value": {},
+        "reason": {}
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "present": {"const": true},
+            "reason": {"type": "null"}
+          }
+        },
+        {
+          "properties": {
+            "present": {"const": false},
+            "value": {"type": "null"},
+            "reason": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    },
+    "row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "mcp_tool", "installable_skill", "plugin_source", "agent_role"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "mcp_tool": {"$ref": "#/$defs/cell"},
+        "installable_skill": {"$ref": "#/$defs/cell"},
+        "plugin_source": {"$ref": "#/$defs/cell"},
+        "agent_role": {"$ref": "#/$defs/cell"}
+      }
+    }
+  }
+}

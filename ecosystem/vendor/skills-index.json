@@ -1,0 +1,301 @@
+[
+  {
+    "repo": "a2a-compliance",
+    "name": "compliance-fleet",
+    "description": "A compliance team plans a maker action across Loomground, then compliance agents steer maker agents over an agent-to-agent control channel, keeping them aligned to the operator's values: query a maker's state, issue a directive, hold, resume or halt; receive report-state, ack and escalate back. Authority is role-based, and a directive stays within the boundary that maker declares in its own governance block. Works in bare mode with zero Loomground and zero external enforcement, where the steering criterion is the compliance role's advisory judgement. The full Loomground profile consumes the published orchestration, tools, skills and contracts as a fail-closed pipeline; where a value plane is present the criterion is drawn from the grounded value graph, degrading to advisory per dimension when that plane is absent. External enforcement is an optional adapter that adds a verdict and a signed chain to a directive. Triggers on \"control my agents\", \"keep the makers aligned\", \"steer/hold/halt this maker\", \"watch the fleet for value drift\", \"issue a compliance directive\".",
+    "allowed_tools": [
+      "a2a_plan",
+      "a2a_admission_preview",
+      "a2a_reconcile",
+      "a2a_ground"
+    ],
+    "commit": "5c6f2c14af46e85989a443c51be103f248151d62",
+    "path": "skills/compliance-fleet/SKILL.md",
+    "url": "https://github.com/flxk1/a2a-compliance/blob/5c6f2c14af46e85989a443c51be103f248151d62/skills/compliance-fleet/SKILL.md"
+  },
+  {
+    "repo": "evidence-emitter",
+    "name": "evidence-emitter",
+    "description": "Compose loomground assurance components into one signed, offline-verifiable governance evidence package. Use when asked to prove what governance was applied to an action or a piece of work, emit a governance certificate or an audit-evidence package, attest a compliance-fleet decision or a privacy-shield scan report, or verify such a package offline.",
+    "allowed_tools": [
+      "evidence_emit",
+      "evidence_verify"
+    ],
+    "commit": "4869b1f90ad12bee25cd19da3bb8b56d69de598c",
+    "path": "skills/evidence-emitter/SKILL.md",
+    "url": "https://github.com/flxk1/evidence-emitter/blob/4869b1f90ad12bee25cd19da3bb8b56d69de598c/skills/evidence-emitter/SKILL.md"
+  },
+  {
+    "repo": "loomground",
+    "name": "loomground",
+    "description": "Express an AI-governance requirement as a validated Loomground policy-graph patch. Use when the user wants to encode a governance rule (human oversight, reservation, prohibition, separation of duty / quorum, redress or contestation, delegation and the principal chain, autonomy grades, disclosure obligation) as a .lg patch; validate or fix an existing patch; or judge whether a requirement is expressible in Loomground versus belonging to policy or a host. Triggers on \"express this as Loomground\", \"write a .lg patch\", \"is this governable in Loomground\", \"validate this patch\", \"governance as a policy graph\".",
+    "allowed_tools": [],
+    "commit": "60c11e0d210264b48fb8657a00e334b75cf84446",
+    "path": "skills/loomground/SKILL.md",
+    "url": "https://github.com/flxk1/loomground/blob/60c11e0d210264b48fb8657a00e334b75cf84446/skills/loomground/SKILL.md"
+  },
+  {
+    "repo": "loomground-deontic",
+    "name": "deontic",
+    "description": "Transcribe a natural-language norm into a verified deontic formula. Use when the user wants to formalise an obligation, permission, or prohibition as a typed statement O/P/F(bearer : action); classify the Hohfeldian incident (claim, duty, privilege, no-right, power, liability, immunity, disability); decide whether a \"right\" is a claim or a liberty; validate a deontic statement; or flag candidate normative conflicts across a set of norms. The procedure transcribes each norm, classifies its incident, validates it against the schema with a bundled engine, flags conflicts, and reports what is a deontic statement versus what belongs to the reasoning layer. Triggers on \"formalise this obligation\", \"write this as a deontic statement\", \"O/P/F\", \"is this a claim or a liberty\", \"validate this deontic formula\", \"are these norms in conflict\".",
+    "allowed_tools": [
+      "deontic_parse",
+      "deontic_conflicts"
+    ],
+    "commit": "35f8eabdc533b275a086b20c8d7a161f4acc46a8",
+    "path": "skills/deontic/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-deontic/blob/35f8eabdc533b275a086b20c8d7a161f4acc46a8/skills/deontic/SKILL.md"
+  },
+  {
+    "repo": "loomground-epistemic",
+    "name": "epistemic",
+    "description": "Extract who knows or believes what, at which certainty band, from one sentence: operator K (knowledge) or B (belief), holder, proposition, certainty (certain, reasonable-grounds, probable, possible, estimate) and evidential source. Use when the user wants a sentence read as a knowledge or belief claim, asks which cue words loomground-epistemic recognises (knows, is aware, believes, reasonable grounds to suspect, estimates that, based on), or needs the certainty band of a statement; triggers on \"who knows this\", \"is this knowledge or belief\", \"certainty band\", \"epistemic facet\". Whether the belief is true and what duty follows belong to the other planes.",
+    "allowed_tools": [
+      "epistemic_extract"
+    ],
+    "commit": "7c5dac171e2df91ae91d96c3ccbea22b27cdd667",
+    "path": "skills/epistemic/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-epistemic/blob/7c5dac171e2df91ae91d96c3ccbea22b27cdd667/skills/epistemic/SKILL.md"
+  },
+  {
+    "repo": "loomground-factual",
+    "name": "factual",
+    "description": "Lower one plain assertion into a factual triple: subject, predicate, object, with dimension (structural for is-a and part-of, relational for any other copula), negation and quantification. Use when the user wants a sentence read as a fact, asks what loomground-factual recognises (copulas, negation, quantifiers, entity trimming), or needs to know whether a sentence has a copula at all; triggers on \"lower this sentence\", \"is this a fact\", \"subject predicate object\", \"factual triple\". Ought, knowledge, time and authority belong to the other planes.",
+    "allowed_tools": [
+      "factual_lower"
+    ],
+    "commit": "4be819ec28c890e476b246e3ec616a5e1c3b857c",
+    "path": "skills/factual/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-factual/blob/4be819ec28c890e476b246e3ec616a5e1c3b857c/skills/factual/SKILL.md"
+  },
+  {
+    "repo": "loomground-governance",
+    "name": "loomground",
+    "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch. Use when the user wants to encode a governance rule (human oversight, reservation, prohibition, separation of duty / quorum, redress or contestation, delegation, disclosure obligation) as a .lg patch; validate or fix an existing patch; or judge whether a requirement is expressible in Loomground versus belonging to a host. The procedure drafts the patch, applies the litmus to classify each requirement as expressible, policy, or host, validates the result against the schemas and the bundled validation engine, and reports what the patch governs and what was handed off to a host. Triggers on \"express this as Loomground\", \"write a .lg patch\", \"is this governable in Loomground\", \"validate this patch\", \"governance as a policy graph\".",
+    "allowed_tools": [
+      "solver_evaluate",
+      "solver_verify"
+    ],
+    "commit": "9ef2501af07d682c7d5ada2cb452fc9eba44f099",
+    "path": "skills/loomground/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-governance/blob/9ef2501af07d682c7d5ada2cb452fc9eba44f099/skills/loomground/SKILL.md"
+  },
+  {
+    "repo": "loomground-ingest",
+    "name": "loomground-ingest",
+    "description": "Drive the Loomground ingest plane - turn a multimodal artifact into a dimensioned subgraph headed for the Versum mental model. Dispatches to the host-registered ingester by grammar, reports the subgraph (nodes, edges, dimension, provenance, quarantine) as a dry run by default, and writes only through a real host-injected Versum sink after the host's governance gate admits it. Invents nothing - missing context is recorded as incomplete, never as false. Use when the user wants to lower a policy or other artifact into the Versum graph, preview what it would add, or run the ingest plane as a dry run. Triggers - \"ingest this policy\", \"lower this policy into the graph\", \"run the ingest plane\", \"what would this artifact add to versum\", \"dry-run the ingest\".",
+    "allowed_tools": [
+      "ingest_text"
+    ],
+    "commit": "ce9639b9ea18d90c5ee386135ccce526a66b8e45",
+    "path": "skills/loomground-ingest/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-ingest/blob/ce9639b9ea18d90c5ee386135ccce526a66b8e45/skills/loomground-ingest/SKILL.md"
+  },
+  {
+    "repo": "loomground-norm",
+    "name": "norm",
+    "description": "Lift a sentence of running text into a RuleFacet (subject, modal, modal_phrase, action, condition, exception, consequence, incident, counterparty, language, confidence) and on into a rendered deontic formula O/P/F(bearer : action) with unless/if scopes, in the 24 EU languages. Use when the user wants a norm extracted from prose, asks which modal phrases loomground-norm recognises in a language (shall, must not, darf keine, doit, non può), or needs the obligation/prohibition/permission/right class of a sentence; triggers on \"extract the rule\", \"lift this to deontic\", \"which modal is this\", \"RuleFacet\". Ranking of sources, jurisdiction and conflict resolution belong to the other planes.",
+    "allowed_tools": [
+      "norm_extract"
+    ],
+    "commit": "104a3ca2272e34898b23fa43ba164e968d8f1001",
+    "path": "skills/norm/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-norm/blob/104a3ca2272e34898b23fa43ba164e968d8f1001/skills/norm/SKILL.md"
+  },
+  {
+    "repo": "loomground-solver",
+    "name": "advise-solver-addons",
+    "description": "Deterministically assess whether a Loomground Solver problem benefits from the optional world-model add-on or whether verified historical runs are ready for metacognitive analysis. Use when users ask whether to enable Solver add-ons, need an explainable add-on recommendation, want required or missing inputs identified, or need provider-neutral activation guidance. Do not use it to select a graph, retriever, model, storage provider, or authorization mechanism.",
+    "allowed_tools": [
+      "solver_advise_addons"
+    ],
+    "commit": "c0f60681ac0dc205a55f710d1958dff3e79f086b",
+    "path": "skills/advise-solver-addons/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-solver/blob/c0f60681ac0dc205a55f710d1958dff3e79f086b/skills/advise-solver-addons/SKILL.md"
+  },
+  {
+    "repo": "loomground-solver",
+    "name": "analyse-risks",
+    "description": "Score and rank risks by impact x likelihood and prioritise mitigations, via the kernel's decision methods. Solver analytic skill; fails closed without the kernel. Use when the user has a set of risks to score, rank, or prioritise for mitigation. Triggers - \"analyse the risks\", \"risk matrix\", \"score these risks\", \"what to mitigate first\".",
+    "allowed_tools": [
+      "solver_analyse_risks"
+    ],
+    "commit": "c0f60681ac0dc205a55f710d1958dff3e79f086b",
+    "path": "skills/analyse-risks/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-solver/blob/c0f60681ac0dc205a55f710d1958dff3e79f086b/skills/analyse-risks/SKILL.md"
+  },
+  {
+    "repo": "loomground-solver",
+    "name": "estimate-liability",
+    "description": "Estimate the conditional probability of liability (or other adverse outcome) as a calibrated range, given evidence factors. Solver analytic skill wrapping the kernel's Bayesian method; an organisational estimate, not legal advice. Use when the user wants a calibrated probability of liability or another adverse outcome from known evidence factors. Triggers - \"how likely is liability\", \"exposure probability\", \"odds of an adverse finding\".",
+    "allowed_tools": [
+      "solver_estimate_liability"
+    ],
+    "commit": "c0f60681ac0dc205a55f710d1958dff3e79f086b",
+    "path": "skills/estimate-liability/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-solver/blob/c0f60681ac0dc205a55f710d1958dff3e79f086b/skills/estimate-liability/SKILL.md"
+  },
+  {
+    "repo": "loomground-solver",
+    "name": "litigation-risk-assessor",
+    "description": "Assess dispute risk - quantify exposure, weigh merits, recommend settle or fight - via the kernel's decision theory. Solver analytic skill; an organisational assessment, not legal advice. Use when the user faces an actual or threatened dispute and needs exposure quantified or a settle-or-fight recommendation. Triggers - \"assess litigation risk\", \"what's our exposure\", \"settle or fight\", \"weigh the merits\".",
+    "allowed_tools": [
+      "solver_litigation_risk"
+    ],
+    "commit": "c0f60681ac0dc205a55f710d1958dff3e79f086b",
+    "path": "skills/litigation-risk-assessor/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-solver/blob/c0f60681ac0dc205a55f710d1958dff3e79f086b/skills/litigation-risk-assessor/SKILL.md"
+  },
+  {
+    "repo": "loomground-solver",
+    "name": "opponent-modeler",
+    "description": "Model an adversary - their options, payoffs, likely move, and exploitable tendencies. Solver analytic skill wrapping the installed loomground_solver kernel; fails closed without it. Use when the user needs to anticipate a specific adversary or counterparty before choosing a move. Triggers - \"model the opponent\", \"what will they do\", \"predict their move\", \"where are they exploitable\".",
+    "allowed_tools": [
+      "solver_opponent_model"
+    ],
+    "commit": "c0f60681ac0dc205a55f710d1958dff3e79f086b",
+    "path": "skills/opponent-modeler/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-solver/blob/c0f60681ac0dc205a55f710d1958dff3e79f086b/skills/opponent-modeler/SKILL.md"
+  },
+  {
+    "repo": "loomground-solver",
+    "name": "probability-tracker",
+    "description": "Maintain and update a calibrated probability over an uncertain hypothesis as evidence arrives (Bayesian). Solver analytic skill wrapping the loomground_solver kernel; fails closed without it. Use when the user holds an uncertain hypothesis and wants its probability tracked and updated as evidence arrives. Triggers - \"track the odds\", \"update the probability\", \"what's the likelihood now\", \"chances given this evidence\".",
+    "allowed_tools": [
+      "solver_probability"
+    ],
+    "commit": "c0f60681ac0dc205a55f710d1958dff3e79f086b",
+    "path": "skills/probability-tracker/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-solver/blob/c0f60681ac0dc205a55f710d1958dff3e79f086b/skills/probability-tracker/SKILL.md"
+  },
+  {
+    "repo": "loomground-solver",
+    "name": "strategic-analysis",
+    "description": "Analyse a competitive/adversarial position - moves, threats, opportunities, plan - via the kernel's decision methods and possible-worlds. Solver analytic skill; fails closed without the kernel. Use when the user needs a competitive or adversarial position analysed into moves, threats, opportunities, and a plan. Triggers - \"analyse this position\", \"what's my best move\", \"what are the threats\", \"think through the strategy\".",
+    "allowed_tools": [
+      "solver_strategy"
+    ],
+    "commit": "c0f60681ac0dc205a55f710d1958dff3e79f086b",
+    "path": "skills/strategic-analysis/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-solver/blob/c0f60681ac0dc205a55f710d1958dff3e79f086b/skills/strategic-analysis/SKILL.md"
+  },
+  {
+    "repo": "loomground-topos",
+    "name": "topos",
+    "description": "Read and write lt, the legal-system topology language: system, level, organ, instrument, competence statements, rel relations between them (outranks, has-primacy-over, reviews, must-be-transposed-by ...) and assert claims by a named organ, with props (resolution_mode, state, status, deadline, basis). Use when the user wants to express which source outranks which, who reviews or transposes what, or the competence of an organ, needs an lt block parsed or checked, or asks for the relation vocabulary; triggers on \"write this in lt\", \"topology statement\", \"has-primacy-over\", \"parse this lt block\". What an instrument says and the facts of a case belong to the other planes.",
+    "allowed_tools": [
+      "topos_parse"
+    ],
+    "commit": "a9f4f54cff8275726ea29139d7a8fabc22182747",
+    "path": "skills/topos/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-topos/blob/a9f4f54cff8275726ea29139d7a8fabc22182747/skills/topos/SKILL.md"
+  },
+  {
+    "repo": "loomground-versum",
+    "name": "loomground-curate",
+    "description": "Run Versum's coordinate-identity curation to mint the concept / mental-model layer of the knowledge graph, for the whole KG or one domain folder. Use when the user wants to curate the concept layer, build the domain canon, check a domain's concept coverage or convergence, or upgrade KG chat multi-hop from claim/source level to concept level. The canon run IS the write - it materializes the concept tables in place (previously empty tables only; claims and registry untouched) - so confirm with the human BEFORE running. Deterministic and local - no model, no network. Triggers - \"curate the concept layer\", \"run coordinate curation\", \"mint the concepts\", \"build the domain canon\", \"has this domain converged\", \"why are there no concepts in the KG\".",
+    "allowed_tools": [
+      "versum_suggest",
+      "versum_confirm",
+      "versum_canon"
+    ],
+    "commit": "e4fb5b4b7a2b3655406347b196b8283fe93b1e7f",
+    "path": "skills/loomground-curate/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-versum/blob/e4fb5b4b7a2b3655406347b196b8283fe93b1e7f/skills/loomground-curate/SKILL.md"
+  },
+  {
+    "repo": "loomground-versum",
+    "name": "loomground-enrich",
+    "description": "Grow the Versum graph from research findings - extract KG-worthy nodes, validate against the graph, propose with confidence; writes route through loomground-knowledge-write with confirmation. Use when research findings or a conversation have produced knowledge that should be added to the Versum graph. Triggers - \"add what we learned to the graph\", \"enrich the KG from this\", \"capture these findings\", \"grow the graph from this conversation\".",
+    "allowed_tools": [
+      "versum_search",
+      "versum_claims"
+    ],
+    "commit": "e4fb5b4b7a2b3655406347b196b8283fe93b1e7f",
+    "path": "skills/loomground-enrich/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-versum/blob/e4fb5b4b7a2b3655406347b196b8283fe93b1e7f/skills/loomground-enrich/SKILL.md"
+  },
+  {
+    "repo": "loomground-versum",
+    "name": "loomground-kg",
+    "description": "The cockpit over the Loomground Versum knowledge graph. Use when the user wants to see the state of the KG, ask what a source grounds or what grounds a claim, check whether this week's digest/signals are captured in the graph, decide what to run next across the Loomground skill platforms, or route grounded work. Triggers include \"KG status\", \"what's in the knowledge graph\", \"is this week's digest grounded\", \"what should I run next\", \"which sources cover X\", \"cockpit\", \"route this to the right skill\", \"what does this source ground\", and \"coverage of this domain\".",
+    "allowed_tools": [
+      "versum_search",
+      "versum_claims"
+    ],
+    "commit": "e4fb5b4b7a2b3655406347b196b8283fe93b1e7f",
+    "path": "skills/loomground-kg/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-versum/blob/e4fb5b4b7a2b3655406347b196b8283fe93b1e7f/skills/loomground-kg/SKILL.md"
+  },
+  {
+    "repo": "loomground-versum",
+    "name": "loomground-kg-chat",
+    "description": "Conversational, read-only Q&A over the Loomground Versum knowledge graph, grounded on every read, local-model-first. Concept multi-hop answers from the curated canon when canon.json is present at the KG root; claim/source-level otherwise - measure, never assume. Use when the user asks a question that should be answered from the knowledge graph without writing to it. Triggers - \"what does this source ground\", \"which sources support this\", \"how are X and Y connected\", \"answer this from the KG\".",
+    "allowed_tools": [
+      "versum_search",
+      "versum_claims"
+    ],
+    "commit": "e4fb5b4b7a2b3655406347b196b8283fe93b1e7f",
+    "path": "skills/loomground-kg-chat/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-versum/blob/e4fb5b4b7a2b3655406347b196b8283fe93b1e7f/skills/loomground-kg-chat/SKILL.md"
+  },
+  {
+    "repo": "loomground-versum",
+    "name": "loomground-knowledge-write",
+    "description": "The Versum-facing alias for the single write path into a Loomground knowledge graph. Use when an approved local PDF or prepared source record should be added. Delegates every executable write to loomground-editorial's live capture-to-kg writer; it has no second identity, deduplication, sidecar, or persistence implementation. It NEVER fetches binaries from within a session.",
+    "allowed_tools": [
+      "versum_capture"
+    ],
+    "commit": "e4fb5b4b7a2b3655406347b196b8283fe93b1e7f",
+    "path": "skills/loomground-knowledge-write/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-versum/blob/e4fb5b4b7a2b3655406347b196b8283fe93b1e7f/skills/loomground-knowledge-write/SKILL.md"
+  },
+  {
+    "repo": "loomground-versum",
+    "name": "loomground-mental-model",
+    "description": "The Versum mental-model engine - scan content into a grounded ConceptGraph and project it to the format that answers the question. One hub over scan, compose, and project, wrapping the versum engine; writes route through loomground-knowledge-write. Use when the user wants concepts extracted from content into a concept graph, or that content projected into another format. Triggers - \"build a mental model\", \"extract the concepts\", \"make a concept graph\", \"turn this into slides/a checklist/a diagram/SQL\", \"project this content as X\".",
+    "allowed_tools": [
+      "versum_index",
+      "versum_claims",
+      "versum_search"
+    ],
+    "commit": "e4fb5b4b7a2b3655406347b196b8283fe93b1e7f",
+    "path": "skills/loomground-mental-model/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-versum/blob/e4fb5b4b7a2b3655406347b196b8283fe93b1e7f/skills/loomground-mental-model/SKILL.md"
+  },
+  {
+    "repo": "loomground-versum",
+    "name": "loomground-organise",
+    "description": "Organise documents into a Loomground Versum by shared mental models, with a person confirming every placement. Use when the user wants to triage the review queue, file a new document, or re-shelve an existing one into the right library/domain/year — \"organise the Versum\", \"sort my inbox\", \"where does this document belong\", \"clear the review queue\", \"suggest a domain for this\". It ranks candidate domains and the nearest existing sources by concept-overlap (the document's mental-model neighbours), shows that evidence, and — only after a human confirms — hands the write to loomground-knowledge-write. It never auto-files and never invents a domain; low-overlap or novel items stay in the review queue.",
+    "allowed_tools": [
+      "versum_index",
+      "versum_search"
+    ],
+    "commit": "e4fb5b4b7a2b3655406347b196b8283fe93b1e7f",
+    "path": "skills/loomground-organise/SKILL.md",
+    "url": "https://github.com/flxk1/loomground-versum/blob/e4fb5b4b7a2b3655406347b196b8283fe93b1e7f/skills/loomground-organise/SKILL.md"
+  },
+  {
+    "repo": "policy-compiler",
+    "name": "policy-compiler",
+    "description": "Read a written policy and produce executable governance norms. Use when the user asks to turn a policy into rules, compile a contract's obligations, find the conflicts in a policy, or ask what a policy requires or forbids.",
+    "allowed_tools": [
+      "policy_compile",
+      "policy_check"
+    ],
+    "commit": "74e7fc4c9180b53179272ba5ddc3f591f3ee09d0",
+    "path": "skills/policy-compiler/SKILL.md",
+    "url": "https://github.com/flxk1/policy-compiler/blob/74e7fc4c9180b53179272ba5ddc3f591f3ee09d0/skills/policy-compiler/SKILL.md"
+  },
+  {
+    "repo": "privacy-shield",
+    "name": "privacy-shield",
+    "description": "Local-first PII/PHI detection and clean-overlay pipeline for governed folders. Scan a folder, file, or text span by span, produce the PII-cleaned overlay — the only thing meant to leave the machine — then decide whether egress to an external service is allowed, by source classification. Personal data is found with a regex/lexicon floor plus an optional local embedding/LLM layer; the value<->placeholder map stays local; every decision is written to a local audit trail. Works standalone with every Loomground plane optional. An external enforcement host can attach behind the neutral sink interface that no-ops when absent. \"Cleared\" means the source class is allowed to egress, NOT a zero-residual certificate. Use when the user says \"redact this\", \"clean this before I send it to the cloud\", \"is this safe for an external LLM\", \"scan this folder for personal data\", \"make a privacy overlay\", \"lock this folder's egress\".",
+    "allowed_tools": [
+      "privacy_scan"
+    ],
+    "commit": "a774b39e64a9aff19dc08c03d5216edaa9eb327d",
+    "path": "skills/privacy-shield/SKILL.md",
+    "url": "https://github.com/flxk1/privacy-shield/blob/a774b39e64a9aff19dc08c03d5216edaa9eb327d/skills/privacy-shield/SKILL.md"
+  }
+]

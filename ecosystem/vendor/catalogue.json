@@ -1,0 +1,847 @@
+{
+  "family": "Loomground",
+  "source": "CATALOGUE.md",
+  "url_base": "https://github.com/flxk1/",
+  "pipeline": [
+    {
+      "step": 1,
+      "stage": "ingest",
+      "repo": "loomground-ingest",
+      "tool": "ingest_text",
+      "in": "source text or a host-acquired artifact",
+      "out": "dimensioned subgraph envelope: nodes, edges, rejections, quarantined"
+    },
+    {
+      "step": 2,
+      "stage": "versum",
+      "repo": "loomground-versum",
+      "tool": "versum_index",
+      "in": "a folder of sources (or one file via versum_capture)",
+      "out": "span-grounded claims and concepts in <folder>/.versum; versum_search over them"
+    },
+    {
+      "step": 3,
+      "stage": "solver",
+      "repo": "loomground-solver",
+      "tool": "solver_evaluate",
+      "in": ".lg patch plus transport (evidence, token)",
+      "out": "verdict per gate, accepted/undecided/rejected, replayable trace"
+    },
+    {
+      "step": 4,
+      "stage": "applied",
+      "repo": "loomground-norm",
+      "tool": "norm_extract",
+      "in": "normative text, solver-grounded",
+      "out": "RuleFacets and lifted deontic formulas"
+    },
+    {
+      "step": 4,
+      "stage": "applied",
+      "repo": "loomground-legal",
+      "tool": null,
+      "in": "entities, jurisdictions, sources of law",
+      "out": "applicability and instrument lifecycle, bridged into deontic and solver"
+    },
+    {
+      "step": 4,
+      "stage": "diagnostic",
+      "repo": "loomground-collapse",
+      "tool": "collapse",
+      "in": "constituents of a fail-closed conjunction",
+      "out": "overall verdict and the limiting term"
+    },
+    {
+      "step": 4,
+      "stage": "diagnostic",
+      "repo": "loomground-escalation",
+      "tool": "escalation",
+      "in": "governance factors, delegated level, ladder",
+      "out": "granted level, binding factor, verdict"
+    },
+    {
+      "step": 4,
+      "stage": "diagnostic",
+      "repo": "loomground-falsifiability",
+      "tool": "falsifiability",
+      "in": "oversight evidence",
+      "out": "ranked evidence, SATISFIED or OPEN"
+    },
+    {
+      "step": 4,
+      "stage": "diagnostic",
+      "repo": "loomground-proxy",
+      "tool": "proxy",
+      "in": "proxies and readings",
+      "out": "substitutions: gamed, misleading, unchecked, tracking"
+    },
+    {
+      "step": 4,
+      "stage": "diagnostic",
+      "repo": "loomground-mandate",
+      "tool": "mandate",
+      "in": "mandate, observed steps, evidence",
+      "out": "divergences from the declared mandate"
+    },
+    {
+      "step": 4,
+      "stage": "diagnostic",
+      "repo": "loomground-brief",
+      "tool": "brief",
+      "in": "premises, space, negative space, divergences",
+      "out": "ordered brief items for human review"
+    }
+  ],
+  "patch_from_documents": [
+    {
+      "step": 1,
+      "repo": "loomground-ingest",
+      "tool": "ingest_text",
+      "in": "the documents' text",
+      "out": "subgraph envelope"
+    },
+    {
+      "step": 2,
+      "repo": "loomground-versum",
+      "tool": "versum_index",
+      "in": "the folder holding the documents",
+      "out": "span-grounded claims; every later statement cites a span"
+    },
+    {
+      "step": 3,
+      "repo": "loomground-norm",
+      "tool": "norm_extract",
+      "in": "normative sentences from the claims",
+      "out": "rules with lifted deontic formulas"
+    },
+    {
+      "step": 3,
+      "repo": "loomground-deontic",
+      "tool": "deontic_parse",
+      "in": "one deontic statement",
+      "out": "formula fields and canonical render; deontic_conflicts flags incompatible pairs"
+    },
+    {
+      "step": 4,
+      "repo": "loomground",
+      "tool": null,
+      "in": "the formulas: who may act at which gate, which kinds are reserved or prohibited",
+      "out": "an .lg patch (actor, human, gate, cord, reserve, prohibit, obligation, redress); the loomground skill authors it, spec/SPEC.md governs"
+    },
+    {
+      "step": 5,
+      "repo": "loomground-solver",
+      "tool": "solver_evaluate",
+      "in": "the .lg patch plus a transport token",
+      "out": "verdict per gate and trace; the patch is accepted when every vector reproduces"
+    }
+  ],
+  "repos": [
+    {
+      "repo": "loomground",
+      "family": "Standard",
+      "role": "family front door and normative base specification",
+      "description": "Normative specification of the Loomground language: grammar, schemas, vocabulary, and conformance vectors for governing when an AI action may take effect.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [
+        "loomground_catalogue",
+        "loomground_skill",
+        "loomground_releases"
+      ],
+      "skills": [
+        "loomground"
+      ],
+      "install": "spec, read only",
+      "url": "https://github.com/flxk1/loomground"
+    },
+    {
+      "repo": "loomground-governance",
+      "family": "Standard",
+      "role": "installable governance-language plane and conformance distribution (lockstep copy of the standard, own release axis)",
+      "description": "Installable distribution of the Loomground governance language: grammar, schemas, vocabulary, conformance vectors, and a data-only Python kit.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [],
+      "skills": [
+        "loomground"
+      ],
+      "install": "pip install \"loomground-governance @ git+https://github.com/flxk1/loomground-governance@loomground-governance-v0.11.0\"",
+      "url": "https://github.com/flxk1/loomground-governance"
+    },
+    {
+      "repo": "loomground-factual",
+      "family": "Standard/language planes",
+      "role": "assertoric base language; the fact representation consumed by modal planes",
+      "description": "Assertoric language plane: lowers a copula-form assertion into a fixed 5D edge; the fact representation the modal planes evaluate against.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [
+        "factual_lower"
+      ],
+      "skills": [
+        "factual"
+      ],
+      "install": "pip install \"loomground-factual @ git+https://github.com/flxk1/loomground-factual@factual-v0.1.0\"",
+      "url": "https://github.com/flxk1/loomground-factual"
+    },
+    {
+      "repo": "loomground-deontic",
+      "family": "Standard/language planes",
+      "role": "deontic language and algebra; language separate from inference",
+      "description": "Deontic language and algebra: O/P/F operators, the eight Hohfeld incidents, a statement grammar, and the composition surface a reasoner consumes.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [
+        "deontic_parse",
+        "deontic_conflicts"
+      ],
+      "skills": [
+        "deontic"
+      ],
+      "install": "pip install \"loomground-deontic @ git+https://github.com/flxk1/loomground-deontic@loomground-deontic-v0.1.3\"",
+      "url": "https://github.com/flxk1/loomground-deontic"
+    },
+    {
+      "repo": "loomground-epistemic",
+      "family": "Standard/language planes",
+      "role": "epistemic language plane; depends on loomground-factual",
+      "description": "Epistemic language plane: a know/believe operator over a proposition, held by an agent at a certainty band, as an nD facet over loomground-factual.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-factual"
+      ],
+      "tools": [
+        "epistemic_extract"
+      ],
+      "skills": [
+        "epistemic"
+      ],
+      "install": "pip install \"loomground-epistemic @ git+https://github.com/flxk1/loomground-epistemic@epistemic-v0.1.0\"",
+      "url": "https://github.com/flxk1/loomground-epistemic"
+    },
+    {
+      "repo": "loomground-topos",
+      "family": "Standard/language planes",
+      "role": "legal-system topology language (authority, hierarchy, competence, inter-system relations); experimental",
+      "description": "Experimental: legal-system topology language for the Loomground family — authority, hierarchy, competence, inter-system relations.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [
+        "topos_parse"
+      ],
+      "skills": [
+        "topos"
+      ],
+      "install": "spec, read only",
+      "url": "https://github.com/flxk1/loomground-topos"
+    },
+    {
+      "repo": "loomground-workspace",
+      "family": "Standard/contracts",
+      "role": "workspace identity and boundary contract",
+      "description": "Workspace identity and boundary contract: how a workspace folder is scoped, identified, and registered.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [],
+      "skills": [],
+      "install": "pip install git+https://github.com/flxk1/loomground-workspace",
+      "url": "https://github.com/flxk1/loomground-workspace"
+    },
+    {
+      "repo": "loomground-vertical",
+      "family": "Standard/contracts",
+      "role": "domain-registration contract: vocabulary, jurisdiction pack, requirements house",
+      "description": "Domain-registration contract: the subject vocabulary, jurisdiction pack, and requirements house a vertical registers through.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [],
+      "skills": [],
+      "install": "pip install git+https://github.com/flxk1/loomground-vertical",
+      "url": "https://github.com/flxk1/loomground-vertical"
+    },
+    {
+      "repo": "skill-governance-block",
+      "family": "Standard/contracts",
+      "role": "vendor-neutral skill-manifest binding; external contract",
+      "description": "Vendor-neutral skill-manifest binding of the Loomground governance language: a skill declares its governance boundary once, in its manifest.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [],
+      "skills": [],
+      "install": "spec, read only",
+      "url": "https://github.com/flxk1/skill-governance-block"
+    },
+    {
+      "repo": "loomground-ref",
+      "family": "Standard/reference implementation",
+      "role": "independent reference implementation",
+      "description": "Stdlib-only reference implementation of the Loomground language; spec 0.10.0, 65/65 conformance vectors against standard 0.11.0.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [],
+      "skills": [],
+      "install": "spec, read only",
+      "url": "https://github.com/flxk1/loomground-ref"
+    },
+    {
+      "repo": "loomground-ingest",
+      "family": "Evidence pipeline",
+      "role": "deterministic normalization and evidence packaging",
+      "description": "Deterministic normalization and evidence packaging: lowers a host-acquired artifact to a dimensioned subgraph envelope for loomground-versum.",
+      "pipeline_position": 1,
+      "depends_on": [
+        "loomground-deontic",
+        "loomground-solver",
+        "loomground-governance",
+        "loomground-factual"
+      ],
+      "tools": [
+        "ingest_text"
+      ],
+      "skills": [
+        "loomground-ingest"
+      ],
+      "install": "pip install -r requirements-dev.txt && pip install .",
+      "url": "https://github.com/flxk1/loomground-ingest"
+    },
+    {
+      "repo": "loomground-versum",
+      "family": "Evidence pipeline",
+      "role": "span-grounded knowledge and evidence plane; the single persistent knowledge layer",
+      "description": "Span-grounded knowledge and evidence plane: indexes a folder of documents into a provenance-anchored graph of typed claims and concepts.",
+      "pipeline_position": 2,
+      "depends_on": [
+        "loomground-governance",
+        "loomground-deontic"
+      ],
+      "tools": [
+        "versum_index",
+        "versum_claims",
+        "versum_search",
+        "versum_capture",
+        "versum_suggest",
+        "versum_confirm",
+        "versum_canon"
+      ],
+      "skills": [
+        "loomground-curate",
+        "loomground-enrich",
+        "loomground-kg",
+        "loomground-kg-chat",
+        "loomground-knowledge-write",
+        "loomground-mental-model",
+        "loomground-organise"
+      ],
+      "install": "pip install -r requirements-dev.txt && pip install .",
+      "url": "https://github.com/flxk1/loomground-versum"
+    },
+    {
+      "repo": "loomground-solver",
+      "family": "Evidence pipeline",
+      "role": "shared reasoning kernel",
+      "description": "Shared reasoning kernel: composes 5D edges, verifies defeasible reasoning and returns a bounded decision, with governance and corpus injected through ports.",
+      "pipeline_position": 3,
+      "depends_on": [
+        "loomground-governance",
+        "loomground-deontic"
+      ],
+      "tools": [
+        "solver_evaluate",
+        "solver_verify",
+        "solver_manifest",
+        "solver_analyse_risks",
+        "solver_estimate_liability",
+        "solver_litigation_risk",
+        "solver_opponent_model",
+        "solver_probability",
+        "solver_strategy",
+        "solver_advise_addons"
+      ],
+      "skills": [
+        "advise-solver-addons",
+        "analyse-risks",
+        "estimate-liability",
+        "litigation-risk-assessor",
+        "opponent-modeler",
+        "probability-tracker",
+        "strategic-analysis"
+      ],
+      "install": "pip install -r requirements-dev.txt && pip install .",
+      "url": "https://github.com/flxk1/loomground-solver"
+    },
+    {
+      "repo": "loomground-norm",
+      "family": "Applied reasoning",
+      "role": "general normative-reasoning plane",
+      "description": "General normative-reasoning plane: rule extraction, obligation state, and multi-hop subsumption over the loomground-deontic formula.",
+      "pipeline_position": 4,
+      "depends_on": [
+        "loomground-solver",
+        "loomground-deontic"
+      ],
+      "tools": [
+        "norm_extract"
+      ],
+      "skills": [
+        "norm"
+      ],
+      "install": "git clone https://github.com/flxk1/loomground-norm && cd loomground-norm && python3 -m pip install -e \".[dev]\" -r requirements-dev.txt",
+      "url": "https://github.com/flxk1/loomground-norm"
+    },
+    {
+      "repo": "loomground-legal",
+      "family": "Applied reasoning",
+      "role": "legal domain plane; experimental",
+      "description": "Legal domain plane: entities, jurisdictions, sources of law, applicability, and instrument lifecycle, bridged into loomground-deontic and loomground-solver.",
+      "pipeline_position": 4,
+      "depends_on": [
+        "loomground-solver",
+        "loomground-deontic"
+      ],
+      "tools": [],
+      "skills": [],
+      "install": "git clone https://github.com/flxk1/loomground-legal && cd loomground-legal && python3 -m pip install -e \".[dev]\" -r requirements-dev.txt",
+      "url": "https://github.com/flxk1/loomground-legal"
+    },
+    {
+      "repo": "policy-compiler",
+      "family": "Applied reasoning",
+      "role": "compiles written policy into deontic norms, surfacing conflicts, undetermined rules, and residual spans",
+      "description": "Read a written policy and produce executable governance norms.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-governance",
+        "loomground-deontic",
+        "loomground-norm"
+      ],
+      "tools": [
+        "policy_compile",
+        "policy_check"
+      ],
+      "skills": [
+        "policy-compiler"
+      ],
+      "install": "pip install \"git+https://github.com/flxk1/policy-compiler.git@policy-compiler-v0.2.0\"",
+      "url": "https://github.com/flxk1/policy-compiler"
+    },
+    {
+      "repo": "loomground-brief",
+      "family": "Diagnostic operators",
+      "role": "selects the minimum unresolved material required for human review",
+      "description": "Selects the minimum unresolved material required for human review.",
+      "pipeline_position": 4,
+      "depends_on": [
+        "loomground-solver"
+      ],
+      "tools": [
+        "brief"
+      ],
+      "skills": [],
+      "install": "pip install loomground-brief",
+      "url": "https://github.com/flxk1/loomground-brief"
+    },
+    {
+      "repo": "loomground-collapse",
+      "family": "Diagnostic operators",
+      "role": "identifies the limiting term in a fail-closed conjunction",
+      "description": "Identifies the limiting term in a fail-closed conjunction.",
+      "pipeline_position": 4,
+      "depends_on": [
+        "loomground-solver"
+      ],
+      "tools": [
+        "collapse"
+      ],
+      "skills": [],
+      "install": "pip install loomground-collapse",
+      "url": "https://github.com/flxk1/loomground-collapse"
+    },
+    {
+      "repo": "loomground-escalation",
+      "family": "Diagnostic operators",
+      "role": "computes the autonomy ceiling imposed by multiple governance factors",
+      "description": "Computes the autonomy ceiling imposed by multiple governance factors.",
+      "pipeline_position": 4,
+      "depends_on": [
+        "loomground-solver"
+      ],
+      "tools": [
+        "escalation"
+      ],
+      "skills": [],
+      "install": "pip install loomground-escalation",
+      "url": "https://github.com/flxk1/loomground-escalation"
+    },
+    {
+      "repo": "loomground-falsifiability",
+      "family": "Diagnostic operators",
+      "role": "ranks oversight evidence by independent falsifiability",
+      "description": "Ranks oversight evidence by independent falsifiability.",
+      "pipeline_position": 4,
+      "depends_on": [
+        "loomground-solver"
+      ],
+      "tools": [
+        "falsifiability"
+      ],
+      "skills": [],
+      "install": "pip install loomground-falsifiability",
+      "url": "https://github.com/flxk1/loomground-falsifiability"
+    },
+    {
+      "repo": "loomground-mandate",
+      "family": "Diagnostic operators",
+      "role": "compares an observed trajectory with its declared mandate",
+      "description": "Compares an observed trajectory with its declared mandate.",
+      "pipeline_position": 4,
+      "depends_on": [
+        "loomground-solver"
+      ],
+      "tools": [
+        "mandate"
+      ],
+      "skills": [],
+      "install": "pip install loomground-mandate",
+      "url": "https://github.com/flxk1/loomground-mandate"
+    },
+    {
+      "repo": "loomground-proxy",
+      "family": "Diagnostic operators",
+      "role": "tests whether a proxy measurement still represents its declared target",
+      "description": "Tests whether a proxy measurement still represents its declared target.",
+      "pipeline_position": 4,
+      "depends_on": [
+        "loomground-solver"
+      ],
+      "tools": [
+        "proxy"
+      ],
+      "skills": [],
+      "install": "pip install loomground-proxy",
+      "url": "https://github.com/flxk1/loomground-proxy"
+    },
+    {
+      "repo": "governance-certification",
+      "family": "Assurance artifacts",
+      "role": "family index: predicate type, required pillars, verifier",
+      "description": "In-toto predicate schema and reference verifier for GovernanceCertification, an attestation a runtime gate mints for one governed action.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [
+        "govcert_verify"
+      ],
+      "skills": [],
+      "install": "pip install \"governance-certification[schema] @ git+https://github.com/flxk1/governance-certification\"",
+      "url": "https://github.com/flxk1/governance-certification"
+    },
+    {
+      "repo": "5d-nd",
+      "family": "Assurance artifacts",
+      "role": "grounding-reference resolver (pillar: grounding)",
+      "description": "Reference resolver for the `5d+nd` grounding scheme: canonicalises, digests and validates a dimensioned reference to a versum span.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [
+        "nd_digest"
+      ],
+      "skills": [],
+      "install": "pip install \"5d-nd @ git+https://github.com/flxk1/5d-nd\"",
+      "url": "https://github.com/flxk1/5d-nd"
+    },
+    {
+      "repo": "oversight-certificate",
+      "family": "Assurance artifacts",
+      "role": "certificate fields, issue and verify operations (pillar: oversight)",
+      "description": "Signed, offline-verifiable certificate that a qualified human decided, escalated or abstained on one action, on named evidence and legal basis.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [
+        "oversight_issue",
+        "oversight_verify"
+      ],
+      "skills": [],
+      "install": "pip install \"oversight-certificate[recommended] @ git+https://github.com/flxk1/oversight-certificate\"",
+      "url": "https://github.com/flxk1/oversight-certificate"
+    },
+    {
+      "repo": "enforcement-posture",
+      "family": "Assurance artifacts",
+      "role": "posture, evidence window, comparison, coverage (pillar: enforcement state)",
+      "description": "Binds evidence to the enforcement controls in force while it was recorded, as a DSSE-wrapped in-toto Statement; measures time below a baseline posture.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [
+        "enforcement_compare"
+      ],
+      "skills": [],
+      "install": "pip install \"enforcement-posture[recommended] @ git+https://github.com/flxk1/enforcement-posture\"",
+      "url": "https://github.com/flxk1/enforcement-posture"
+    },
+    {
+      "repo": "effect-reconciliation",
+      "family": "Assurance artifacts",
+      "role": "the three reported mismatches (pillar: observed effects)",
+      "description": "Reconciles an authorisation ledger against an effect ledger and reports three mismatches: permitted but unobserved, observed but unpermitted, duplicated.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [
+        "effect_reconcile"
+      ],
+      "skills": [],
+      "install": "pip install \"git+https://github.com/flxk1/effect-reconciliation\"",
+      "url": "https://github.com/flxk1/effect-reconciliation"
+    },
+    {
+      "repo": "norm-freshness",
+      "family": "Assurance artifacts",
+      "role": "RulePin, observed source state, freshness verdict (pillar: source validity)",
+      "description": "Per-rule freshness verdict for compiled rules pinned to a versioned source, computed at decision time from injected observations of that source.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [
+        "norm_freshness"
+      ],
+      "skills": [],
+      "install": "pip install \"git+https://github.com/flxk1/norm-freshness\"",
+      "url": "https://github.com/flxk1/norm-freshness"
+    },
+    {
+      "repo": "obligation-discharge",
+      "family": "Assurance artifacts",
+      "role": "may a permit proceed; were attached duties discharged (pillar: attached duties)",
+      "description": "Two decisions over a permit carrying duties: may an enforcement point act on it, and were the attached duties discharged on time.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [
+        "obligation_admit"
+      ],
+      "skills": [],
+      "install": "pip install git+https://github.com/flxk1/obligation-discharge",
+      "url": "https://github.com/flxk1/obligation-discharge"
+    },
+    {
+      "repo": "loomground-audit-chain",
+      "family": "Assurance artifacts",
+      "role": "append-only, hash-chained, Ed25519-signed event log with chain verification (pillar: intact)",
+      "description": "Append-only, hash-chained, Ed25519-signed events with chain verification and witness-escape records.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-workspace"
+      ],
+      "tools": [
+        "audit_chain_verify"
+      ],
+      "skills": [],
+      "install": "pip install git+https://github.com/flxk1/loomground-audit-chain",
+      "url": "https://github.com/flxk1/loomground-audit-chain"
+    },
+    {
+      "repo": "oversight-ladder",
+      "family": "Assurance artifacts",
+      "role": "human-oversight obligations keyed to the L0-L6 autonomy ladder (pillar: oversight obligation)",
+      "description": "Human-oversight obligations keyed to loomground's L0-L6 autonomy ladder.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-governance",
+        "loomground-escalation"
+      ],
+      "tools": [],
+      "skills": [],
+      "install": "pip install \"oversight-ladder @ git+https://github.com/flxk1/oversight-ladder@v0.1.0\"",
+      "url": "https://github.com/flxk1/oversight-ladder"
+    },
+    {
+      "repo": "evidence-emitter",
+      "family": "Assurance artifacts",
+      "role": "composes the installed assurance components into one signed, offline-verifiable evidence package",
+      "description": "Compose loomground assurance components into one signed, offline-verifiable governance evidence package.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-governance"
+      ],
+      "tools": [
+        "evidence_emit",
+        "evidence_verify"
+      ],
+      "skills": [
+        "evidence-emitter"
+      ],
+      "install": "pip install \"git+https://github.com/flxk1/evidence-emitter.git@v0.1.0\"",
+      "url": "https://github.com/flxk1/evidence-emitter"
+    },
+    {
+      "repo": "loomground-lock",
+      "family": "Runtime controls",
+      "role": "egress and ingress locks, capability tokens, at-rest seal of a folder's memory",
+      "description": "Egress and ingress locks with capability tokens, and at-rest sealing of a folder's memory.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-governance",
+        "loomground-workspace"
+      ],
+      "tools": [
+        "lock_text"
+      ],
+      "skills": [],
+      "install": "pip install git+https://github.com/flxk1/loomground-lock",
+      "url": "https://github.com/flxk1/loomground-lock"
+    },
+    {
+      "repo": "loomground-lane",
+      "family": "Runtime controls",
+      "role": "durable approval envelopes (actions, data, connectors, folder, policy) per graded agent",
+      "description": "Durable approval envelopes for governed agents: what a grade covers, checked each iteration, appended to the signed audit chain.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-governance",
+        "loomground-audit-chain"
+      ],
+      "tools": [
+        "lane_evaluate"
+      ],
+      "skills": [],
+      "install": "pip install git+https://github.com/flxk1/loomground-lane",
+      "url": "https://github.com/flxk1/loomground-lane"
+    },
+    {
+      "repo": "loomground-drift",
+      "family": "Runtime controls",
+      "role": "leased autonomy, tripwires, quarantine; drift against a recorded baseline",
+      "description": "Leased autonomy that decays unless renewed, tripwires that quarantine, drift measured against a baseline.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-governance",
+        "loomground-audit-chain"
+      ],
+      "tools": [
+        "drift_breaker"
+      ],
+      "skills": [],
+      "install": "pip install git+https://github.com/flxk1/loomground-drift",
+      "url": "https://github.com/flxk1/loomground-drift"
+    },
+    {
+      "repo": "loomground-erasure",
+      "family": "Runtime controls",
+      "role": "controller-signed erasure sweeps, pending-erase markers, forgotten-subjects ledger",
+      "description": "Controller-signed erasure over a signed audit chain: sweep, composite tombstone, pending markers for sealed stores, a ledger that refuses re-ingestion.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-audit-chain",
+        "loomground-lock",
+        "loomground-governance"
+      ],
+      "tools": [
+        "erasure_sweep"
+      ],
+      "skills": [],
+      "install": "pip install git+https://github.com/flxk1/loomground-erasure",
+      "url": "https://github.com/flxk1/loomground-erasure"
+    },
+    {
+      "repo": "privacy-shield",
+      "family": "Runtime controls",
+      "role": "local PII/PHI detection, clean overlays, and egress control",
+      "description": "Detect PII and PHI locally, produce a clean overlay, and block unsafe egress before content reaches an external model.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-governance"
+      ],
+      "tools": [
+        "privacy_scan"
+      ],
+      "skills": [
+        "privacy-shield"
+      ],
+      "install": "pip install \"git+https://github.com/flxk1/privacy-shield.git@v1.0.0\"",
+      "url": "https://github.com/flxk1/privacy-shield"
+    },
+    {
+      "repo": "a2a-compliance",
+      "family": "Runtime controls",
+      "role": "full-family compliance-team planning and A2A maker control",
+      "description": "Plan a governed maker action across all 41 public Loomground repositories, then control maker agents over an A2A protocol; the protocol profile stays dependency-free and the full-family profile fails closed.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-governance",
+        "loomground-deontic",
+        "loomground-norm",
+        "loomground-mandate",
+        "loomground-escalation",
+        "loomground-proxy",
+        "loomground-falsifiability"
+      ],
+      "tools": [
+        "a2a_ground",
+        "a2a_plan",
+        "a2a_admission_preview",
+        "a2a_reconcile"
+      ],
+      "skills": [
+        "compliance-fleet"
+      ],
+      "install": "pip install \"git+https://github.com/flxk1/a2a-compliance.git@v0.1.0\"",
+      "url": "https://github.com/flxk1/a2a-compliance"
+    },
+    {
+      "repo": "loomground-plugins",
+      "family": "Interfaces and authoring",
+      "role": "multi-host skill catalogue and package builder",
+      "description": "Distribute Loomground skills to Claude Code, Codex, and generic Agent Skills hosts from their canonical repositories.",
+      "pipeline_position": null,
+      "depends_on": [
+        "a2a-compliance",
+        "evidence-emitter",
+        "loomground-deontic",
+        "loomground-epistemic",
+        "loomground-factual",
+        "loomground-governance",
+        "loomground-ingest",
+        "loomground-norm",
+        "loomground-solver",
+        "loomground-topos",
+        "loomground-versum",
+        "policy-compiler",
+        "privacy-shield"
+      ],
+      "tools": [],
+      "skills": [],
+      "install": "git clone https://github.com/flxk1/loomground-plugins",
+      "url": "https://github.com/flxk1/loomground-plugins"
+    },
+    {
+      "repo": "loomground-patchbay",
+      "family": "Interfaces and authoring",
+      "role": "reusable presentation contract and console shell",
+      "description": "Presentation contract and console shell for Loomground plane data: shell renderers, canvas units, render harness, and a loopback host.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [],
+      "skills": [],
+      "install": "git clone https://github.com/flxk1/loomground-patchbay",
+      "url": "https://github.com/flxk1/loomground-patchbay"
+    },
+    {
+      "repo": "loomground-mcp",
+      "family": "Interfaces and authoring",
+      "role": "one MCP server exposing the planes as tools and the skills as prompts",
+      "description": "One MCP server exposing the Loomground planes as tools: versum, the four languages, solver and its skills, ingest, operators, assurance; stdio or HTTP.",
+      "pipeline_position": null,
+      "depends_on": [
+        "loomground-versum",
+        "loomground-solver",
+        "loomground-ingest",
+        "loomground-deontic",
+        "loomground-factual",
+        "loomground-epistemic",
+        "loomground-norm",
+        "loomground-governance"
+      ],
+      "tools": [],
+      "skills": [],
+      "install": "pip install loomground-mcp",
+      "url": "https://github.com/flxk1/loomground-mcp"
+    }
+  ]
+}
