@@ -14,51 +14,6 @@
     "url": "https://github.com/flxk1/a2a-compliance/blob/5c6f2c14af46e85989a443c51be103f248151d62/skills/compliance-fleet/SKILL.md"
   },
   {
-    "repo": "digital-law",
-    "name": "digital-law-orchestrator",
-    "description": "Use when a query crosses more than one Digital Law domain — names both the AI Act and GDPR, describes an AI system deciding/scoring/profiling a person (automated decision-making, credit/eligibility scoring), asks \"does this need both AI Act and GDPR sign-off\", \"what's the cross-regulatory read\", or any question whose facts match more than one installed domain skill's activation triggers. Also the entry point for a single-domain query that should still receive the canonical [0]-[6] output shape. Runs the routing/dispatch/harmonisation PROCESS only — it asserts no substantive law itself; every legal proposition in the answer comes from the activated domain skill(s) (ai-governance, data-protection) and their own grounding/temporal/authority verification.",
-    "allowed_tools": [
-      "versum_search",
-      "versum_claims",
-      "solver_evaluate",
-      "oversight_issue"
-    ],
-    "commit": "c24c5d46e4a38d2873516b8cb1d2c7a86de5d548",
-    "path": "skills/digital-law-orchestrator/SKILL.md",
-    "url": "https://github.com/flxk1/digital-law/blob/c24c5d46e4a38d2873516b8cb1d2c7a86de5d548/skills/digital-law-orchestrator/SKILL.md",
-    "private": true
-  },
-  {
-    "repo": "digital-law-ai",
-    "name": "ai-governance",
-    "description": "Use when the user asks about EU AI Act compliance, \"is this high-risk AI\", \"check Annex III\", \"GPAI obligations\", \"FRIA\", \"conformity assessment\", \"AI transparency\", Art. 5 prohibited practices, Art. 6 classification, Art. 50 transparency, systemic-risk GPAI, provider/deployer/importer/distributor role, or AI Office guidance. Grounded advisory over Regulation (EU) 2024/1689 — every asserted article is verified live (in-force + supported by an authority-tiered source) before it is stated as law; ungrounded or not-yet-applicable provisions are escalated, never asserted.",
-    "allowed_tools": [
-      "versum_search",
-      "versum_claims",
-      "solver_evaluate",
-      "oversight_issue"
-    ],
-    "commit": "99c89f83c87788237e4582021463e89d30fc5501",
-    "path": "skills/ai-governance/SKILL.md",
-    "url": "https://github.com/flxk1/digital-law-ai/blob/99c89f83c87788237e4582021463e89d30fc5501/skills/ai-governance/SKILL.md",
-    "private": true
-  },
-  {
-    "repo": "digital-law-data-protection",
-    "name": "data-protection",
-    "description": "Use when the user asks about GDPR (Regulation (EU) 2016/679) compliance, \"is this a lawful basis\", \"check Art. 28 processor terms\", \"third-country transfers\", \"Schrems II\", \"SCCs\", \"DPIA\", \"data subject access request\", \"DSAR\", \"automated decision-making\" (Art. 22), cookie consent / ePrivacy, breach notification (Art. 33/34), controller/processor/joint-controller role, or EDPB / national DPA guidance. Grounded advisory over Regulation (EU) 2016/679 and, where the question turns on cookies/electronic communications, Directive 2002/58/EC (ePrivacy) — every asserted article is verified live (in-force + supported by an authority-tiered source) before it is stated as law; Directive-sourced claims carry a mandatory EU-level-only disclosure; ungrounded, not-yet-applicable, or proposal-stage provisions (e.g. the draft ePrivacy Regulation) are escalated, never asserted.",
-    "allowed_tools": [
-      "versum_search",
-      "versum_claims",
-      "solver_evaluate",
-      "oversight_issue"
-    ],
-    "commit": "44f65672ea254bf302f3692e81e110bc59cc6c9f",
-    "path": "skills/data-protection/SKILL.md",
-    "url": "https://github.com/flxk1/digital-law-data-protection/blob/44f65672ea254bf302f3692e81e110bc59cc6c9f/skills/data-protection/SKILL.md",
-    "private": true
-  },
-  {
     "repo": "evidence-emitter",
     "name": "evidence-emitter",
     "description": "Compose loomground assurance components into one signed, offline-verifiable governance evidence package. Use when asked to prove what governance was applied to an action or a piece of work, emit a governance certificate or an audit-evidence package, attest a compliance-fleet decision or a privacy-shield scan report, or verify such a package offline.",
@@ -319,66 +274,6 @@
     "commit": "e4fb5b4b7a2b3655406347b196b8283fe93b1e7f",
     "path": "skills/loomground-organise/SKILL.md",
     "url": "https://github.com/flxk1/loomground-versum/blob/e4fb5b4b7a2b3655406347b196b8283fe93b1e7f/skills/loomground-organise/SKILL.md"
-  },
-  {
-    "repo": "music-rights",
-    "name": "collective-rights",
-    "description": "Use when the user asks about collective management organisations (CMOs/PROs) — GEMA, SACEM, SIAE, STIM, KODA, PRS for Music, MCPS, PPL, ASCAP, BMI, SESAC, GMR, MLC, SoundExchange, IMRO, JASRAC, APRA AMCOS, SOCAN — affiliation and mandate mechanics: exclusive vs. non-exclusive mandates, double-licensing risk, switching CMOs, songwriter/publisher membership, performance share at source vs. at receipt, mechanical/blanket-licence administration. Grounded, methodology-only reasoning over the `mrl` multi-jurisdiction music-rights coordinate system (DE/EU/US/UK/INTL) — every proposition is grounded through the loomground `mrl` rail or explicitly escalated; never asserted from latent knowledge.",
-    "allowed_tools": [
-      "versum_search",
-      "versum_claims",
-      "solver_evaluate",
-      "oversight_issue"
-    ],
-    "commit": "06be332032225ff0f8a3d7f41016306ea08b0908",
-    "path": "skills/collective-rights/SKILL.md",
-    "url": "https://github.com/flxk1/music-rights/blob/06be332032225ff0f8a3d7f41016306ea08b0908/skills/collective-rights/SKILL.md",
-    "private": true
-  },
-  {
-    "repo": "music-rights",
-    "name": "copyright-publishing",
-    "description": "Use when the user asks about music publishing, mechanical licensing, sub-publishing deals, songwriter/publisher splits, § 32a Bestseller-paragraf, DSM Directive Art. 18-22 (fair-remuneration mechanism, transparency, contract-adjustment, alternative-dispute-resolution, revocation), US 17 U.S.C. § 203 termination-of-transfer/reversion, or work-for-hire status of a composition. Grounded, methodology-only reasoning over the `mrl` multi-jurisdiction music-rights coordinate system (DE/EU/US/UK/INTL) — every proposition is grounded through the loomground `mrl` rail or explicitly escalated; never asserted from latent knowledge.",
-    "allowed_tools": [
-      "versum_search",
-      "versum_claims",
-      "solver_evaluate",
-      "oversight_issue"
-    ],
-    "commit": "06be332032225ff0f8a3d7f41016306ea08b0908",
-    "path": "skills/copyright-publishing/SKILL.md",
-    "url": "https://github.com/flxk1/music-rights/blob/06be332032225ff0f8a3d7f41016306ea08b0908/skills/copyright-publishing/SKILL.md",
-    "private": true
-  },
-  {
-    "repo": "music-rights",
-    "name": "neighbouring-rights",
-    "description": "Use when the user asks about neighbouring rights, droits voisins, verwandte Schutzrechte, performer's rights, phonogram-producer rights, broadcaster rights, equitable remuneration, public performance of a sound recording, § 78 UrhG, CDPA § 182D / 191G, 17 U.S.C. § 114, SoundExchange, PPL, GVL, the Rome Convention, WPPT, or the Rental & Lending Directive. Grounded, methodology-only reasoning over the `mrl` multi-jurisdiction music-rights coordinate system (DE/EU/US/UK/INTL) — every proposition is grounded through the loomground `mrl` rail or explicitly escalated; never asserted from latent knowledge.",
-    "allowed_tools": [
-      "versum_search",
-      "versum_claims",
-      "solver_evaluate",
-      "oversight_issue"
-    ],
-    "commit": "06be332032225ff0f8a3d7f41016306ea08b0908",
-    "path": "skills/neighbouring-rights/SKILL.md",
-    "url": "https://github.com/flxk1/music-rights/blob/06be332032225ff0f8a3d7f41016306ea08b0908/skills/neighbouring-rights/SKILL.md",
-    "private": true
-  },
-  {
-    "repo": "music-rights",
-    "name": "sync-licensing",
-    "description": "Use when the user asks about synchronisation (\"sync\") licensing or master-use licensing — sync fees, one-stop vs. split sync, MFN (most-favoured-nation) clauses, options and option fees, territory / term / media scope, sync-agency commissions, sync-buyer indemnities, film/TV/advertising/video-game/trailer sync, festival or promotional use, or reversion of sync grants. Grounded, methodology-only reasoning over the `mrl` multi-jurisdiction music-rights coordinate system (DE/EU/US/UK/INTL) — every proposition is grounded through the loomground `mrl` rail or explicitly escalated; never asserted from latent knowledge.",
-    "allowed_tools": [
-      "versum_search",
-      "versum_claims",
-      "solver_evaluate",
-      "oversight_issue"
-    ],
-    "commit": "06be332032225ff0f8a3d7f41016306ea08b0908",
-    "path": "skills/sync-licensing/SKILL.md",
-    "url": "https://github.com/flxk1/music-rights/blob/06be332032225ff0f8a3d7f41016306ea08b0908/skills/sync-licensing/SKILL.md",
-    "private": true
   },
   {
     "repo": "policy-compiler",

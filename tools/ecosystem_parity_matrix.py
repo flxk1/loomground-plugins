@@ -8,9 +8,18 @@ four columns derived from the repositories' own authoritative surfaces:
 
   mcp_tool          -- ecosystem/vendor/catalogue.json (pinned copy of the
                         "loomground" repository's CATALOGUE.json)
-  installable_skill -- ecosystem/vendor/skills-index.json (pinned copy of
-                        loomground-mcp's public skills/index.json), filtered
-                        to entries whose repo is public and in the 41
+  installable_skill -- ecosystem/vendor/skills-index.json, the PUBLIC
+                        projection at the loomground-mcp pinned commit: the
+                        upstream skills/index.json also carries skill records
+                        for repositories outside the 41 public inventory,
+                        which are dropped before vendoring so this public
+                        repository never carries their names, descriptions,
+                        paths, commit SHAs, or blob URLs. It is not a
+                        byte-for-byte copy of the upstream file; see
+                        ecosystem/vendor/PINS.json. The generator still
+                        filters defensively (repo public and in the 41) so a
+                        future re-vendor that reintroduces a private record
+                        fails closed instead of silently leaking again.
   plugin_source     -- .claude-plugin/marketplace.json, this repository's own
                         committed, release_gate-enforced marketplace manifest
   agent_role        -- ecosystem/vendor/a2a-compliance-roles/*.json (pinned
