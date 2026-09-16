@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "vendored_path": "ecosystem/vendor/catalogue.json",
+      "source_repo": "loomground",
+      "source_path": "CATALOGUE.json",
+      "note": "source_commit is not repeated here; it is read from ecosystem/manifest.json's own revision pin for source_repo, which is already validated by ecosystem_certify.validate_manifest. Duplicating the commit here would create a second pin to drift out of sync."
+    },
+    {
+      "vendored_path": "ecosystem/vendor/skills-index.json",
+      "source_repo": "loomground-mcp",
+      "source_path": "src/loomground_mcp/skills/index.json",
+      "note": "unfiltered upstream copy, including private-repo entries; the generator filters to public entries whose repo is one of the 41 ecosystem/manifest.json repositories."
+    },
+    {
+      "vendored_path": "ecosystem/vendor/a2a-compliance-roles/*.json",
+      "source_repo": "a2a-compliance",
+      "source_path": "a2a_compliance/roles/*.json",
+      "note": "eight role manifests, copied verbatim."
+    }
+  ]
+}
