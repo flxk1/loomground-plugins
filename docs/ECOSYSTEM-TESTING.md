@@ -4,11 +4,11 @@
 # Ecosystem testing
 
 Loomground is certified as one revision-bound system, not as 41 unrelated green
-repositories. The canonical inventory is `ecosystem/manifest.json`.
+repositories from the catalogue. The canonical inventory is `ecosystem/manifest.json`.
 
 ## What must pass
 
-1. **Inventory:** exactly 41 uniquely sorted public repositories with canonical
+1. **Inventory:** exactly 41 uniquely sorted catalogued repositories with canonical
    URLs, immutable revisions, one stated invariant and one test profile each.
 2. **Runtime parity:** the 32 executable packages must use the exact commits in
    `runtime/runtime-sources.json`. `loomground-plugins` uses `self`, resolved to

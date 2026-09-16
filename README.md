@@ -57,7 +57,7 @@ Windows on x86-64 and ARM64. GitHub OIDC/Sigstore attestations authenticate each
 bundle, checksum, ephemeral public key and installer wheel; no permanent release
 private key is stored. See [docs/RUNTIME-RELEASE.md](docs/RUNTIME-RELEASE.md).
 
-The ecosystem certification contract covers all 41 public Loomground repositories
+The ecosystem certification contract covers the 41 catalogued Loomground repositories
 at exact revisions and eight cross-repository failure scenarios. Missing, stale,
 failed, duplicate, or mutated evidence cannot produce a passing certificate. See
 [docs/ECOSYSTEM-TESTING.md](docs/ECOSYSTEM-TESTING.md).
@@ -105,7 +105,7 @@ out: dist/codex/<package>/ contains the pinned skills and installation metadata
 | source registry | `externals.json`: repository URL, immutable commit, sibling path |
 | package manifest | `<source>/package.json`, checked against `schemas/loomground-package.schema.json` |
 | Claude catalogue | `.claude-plugin/marketplace.json`, regenerated from the pinned sources |
-| ecosystem certification | `ecosystem/manifest.json`: all 41 repositories, exact revisions, invariants and scenarios |
+| ecosystem certification | `ecosystem/manifest.json`: the 41 catalogued repositories, exact revisions, invariants and scenarios |
 | release gate | JSON validity, supply-chain checks, generated-catalogue parity, tests |
 
 ## Family

@@ -44,7 +44,7 @@ The catalogue distributes 25 skills across governance, runtime controls, evidenc
 | host adapters | pure renderers for Claude, Codex, Cursor, OpenAI, n8n and generic MCP |
 | onboarding | confirmed runtime install plus atomic, non-secret host and Maker handoff pack |
 | runtime release | six-platform Python 3.12 matrix; ephemeral Ed25519 keys; GitHub OIDC/Sigstore provenance |
-| ecosystem certification | all 41 public repositories at exact revisions plus eight cross-repository fail-closed scenarios |
+| ecosystem certification | the 41 catalogued repositories at exact revisions plus eight cross-repository fail-closed scenarios |
 | release gate | JSON validity, supply-chain checks, generated-catalogue parity, tests |
 
 ## Ecosystem certification
@@ -55,7 +55,7 @@ when any result is missing, stale, failed, duplicated, or digest-invalid. Detail
 `docs/ECOSYSTEM-TESTING.md`.
 
 The manual `ecosystem-repository-evidence` workflow requires exactly one passing,
-revision-bound result for all 41 repositories. It consumes native GitHub checks
+revision-bound result for the 41 catalogued repositories. It consumes native GitHub checks
 where available and runs isolated native tests for the four historical pins that
 have no check-run evidence. It also verifies and installs the published signed
 runtime, checks its 32 Git pins, executes all eight scenarios through MCP, binds
