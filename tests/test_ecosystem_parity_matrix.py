@@ -195,6 +195,68 @@ def test_catalogue_rejects_a_tool_owned_by_two_repositories(catalogue):
         parity.build_tool_and_skill_maps(mutated)
 
 
+# --- privacy: no private-repo metadata may ever be vendored into this
+# public repository. These guard the committed file on disk directly (not a
+# constructed fixture), so a future re-vendor that pulls the private-repo
+# records back in from upstream fails this suite before it reaches a commit. ---
+
+PRIVATE_REPOS_NEVER_TO_LEAK = (
+    "digital-law",
+    "digital-law-ai",
+    "digital-law-data-protection",
+    "music-rights",
+)
+
+
+def test_vendored_skills_index_carries_no_private_records(names, skills_index):
+    private = [e for e in skills_index if e.get("private")]
+    assert private == [], f"vendored skills-index.json must never carry private records: {private}"
+
+
+def test_vendored_skills_index_carries_no_non_inventory_repos(names, skills_index):
+    outside = sorted({e["repo"] for e in skills_index} - set(names))
+    assert outside == [], f"vendored skills-index.json must only carry the 41-inventory repos: {outside}"
+
+
+def test_vendored_skills_index_names_no_known_private_repo(skills_index):
+    repos = {e["repo"] for e in skills_index}
+    leaked = repos & set(PRIVATE_REPOS_NEVER_TO_LEAK)
+    assert leaked == set(), f"vendored skills-index.json names a known private repo: {leaked}"
+
+
+def test_vendored_skills_index_has_no_private_key_at_all(skills_index):
+    # Stronger than "private is not true": the committed public projection
+    # should not carry the key at all, since every remaining record is public.
+    carrying_key = [e["repo"] for e in skills_index if "private" in e]
+    assert carrying_key == [], f"public projection should not carry a private key: {carrying_key}"
+
+
+def test_vendored_catalogue_names_no_private_repo_and_matches_inventory(names, catalogue):
+    repos = {entry["repo"] for entry in catalogue["repos"]}
+    leaked = repos & set(PRIVATE_REPOS_NEVER_TO_LEAK)
+    assert leaked == set(), f"vendored catalogue.json names a known private repo: {leaked}"
+    assert repos == set(names), "vendored catalogue.json must name exactly the 41-inventory repos"
+
+
+def test_vendored_roles_reference_no_private_repo(names, roles):
+    for role_id, role in roles.items():
+        for capability in role["allowed_capabilities"]:
+            kind, _, value = capability.partition(":")
+            if kind in ("contract", "distribution"):
+                assert value not in PRIVATE_REPOS_NEVER_TO_LEAK, (
+                    f"role {role_id} references a known private repo: {value}"
+                )
+                assert value in names, (
+                    f"role {role_id} references a repo outside the inventory: {value}"
+                )
+
+
+def test_vendor_pins_note_no_private_repo():
+    pins_text = (ROOT / "ecosystem/vendor/PINS.json").read_text(encoding="utf-8")
+    for repo in PRIVATE_REPOS_NEVER_TO_LEAK:
+        assert repo not in pins_text, f"PINS.json names a known private repo: {repo}"
+
+
 # --- fail-closed: installable skill drift ------------------------------
 
 def test_skills_index_rejects_public_entry_for_unknown_repository(names, skills_index):
