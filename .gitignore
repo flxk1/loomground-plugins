@@ -8,3 +8,4 @@ _to_delete/
 _skill_bundles/
 /build/
 *.egg-info/
+/work/
