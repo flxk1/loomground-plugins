@@ -11,7 +11,7 @@
       "vendored_path": "ecosystem/vendor/skills-index.json",
       "source_repo": "loomground-mcp",
       "source_path": "src/loomground_mcp/skills/index.json",
-      "note": "unfiltered upstream copy, including private-repo entries; the generator filters to public entries whose repo is one of the 41 ecosystem/manifest.json repositories."
+      "note": "NOT a byte-for-byte copy of the upstream file: the upstream index also carries skill records for private repositories outside the 41 public ecosystem/manifest.json inventory. Vendoring those into this public repository would leak private-repo names, descriptions, paths, commit SHAs, and blob URLs. This file is the public projection at the pinned commit: every record marked private, or whose repo is outside the 41-repo inventory, is dropped before it is committed here, not merely filtered downstream. tests/test_ecosystem_parity_matrix.py asserts zero such records remain and that no known private repo name appears anywhere under ecosystem/vendor/."
     },
     {
       "vendored_path": "ecosystem/vendor/a2a-compliance-roles/*.json",
