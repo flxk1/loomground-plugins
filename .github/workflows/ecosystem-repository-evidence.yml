@@ -56,7 +56,7 @@ jobs:
             dependency: ""
             dependency_commit: ""
           - name: loomground-workspace
-            commit: e6e5e7dae8dc11e089a11dc15f3b519d2e4750ad
+            commit: b022d61f7c5e5d3dae85cf037f09ec4d446a3eb7
             dependency: ""
             dependency_commit: ""
           - name: oversight-certificate
@@ -155,7 +155,7 @@ jobs:
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           repository: flxk1/loomground-legal
-          ref: 30c8ce2cc563f18d238451aa0444c516b038c0d0
+          ref: 1ece4536ce2530aa7820bc33e7b2a5787b040a4f
           path: legal
       - name: Download the published Linux runtime and released installer
         shell: bash
