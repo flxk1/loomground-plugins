@@ -5,7 +5,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/a2a-compliance.git",
-      "sha": "5c6f2c14af46e85989a443c51be103f248151d62"
+      "sha": "66b4f42aaf6235652165f69bfc1f5304b77795d7"
     }
   },
   "evidence-emitter": {
@@ -22,7 +22,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-deontic.git",
-      "sha": "5ac270ecc7d451185d8c99c61951b8b7a5e600f9"
+      "sha": "ead0ad28a133a9d37f3dbec8e890b6e32b3b7048"
     }
   },
   "loomground-epistemic": {
@@ -48,7 +48,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-governance.git",
-      "sha": "ec19e0528b83bcecf1fff6c61d0163f2c536f37d"
+      "sha": "408554b0a8f7158f268f168c44ebb690b749b5f7"
     }
   },
   "loomground-ingest": {
@@ -56,7 +56,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-ingest.git",
-      "sha": "fe156fffe1e2a5c673544d468b353582f816d984"
+      "sha": "de3f6dcefbac1455abb930e5f63f212129d08585"
     }
   },
   "loomground-norm": {
@@ -65,7 +65,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-norm.git",
-      "sha": "b7d08778e79f44b970ed8965639b31fc21df9cd3"
+      "sha": "b1bf436570a18a201fc95fd8156bbd929ee349d0"
     }
   },
   "loomground-solver": {
@@ -73,7 +73,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-solver.git",
-      "sha": "3d6b77a45179ad829c2933ad64e9005bf91ec06a"
+      "sha": "e926f64ad82c37527b45e49f8fdae84bdce4537f"
     }
   },
   "loomground-topos": {
@@ -90,7 +90,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-versum.git",
-      "sha": "16751334bcd9d7d8013b24fd473b468c7d5f5b8c"
+      "sha": "3971bd578f3d31d69bdfb3dd22f2ee3a6610be2e"
     }
   },
   "policy-compiler": {
@@ -99,7 +99,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/policy-compiler.git",
-      "sha": "74e7fc4c9180b53179272ba5ddc3f591f3ee09d0"
+      "sha": "2dfd3f0b7004981f6b59948fb92f690d619c3edf"
     }
   },
   "privacy-shield": {
