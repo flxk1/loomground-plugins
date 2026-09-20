@@ -34,9 +34,9 @@
     {"name": "loomground-drift", "url": "https://github.com/flxk1/loomground-drift.git", "commit": "e8279ec38255f278b978752fc13dffb51acfd448"},
     {"name": "loomground-erasure", "url": "https://github.com/flxk1/loomground-erasure.git", "commit": "df098be5815e5dc418d36d397a8d9b24697279e7"},
     {"name": "loomground-workspace", "url": "https://github.com/flxk1/loomground-workspace.git", "commit": "b022d61f7c5e5d3dae85cf037f09ec4d446a3eb7"},
-    {"name": "policy-compiler", "url": "https://github.com/flxk1/policy-compiler.git", "commit": "2dfd3f0b7004981f6b59948fb92f690d619c3edf"},
+    {"name": "policy-compiler", "url": "https://github.com/flxk1/policy-compiler.git", "commit": "d14e9a859661421738c3e0c8d2d79ae1941fbc2f"},
     {"name": "evidence-emitter", "url": "https://github.com/flxk1/evidence-emitter.git", "commit": "4869b1f90ad12bee25cd19da3bb8b56d69de598c"},
     {"name": "privacy-shield", "url": "https://github.com/flxk1/privacy-shield.git", "commit": "a774b39e64a9aff19dc08c03d5216edaa9eb327d"},
-    {"name": "a2a-compliance", "url": "https://github.com/flxk1/a2a-compliance.git", "commit": "66b4f42aaf6235652165f69bfc1f5304b77795d7"}
+    {"name": "a2a-compliance", "url": "https://github.com/flxk1/a2a-compliance.git", "commit": "706223c230fcc110c9cb53c3614a3f626c6f2da5"}
   ]
 }

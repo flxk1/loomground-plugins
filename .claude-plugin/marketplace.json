@@ -13,7 +13,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/a2a-compliance.git",
-        "sha": "66b4f42aaf6235652165f69bfc1f5304b77795d7"
+        "sha": "706223c230fcc110c9cb53c3614a3f626c6f2da5"
       },
       "description": "Control maker agents over an A2A protocol with role authority and optional Loomground value grounding.",
       "version": "0.1.0",
@@ -270,7 +270,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/policy-compiler.git",
-        "sha": "2dfd3f0b7004981f6b59948fb92f690d619c3edf"
+        "sha": "d14e9a859661421738c3e0c8d2d79ae1941fbc2f"
       },
       "description": "Compile a written policy into grounded deontic norms (O/P/F with bearer, action, conditions, cross-references), surfacing conflicts, undetermined rules, and unplaceable spans, and running test cases. Stops at a validated draft; activation is reserved. Delegates lowering to the loomground deontic/norm planes when present, degrading to advisory when absent. Output matches the compliance-fleet grounding seam.",
       "version": "0.2.0",
