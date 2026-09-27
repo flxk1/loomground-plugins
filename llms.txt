@@ -41,12 +41,12 @@ loomground onboard
 …
 
 ## Usage
-`externals.json` pins 13 public source repositories by commit;
+`externals.json` pins 14 public source repositories by commit;
 `tools/build_packages.py` validates them and builds host-specific packages.
 `.claude-plugin/marketplace.json` is the committed catalogue that
 `loomground-suite` composes without copying the repositories.
 
-The catalogue distributes 25 skills across governance, runtime controls,
+The catalogue distributes 32 skills across governance, runtime controls,
 evidence, ingest, solver analysis, Versum knowledge work, and the language
 planes.
 
@@ -59,10 +59,10 @@ deployment is advisory, not enforced.
 | source registry | `externals.json`: repository URL, immutable commit, sibling path |
 | package manifest | `<source>/package.json` against `schemas/loomground-package.schema.json` |
 | Claude catalogue | `.claude-plugin/marketplace.json`, regenerated from pins |
-| ecosystem certification | `ecosystem/manifest.json`: the 42 catalogued repositories, exact revisions, invariants and scenarios |
+| ecosystem certification | `ecosystem/manifest.json`: the 42 certified repositories, exact revisions, invariants and scenarios |
 | release gate | JSON validity, supply-chain checks, generated-catalogue parity, tests |
 
 ## Family
-Interfaces and authoring: consumes committed skills from 13 Loomground repositories at immutable pins, produces installation packages for supported hosts. Plane execution stays in `loomground-mcp` and the source repositories.
+Interfaces and authoring: consumes committed skills from 14 Loomground repositories at immutable pins, produces installation packages for supported hosts. Plane execution stays in `loomground-mcp` and the source repositories.
 
 Language: loomground — guide https://github.com/flxk1/loomground/blob/main/llms.txt (the .lg language an agent reads, emits, validates); catalogue https://github.com/flxk1/loomground/blob/main/CATALOGUE.json

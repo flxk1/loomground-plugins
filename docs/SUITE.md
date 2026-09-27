@@ -8,7 +8,7 @@ Loomground family. It installs one control skill and registers one
 `loomground-mcp` server. The server exposes the pinned family catalogue, 26
 skill bodies and 55 plane functions.
 
-It does not recursively install 13 plugin cards or clone 30+ repositories.
+It does not recursively install 14 plugin cards or clone 30+ repositories.
 That would duplicate source and let package versions drift. The runtime consumes
 the family at release pins; `loomground_catalogue`, `loomground_releases` and
 `loomground_skill` expose the resolved map to the host.

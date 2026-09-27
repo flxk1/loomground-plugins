@@ -49,7 +49,7 @@ dependencies:
   governance and solver.
 - `core`: language planes, governance, ingest and solver.
 - `knowledge`: ingest, Versum, factual/epistemic language and solver.
-- `full`: all 13 marketplace plugins.
+- `full`: all 14 source plugins in the marketplace.
 
 ## Signed bundles and transactional installation
 
