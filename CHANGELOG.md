@@ -2,6 +2,19 @@
 <!-- Copyright 2026 flxk1 -->
 # Changelog
 
+## 2026-09-27 — governance roles
+
+- New marketplace plugin `loomground-governance-roles`: the seven governed
+  roles from `governance-layer`, pinned by commit in `externals.json` and the
+  marketplace, and part of the `full` installer profile.
+- `governance-layer` joins the certified ecosystem: 42 repositories in
+  `ecosystem/manifest.json`, its `test` check in `repository-checks.json`, and a
+  participant in the cross-host runtime parity scenario.
+- Repinned `loomground` and `a2a-compliance` and re-vendored the catalogue and
+  the `conductor` role, which now declares `contract:governance-layer`.
+- The parity matrix maps an external plugin to its repository by the pinned
+  source URL, so a plugin name may differ from its repository name.
+
 ## 2026-09-27 — install requirements
 
 - README, `docs/SUITE.md`, `docs/INSTALLER.md` and `llms.txt` state install

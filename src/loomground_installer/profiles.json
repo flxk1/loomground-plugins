@@ -35,6 +35,7 @@
       "loomground-epistemic",
       "loomground-factual",
       "loomground-governance",
+      "loomground-governance-roles",
       "loomground-ingest",
       "loomground-norm",
       "loomground-solver",

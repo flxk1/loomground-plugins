@@ -166,7 +166,7 @@
       "skills": [
         "loomground"
       ],
-      "install": "pip install \"loomground-governance @ git+https://github.com/flxk1/loomground-governance@loomground-governance-v0.11.0\"",
+      "install": "pip install \"loomground-governance @ git+https://github.com/flxk1/loomground-governance@loomground-governance-v0.11.1\"",
       "url": "https://github.com/flxk1/loomground-governance"
     },
     {
@@ -199,7 +199,7 @@
       "skills": [
         "deontic"
       ],
-      "install": "pip install \"loomground-deontic @ git+https://github.com/flxk1/loomground-deontic@loomground-deontic-v0.1.3\"",
+      "install": "pip install \"loomground-deontic @ git+https://github.com/flxk1/loomground-deontic@loomground-deontic-v0.2.1\"",
       "url": "https://github.com/flxk1/loomground-deontic"
     },
     {
@@ -276,7 +276,7 @@
       "repo": "loomground-ref",
       "family": "Standard/reference implementation",
       "role": "independent reference implementation",
-      "description": "Stdlib-only reference implementation of the Loomground language; spec 0.10.0, 65/65 conformance vectors against standard 0.11.0.",
+      "description": "Stdlib-only reference implementation of the Loomground language; spec 0.10.0, 69/69 conformance vectors against standard 0.11.0.",
       "pipeline_position": null,
       "depends_on": [],
       "tools": [],
@@ -422,7 +422,7 @@
       "skills": [
         "policy-compiler"
       ],
-      "install": "pip install \"git+https://github.com/flxk1/policy-compiler.git@policy-compiler-v0.2.0\"",
+      "install": "pip install \"git+https://github.com/flxk1/policy-compiler.git@policy-compiler-v0.3.0\"",
       "url": "https://github.com/flxk1/policy-compiler"
     },
     {
@@ -754,14 +754,14 @@
       "skills": [
         "privacy-shield"
       ],
-      "install": "pip install \"git+https://github.com/flxk1/privacy-shield.git@v1.0.0\"",
+      "install": "pip install \"git+https://github.com/flxk1/privacy-shield.git@v2.1.1\"",
       "url": "https://github.com/flxk1/privacy-shield"
     },
     {
       "repo": "a2a-compliance",
       "family": "Runtime controls",
       "role": "full-family compliance-team planning and A2A maker control",
-      "description": "Plan a governed maker action across all 41 public Loomground repositories, then control maker agents over an A2A protocol; the protocol profile stays dependency-free and the full-family profile fails closed.",
+      "description": "Plan a governed maker action across the Loomground family, then control the maker over an A2A protocol. Two profiles: a protocol floor and a fail-closed Loomground compliance team.",
       "pipeline_position": null,
       "depends_on": [
         "loomground-governance",
@@ -781,14 +781,34 @@
       "skills": [
         "compliance-fleet"
       ],
-      "install": "pip install \"git+https://github.com/flxk1/a2a-compliance.git@v0.1.0\"",
+      "install": "pip install \"git+https://github.com/flxk1/a2a-compliance.git@v0.4.0\"",
       "url": "https://github.com/flxk1/a2a-compliance"
+    },
+    {
+      "repo": "governance-layer",
+      "family": "Runtime controls",
+      "role": "seven governed roles as install-ready skills, each carrying a governance block",
+      "description": "Turn universal loomground skills into governed roles, each carrying the governance block an enforcement host reads.",
+      "pipeline_position": null,
+      "depends_on": [],
+      "tools": [],
+      "skills": [
+        "grounder",
+        "legal-reasoner",
+        "knowledge-steward",
+        "lock-steward",
+        "policy-officer",
+        "auditor",
+        "local-grounder"
+      ],
+      "install": "pip install \"governance-layer @ git+https://github.com/flxk1/governance-layer\"",
+      "url": "https://github.com/flxk1/governance-layer"
     },
     {
       "repo": "loomground-plugins",
       "family": "Interfaces and authoring",
       "role": "multi-host skill catalogue and package builder",
-      "description": "Distribute Loomground skills to Claude Code, Codex, and generic Agent Skills hosts from their canonical repositories.",
+      "description": "Distribute Loomground skills and one pinned runtime to Claude, Codex/OpenAI, Cursor, n8n and generic MCP/Agent Skills hosts from their canonical repositories.",
       "pipeline_position": null,
       "depends_on": [
         "a2a-compliance",
@@ -826,7 +846,7 @@
       "repo": "loomground-mcp",
       "family": "Interfaces and authoring",
       "role": "one MCP server exposing the planes as tools and the skills as prompts",
-      "description": "One MCP server exposing the Loomground planes as tools: versum, the four languages, solver and its skills, ingest, operators, assurance; stdio or HTTP.",
+      "description": "One MCP server exposing the Loomground planes as tools: versum, the four languages, solver and its skills, ingest, operators, assurance, controls; stdio or HTTP.",
       "pipeline_position": null,
       "depends_on": [
         "loomground-versum",

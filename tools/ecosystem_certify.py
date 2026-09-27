@@ -54,8 +54,8 @@ def validate_manifest(document: object, runtime_sources: object) -> dict:
     if manifest["schema_version"] != 1 or manifest["owner"] != "flxk1":
         raise CertificationError("unsupported ecosystem manifest identity")
     repositories = manifest["repositories"]
-    if not isinstance(repositories, list) or manifest["repository_count"] != 41:
-        raise CertificationError("ecosystem manifest must declare 41 repositories")
+    if not isinstance(repositories, list) or manifest["repository_count"] != 42:
+        raise CertificationError("ecosystem manifest must declare 42 repositories")
     if len(repositories) != manifest["repository_count"]:
         raise CertificationError("repository_count differs from repository inventory")
 
@@ -451,7 +451,7 @@ def main() -> int:
                 args.self_commit or current_commit(),
                 verify_evidence_files=True,
             )
-            print(f"ECOSYSTEM REPOSITORY RESULTS PASS: {len(repositories)}/41 repositories")
+            print(f"ECOSYSTEM REPOSITORY RESULTS PASS: {len(repositories)}/42 repositories")
             return 0
         self_commit = args.self_commit or current_commit()
         certificate = certify(manifest, args.results, self_commit)

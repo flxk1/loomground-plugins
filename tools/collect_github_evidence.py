@@ -207,7 +207,7 @@ def main() -> int:
         passed, failures = collect(
             manifest, contracts, args.self_commit, args.output, token, set(args.exclude)
         )
-        expected = 41 - len(set(args.exclude))
+        expected = 42 - len(set(args.exclude))
         if failures:
             for failure in failures:
                 print(f"GITHUB EVIDENCE FAIL: {failure}")

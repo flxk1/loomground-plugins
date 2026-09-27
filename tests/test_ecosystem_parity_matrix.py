@@ -50,26 +50,26 @@ def roles():
 
 # --- row set -----------------------------------------------------------
 
-def test_row_count_is_exactly_41(matrix):
-    assert matrix["row_count"] == 41
-    assert len(matrix["rows"]) == 41
+def test_row_count_is_exactly_42(matrix):
+    assert matrix["row_count"] == 42
+    assert len(matrix["rows"]) == 42
 
 
 def test_rows_match_manifest_names_exactly(matrix, names):
     row_names = sorted(row["name"] for row in matrix["rows"])
     assert row_names == names
-    assert len(set(row_names)) == 41
+    assert len(set(row_names)) == 42
 
 
 def test_manifest_names_rejects_wrong_count():
     manifest = {"repositories": [{"name": f"repo-{i}"} for i in range(40)]}
-    with pytest.raises(parity.ParityError, match="exactly 41"):
+    with pytest.raises(parity.ParityError, match="exactly 42"):
         parity.manifest_names(manifest)
 
 
 def test_manifest_names_rejects_duplicates():
-    manifest = {"repositories": [{"name": "a"}] * 41}
-    with pytest.raises(parity.ParityError, match="exactly 41"):
+    manifest = {"repositories": [{"name": "a"}] * 42}
+    with pytest.raises(parity.ParityError, match="exactly 42"):
         parity.manifest_names(manifest)
 
 
@@ -145,13 +145,13 @@ def test_loomground_workspace_has_a_legitimate_null_plugin_source_with_reason(ma
     assert "not listed as a pinned external plugin source" in row["plugin_source"]["reason"]
 
 
-def test_agent_role_partitions_all_41_repositories_across_8_roles(matrix):
+def test_agent_role_partitions_all_42_repositories_across_8_roles(matrix):
     role_ids = {row["agent_role"]["value"] for row in matrix["rows"]}
     assert role_ids == set(parity.ROLE_IDS)
     per_role = {}
     for row in matrix["rows"]:
         per_role.setdefault(row["agent_role"]["value"], []).append(row["name"])
-    assert sum(len(v) for v in per_role.values()) == 41
+    assert sum(len(v) for v in per_role.values()) == 42
     assert per_role["decision-verifier"] == ["loomground-solver"]
 
 
@@ -215,7 +215,7 @@ def test_vendored_skills_index_carries_no_private_records(names, skills_index):
 
 def test_vendored_skills_index_carries_no_non_inventory_repos(names, skills_index):
     outside = sorted({e["repo"] for e in skills_index} - set(names))
-    assert outside == [], f"vendored skills-index.json must only carry the 41-inventory repos: {outside}"
+    assert outside == [], f"vendored skills-index.json must only carry the 42-inventory repos: {outside}"
 
 
 def test_vendored_skills_index_names_no_known_private_repo(skills_index):
@@ -235,7 +235,7 @@ def test_vendored_catalogue_names_no_private_repo_and_matches_inventory(names, c
     repos = {entry["repo"] for entry in catalogue["repos"]}
     leaked = repos & set(PRIVATE_REPOS_NEVER_TO_LEAK)
     assert leaked == set(), f"vendored catalogue.json names a known private repo: {leaked}"
-    assert repos == set(names), "vendored catalogue.json must name exactly the 41-inventory repos"
+    assert repos == set(names), "vendored catalogue.json must name exactly the 42-inventory repos"
 
 
 def test_vendored_roles_reference_no_private_repo(names, roles):
@@ -270,7 +270,7 @@ def test_skills_index_rejects_private_flag_on_an_inventory_repository(names, ski
     mutated = copy.deepcopy(skills_index)
     entry = next(e for e in mutated if e["repo"] == "privacy-shield")
     entry["private"] = True
-    with pytest.raises(parity.ParityError, match="marks a 41-inventory repository private"):
+    with pytest.raises(parity.ParityError, match="marks a 42-inventory repository private"):
         parity.installable_skill_cells(mutated, names)
 
 

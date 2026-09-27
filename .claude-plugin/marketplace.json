@@ -137,6 +137,29 @@
       ]
     },
     {
+      "name": "loomground-governance-roles",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/flxk1/governance-layer.git",
+        "sha": "291961e51933fbb986d8e4cbe3eee2053c56e1eb"
+      },
+      "description": "Seven governed roles for the loomground ecosystem — grounder, legal-reasoner, knowledge-steward, lock-steward, policy-officer, auditor, local-grounder. Each role is a skill that declares its own governance block in its manifest frontmatter; an enforcement host enforces the block (a signed verdict on its hash-chain), ctrl plans on it, the agent-registry records it. The official/private firewall keeps the product grounder on official versum only while the local-grounder serves the private folder, firewalled.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Loomground Contributors"
+      },
+      "keywords": [
+        "governance",
+        "loomground",
+        "governed-agents",
+        "roles",
+        "skill-governance-block",
+        "egress-lock",
+        "grounding",
+        "legal"
+      ]
+    },
+    {
       "name": "loomground-ingest",
       "source": {
         "source": "url",

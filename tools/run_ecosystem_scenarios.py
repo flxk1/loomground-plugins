@@ -152,7 +152,7 @@ async def cross_host_runtime_parity(runtime: Runtime, runtime_destination: Path)
     })
     scenario.require("all-six-host-adapters-render", set(adapters) == set(HOSTS))
     scenario.require("host-adapters-contain-no-secret-material", all(not item["secret_material_included"] for item in adapters.values()))
-    scenario.require("family-plan-covers-41-repositories", len(plan["plan"]["repository_coverage"]) == 41)
+    scenario.require("family-plan-covers-42-repositories", len(plan["plan"]["repository_coverage"]) == 42)
     scenario.require("distribution-never-dispatches", plan["dispatch_performed"] is False)
     return scenario
 

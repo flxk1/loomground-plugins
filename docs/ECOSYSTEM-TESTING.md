@@ -3,12 +3,12 @@
 
 # Ecosystem testing
 
-Loomground is certified as one revision-bound system, not as 41 unrelated green
+Loomground is certified as one revision-bound system, not as 42 unrelated green
 repositories from the catalogue. The canonical inventory is `ecosystem/manifest.json`.
 
 ## What must pass
 
-1. **Inventory:** exactly 41 uniquely sorted catalogued repositories with canonical
+1. **Inventory:** exactly 42 uniquely sorted catalogued repositories with canonical
    URLs, immutable revisions, one stated invariant and one test profile each.
 2. **Runtime parity:** the 32 executable packages must use the exact commits in
    `runtime/runtime-sources.json`. `loomground-plugins` uses `self`, resolved to
@@ -84,13 +84,13 @@ The workflow also downloads the released Linux runtime and installer, verifies
 their GitHub attestations and checksum, performs the signed transactional install,
 checks its 32 Git source pins, and runs all eight scenarios through its MCP
 surface. The final job merges this with GitHub and native-backfill evidence,
-requires exactly 41 unique passing repository results and eight traces, then
+requires exactly 42 unique passing repository results and eight traces, then
 mints and independently verifies the complete certificate. No job may replace a
 missing result with an inventory assertion.
 
 The central release gate validates the inventory, check-contract parity, pin
 parity, schemas, negative cases and deterministic aggregation. Promotion to an
-ecosystem release must additionally supply all 41 repository results and all
+ecosystem release must additionally supply all 42 repository results and all
 eight scenario traces. Both executors are implemented by the manual workflow.
 
 This certifies the tested pins and scenarios. It does not prove every possible

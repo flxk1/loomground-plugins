@@ -129,13 +129,13 @@ jobs:
           pattern: ecosystem-repository-*
           path: ${{ runner.temp }}/ecosystem-results
           merge-multiple: true
-      - name: Require exactly one passing result for all 41 revisions
+      - name: Require exactly one passing result for all 42 revisions
         run: >-
           python tools/ecosystem_certify.py
           --results "$RUNNER_TEMP/ecosystem-results"
           --self-commit "$GITHUB_SHA"
           --repository-results-only
-      - name: Upload the complete 41-repository result set
+      - name: Upload the complete 42-repository result set
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ecosystem-repositories-complete-${{ github.sha }}
