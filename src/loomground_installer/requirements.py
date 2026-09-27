@@ -61,15 +61,28 @@ RangePart = tuple[int, int]
 SupportedRange = tuple[RangePart, RangePart]
 
 
-def _candidate_paths() -> list[Path]:
+def _candidate_paths(start: Path | None = None, include_packaged: bool = True) -> list[Path]:
+    """Enumerate places ``runtime-sources.json`` might live, in lookup order.
+
+    ``start`` and ``include_packaged`` are narrow, default-preserving
+    injection points for tests: with both left at their defaults this
+    behaves byte-for-byte as before (packaged data first, then a parent-walk
+    from this module's own path). A test can point ``start`` at a synthetic
+    module path to make the parent-walk begin somewhere else (e.g. under a
+    ``tmp_path``) and set ``include_packaged=False`` to skip the installed
+    package-data candidate, so it can drive the real loader against a
+    temporary ``runtime/runtime-sources.json`` instead of the real one -- no
+    new environment variable, no monkeypatching of this function itself.
+    """
     candidates: list[Path] = []
-    try:
-        packaged = resources.files("loomground_installer").joinpath("runtime-sources.json")
-        if packaged.is_file():
-            candidates.append(Path(str(packaged)))
-    except (ModuleNotFoundError, FileNotFoundError, TypeError):
-        pass
-    here = Path(__file__).resolve()
+    if include_packaged:
+        try:
+            packaged = resources.files("loomground_installer").joinpath("runtime-sources.json")
+            if packaged.is_file():
+                candidates.append(Path(str(packaged)))
+        except (ModuleNotFoundError, FileNotFoundError, TypeError):
+            pass
+    here = (start if start is not None else Path(__file__)).resolve()
     for parent in here.parents:
         dev_copy = parent / "runtime" / "runtime-sources.json"
         if dev_copy.is_file():
@@ -78,12 +91,14 @@ def _candidate_paths() -> list[Path]:
     return candidates
 
 
-def load_runtime_sources() -> dict | None:
+def load_runtime_sources(start: Path | None = None, include_packaged: bool = True) -> dict | None:
     """Load ``runtime-sources.json``, or ``None`` if it cannot be found or parsed.
 
     Never raises: callers degrade to an ``"unknown"`` doctor status instead.
+    ``start``/``include_packaged`` are threaded straight through to
+    ``_candidate_paths`` -- see its docstring.
     """
-    for candidate in _candidate_paths():
+    for candidate in _candidate_paths(start=start, include_packaged=include_packaged):
         try:
             data = json.loads(candidate.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
@@ -93,13 +108,15 @@ def load_runtime_sources() -> dict | None:
     return None
 
 
-def supported_runtime_python() -> SupportedRange | None:
+def supported_runtime_python(start: Path | None = None, include_packaged: bool = True) -> SupportedRange | None:
     """Return ``((min_major, min_minor), (max_major_excl, max_minor_excl))``.
 
     Derived from the single ``runtime-sources.json`` source. Returns
-    ``None`` if that source cannot be located or is malformed.
+    ``None`` if that source cannot be located or is malformed. ``start``/
+    ``include_packaged`` are threaded straight through to
+    ``load_runtime_sources`` -- see ``_candidate_paths`` for what they do.
     """
-    data = load_runtime_sources()
+    data = load_runtime_sources(start=start, include_packaged=include_packaged)
     if not data:
         return None
     python = data.get("python")
@@ -124,24 +141,48 @@ def format_supported_runtime_python(range_: SupportedRange) -> str:
 # Public, stable names other legs/docs/tests can import without reaching into
 # doctor-check internals. ``runtime_python_range`` is a plain alias of
 # ``supported_runtime_python`` (same single-source-of-truth loader, same
-# ``None``-on-not-found contract); ``minimum_runtime_python_label`` renders
-# just the lower ``"major.minor"`` bound, for short prose ("requires Python
-# <label> or newer") that doesn't want the full "A.B <= python < C.D" form.
+# ``None``-on-not-found contract).
 runtime_python_range = supported_runtime_python
 
 
-def minimum_runtime_python_label(range_: SupportedRange | None = None) -> str | None:
-    """Return the minimum supported version as a ``"major.minor"`` string.
+def runtime_python_label(range_: SupportedRange | None = None) -> str | None:
+    """Render the supported range as a short, human-friendly label.
 
-    Returns ``None`` if ``range_`` is ``None`` and the range cannot be
-    resolved from ``runtime-sources.json`` either.
+    This is the *one* short-label formatter for the supported runtime Python
+    range: ``loomground doctor``, the loomground-suite SessionStart hook
+    (via ``tools/render_suite_hook.py``) and the docs drift test all call
+    this function rather than growing a second copy of this logic.
+
+    * a single supported minor within one major, e.g. ``((3, 12), (3, 13))``,
+      renders as ``"3.12"``;
+    * a same-major span, e.g. ``((3, 12), (3, 14))``, renders as
+      ``"3.12–3.13"`` -- minimum through the last supported minor
+      (``maximum_exclusive``'s minor minus one), joined with an en dash
+      (U+2013);
+    * a cross-major range, or one whose upper bound is a bare next major
+      (e.g. ``((3, 12), (4, 0))``), has no natural short minor-range form,
+      so it renders as the explicit constraint string
+      ``">=3.12, <4.0"``;
+    * ``range_=None`` resolves the range from ``runtime-sources.json`` via
+      ``supported_runtime_python()`` first, same as the other public
+      formatters here.
+
+    Returns ``None`` (never raises) if the range cannot be resolved, or is
+    empty/invalid (``minimum >= maximum_exclusive``).
     """
     if range_ is None:
         range_ = supported_runtime_python()
     if range_ is None:
         return None
-    (min_major, min_minor), _ = range_
-    return f"{min_major}.{min_minor}"
+    minimum, maximum_exclusive = range_
+    (min_major, min_minor), (max_major, max_minor) = minimum, maximum_exclusive
+    if (min_major, min_minor) >= (max_major, max_minor):
+        return None
+    if min_major == max_major:
+        if max_minor - min_minor == 1:
+            return f"{min_major}.{min_minor}"
+        return f"{min_major}.{min_minor}–{min_major}.{max_minor - 1}"
+    return f">={min_major}.{min_minor}, <{max_major}.{max_minor}"
 
 
 def default_pip_probe() -> bool:
@@ -180,6 +221,7 @@ def python_runtime_check(
         )
     minimum, maximum_exclusive = range_
     human_range = format_supported_runtime_python(range_)
+    label = runtime_python_label(range_)
     if minimum <= current < maximum_exclusive:
         return Check(
             "python",
@@ -188,12 +230,13 @@ def python_runtime_check(
             f"range ({human_range})",
             fix="no action needed",
         )
+    label_hint = f" (Python {label} required)" if label else ""
     return Check(
         "python",
         "unsupported",
         f"running Python {current[0]}.{current[1]} is outside the supported runtime "
         f"range ({human_range})",
-        fix=f"install a CPython interpreter satisfying {human_range} and re-run "
+        fix=f"install a CPython interpreter satisfying {human_range}{label_hint} and re-run "
             "`loomground onboard` with it",
     )
 

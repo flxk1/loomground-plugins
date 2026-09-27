@@ -21,8 +21,8 @@ sys.path.insert(0, str(ROOT / "src"))
 from loomground_installer.core import doctor, doctor_requirements  # noqa: E402
 from loomground_installer.requirements import (  # noqa: E402
     format_supported_runtime_python,
-    minimum_runtime_python_label,
     python_runtime_check,
+    runtime_python_label,
     runtime_python_range,
     supported_runtime_python,
 )
@@ -64,8 +64,18 @@ class SupportedRuntimeRangeTests(unittest.TestCase):
         self.assertIn("3.12", text)
         self.assertIn("3.13", text)
 
-    def test_minimum_label_is_short_form(self):
-        self.assertEqual(minimum_runtime_python_label(((3, 12), (3, 13))), "3.12")
+    def test_short_label_single_minor(self):
+        self.assertEqual(runtime_python_label(((3, 12), (3, 13))), "3.12")
+
+    def test_short_label_same_major_span_uses_en_dash(self):
+        self.assertEqual(runtime_python_label(((3, 12), (3, 14))), "3.12–3.13")
+
+    def test_short_label_cross_major_uses_explicit_constraint_string(self):
+        self.assertEqual(runtime_python_label(((3, 12), (4, 0))), ">=3.12, <4.0")
+
+    def test_short_label_invalid_or_empty_range_is_none(self):
+        self.assertIsNone(runtime_python_label(((3, 13), (3, 12))))  # inverted
+        self.assertIsNone(runtime_python_label(((3, 12), (3, 12))))  # empty
 
     def test_mutation_a_different_range_changes_the_verdict(self):
         # Point python_runtime_check's loader at a different (higher)
@@ -82,6 +92,50 @@ class SupportedRuntimeRangeTests(unittest.TestCase):
 
         inside_new_range = python_runtime_check((3, 20, 0), loader=mutated_loader)
         self.assertEqual(inside_new_range.status, "ok")
+
+    def test_mutation_a_different_range_changes_the_verdict_via_real_loader(self):
+        # Unlike the lambda-injection test above, this drives the *real*
+        # file-finding/parsing path: _candidate_paths()'s parent-walk,
+        # load_runtime_sources()'s JSON parsing, and
+        # supported_runtime_python()'s range extraction, via a genuine
+        # <tmp>/runtime/runtime-sources.json and a genuine
+        # <tmp>/a/b/module.py start point -- no lambda/monkeypatched
+        # _candidate_paths. It uses the running interpreter's own version so
+        # it's meaningful under whatever Python runs the suite: the verdict
+        # under the real repo's default range (baseline) must differ from
+        # the verdict once the loader is pointed at a temp range file whose
+        # bounds are built to bracket the current interpreter exactly.
+        current_major, current_minor = sys.version_info[:2]
+        baseline = python_runtime_check(sys.version_info, loader=supported_runtime_python)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            runtime_dir = tmp_path / "runtime"
+            runtime_dir.mkdir()
+            different_range = {
+                "python": {
+                    "minimum": [current_major, current_minor],
+                    "maximum_exclusive": [current_major, current_minor + 1],
+                }
+            }
+            (runtime_dir / "runtime-sources.json").write_text(
+                json.dumps(different_range), encoding="utf-8"
+            )
+            fake_module = tmp_path / "a" / "b" / "module.py"
+
+            def file_driven_loader():
+                return supported_runtime_python(start=fake_module, include_packaged=False)
+
+            # The real loader must resolve the temp file's range, not the
+            # repository's real runtime-sources.json.
+            self.assertEqual(
+                file_driven_loader(), ((current_major, current_minor), (current_major, current_minor + 1))
+            )
+
+            mutated = python_runtime_check(sys.version_info, loader=file_driven_loader)
+
+        self.assertEqual(mutated.status, "ok")
+        self.assertNotEqual(mutated.status, baseline.status)
 
 
 class DoctorRequirementsPythonCheckTests(unittest.TestCase):

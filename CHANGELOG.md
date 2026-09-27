@@ -13,6 +13,19 @@
 - `docs/INSTALLER.md` labels its runtime-lock JSON as a schema example.
 - `tests/test_docs_requirements.py` fails when a documented runtime Python
   version drifts from `runtime/runtime-sources.json`.
+- `requirements.py`'s `_candidate_paths`/`load_runtime_sources`/
+  `supported_runtime_python` gained a narrow, default-preserving `start`/
+  `include_packaged` injection point, so tests can drive the real
+  file-finding/parsing path against a temp `runtime-sources.json` instead of
+  a lambda; `tests/test_doctor_requirements.py` adds a file-driven mutation
+  test that flips the verdict through the real loader.
+- Added `runtime_python_label`, the one short-label formatter for the
+  supported runtime Python range (single minor, same-major span with an en
+  dash, or an explicit `>=A.B, <C.D` constraint string for cross-major
+  ranges); `loomground doctor`, `tools/render_suite_hook.py` (which
+  generates the loomground-suite SessionStart hook's label line) and
+  `tests/test_docs_requirements.py` all call it, replacing the retired
+  `minimum_runtime_python_label` and the hook's hand-copied literal.
 
 ## 2026-09-13 — ecosystem certification
 

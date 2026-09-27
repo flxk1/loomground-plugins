@@ -16,15 +16,33 @@ Two statements are excluded on purpose: the installer CLI's `>=3.11`, which is
 checked against `pyproject.toml` `requires-python` instead, and the fenced
 block after the "Schema example" label in docs/INSTALLER.md, which shows the
 lock shape with illustrative values rather than the supported policy.
+
+G1 (this module's main drift check) sources the numeric range through
+`loomground_installer.requirements.supported_runtime_python` -- the real
+production loader, driven here via its `start`/`include_packaged`
+injection point at a per-root synthetic module path so it resolves each
+root's own (possibly temp-copied) `runtime/runtime-sources.json` -- rather
+than a second, hand-rolled JSON parse. `runtime_python_label`, the one
+short-label formatter also used by `loomground doctor` and the
+loomground-suite hook, is checked directly: every doc must mention that
+exact short label somewhere.
 """
 import json
 import re
 import shutil
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from loomground_installer.requirements import (  # noqa: E402
+    runtime_python_label,
+    supported_runtime_python,
+)
+
 DOCS = ("README.md", "docs/SUITE.md", "docs/INSTALLER.md", "llms.txt")
 RUNTIME_SOURCES = "runtime/runtime-sources.json"
 PYPROJECT = "pyproject.toml"
@@ -36,8 +54,19 @@ PAIR = re.compile(r"\[\s*3\s*,\s*(?P<minor>\d{1,2})\s*\]")
 
 
 def runtime_range(root: Path) -> tuple[tuple[int, int], tuple[int, int]]:
-    python = json.loads((root / RUNTIME_SOURCES).read_text(encoding="utf-8"))["python"]
-    return tuple(python["minimum"][:2]), tuple(python["maximum_exclusive"][:2])
+    """Resolve the supported range for ``root`` via the real production loader.
+
+    Points ``supported_runtime_python``'s ``start`` injection point at a
+    synthetic module path under ``root`` so its parent-walk finds
+    ``root/runtime/runtime-sources.json`` -- the same file this test's docs
+    are checked against -- instead of re-parsing the JSON by hand.
+    ``include_packaged=False`` so an installed package's own
+    runtime-sources.json (if any) never shadows ``root``'s copy.
+    """
+    fake_module = root / "_docs_drift_probe" / "module.py"
+    range_ = supported_runtime_python(start=fake_module, include_packaged=False)
+    assert range_ is not None, f"could not resolve a supported Python range from {root}"
+    return range_
 
 
 def cli_minimum(root: Path) -> tuple[int, int]:
@@ -119,6 +148,17 @@ def copy_tree(destination: Path) -> None:
 class DocsRequirementsTests(unittest.TestCase):
     def test_documented_runtime_python_matches_runtime_sources(self):
         self.assertEqual(drift(ROOT), [])
+
+    def test_documented_short_label_matches_the_one_helper(self):
+        # Ties every doc directly to runtime_python_label -- the single
+        # short-label formatter also used by `loomground doctor` and the
+        # loomground-suite hook -- rather than only to the raw
+        # minimum/maximum tuple drift() already checks above.
+        label = runtime_python_label(runtime_range(ROOT))
+        self.assertIsNotNone(label)
+        for relative in DOCS:
+            text = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertIn(label, text, f"{relative} does not mention short label {label!r}")
 
     def test_changed_runtime_range_is_detected(self):
         with tempfile.TemporaryDirectory() as temporary:

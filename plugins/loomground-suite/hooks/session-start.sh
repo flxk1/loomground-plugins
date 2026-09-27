@@ -15,10 +15,16 @@
 # present -- and "Python missing" is itself one of the cases this hook must
 # report, so the hook cannot depend on Python to detect that.
 #
-# The "3.12" minimum-Python label below is a literal copy of the "minimum"
-# entry in runtime/runtime-sources.json (the single source of truth for the
-# supported runtime range). tests/test_suite_runtime_hook.py asserts this
-# literal stays in sync with that file; update both together.
+# The PYTHON_MINIMUM_LABEL line below is GENERATED, not hand-maintained: it
+# is produced from runtime/runtime-sources.json (the single source of truth
+# for the supported runtime range) by
+# loomground_installer.requirements.runtime_python_label -- the one short
+# -label formatter also used by `loomground doctor` and the docs drift test
+# (tests/test_docs_requirements.py) -- via `tools/render_suite_hook.py`.
+# After changing runtime-sources.json's supported range, regenerate this
+# line with `tools/render_suite_hook.py`, or check it is still in sync with
+# `tools/render_suite_hook.py --check` (as tests/test_suite_runtime_hook.py
+# does). Do not hand-edit this literal.
 PYTHON_MINIMUM_LABEL="3.12"
 
 # Silent, successful no-op when the runtime is already on PATH.
