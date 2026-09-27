@@ -2,6 +2,18 @@
 <!-- Copyright 2026 flxk1 -->
 # Changelog
 
+## 2026-09-27 — install requirements
+
+- README, `docs/SUITE.md`, `docs/INSTALLER.md` and `llms.txt` state install
+  prerequisites up front: Python 3.12 with pip for the runtime, Python `>=3.11`
+  for the installer CLI, no bundled interpreter, git only for source installs,
+  release platforms, and that the plugin does not install the runtime.
+- `loomground doctor` python/pip/git checks and the Claude Code SessionStart
+  hook message documented; Codex relies on `doctor` and docs.
+- `docs/INSTALLER.md` labels its runtime-lock JSON as a schema example.
+- `tests/test_docs_requirements.py` fails when a documented runtime Python
+  version drifts from `runtime/runtime-sources.json`.
+
 ## 2026-09-13 — ecosystem certification
 
 - Revision-bound 41-repository, 8-scenario ecosystem certificate

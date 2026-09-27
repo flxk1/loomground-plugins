@@ -14,6 +14,34 @@ loomground plan --profile compliance --host auto
 loomground doctor --host auto
 ```
 
+## Requirements
+
+The installer CLI runs on Python `>=3.11` (`pyproject.toml`
+`requires-python`). The runtime it installs needs Python 3.12
+(`>=3.12, <3.13`) with pip, from `runtime/runtime-sources.json`, the one source
+of that range. No interpreter is bundled: `runtime install` and `onboard`
+install the bundle's wheels with the interpreter running `loomground`
+(`python -m pip install --no-index --target ...`) and bind the launcher to it,
+so run the CLI under Python 3.12 for runtime installation. git is needed only
+for installing from source. Signed bundles exist for the platforms that
+`.github/workflows/runtime-release.yml` builds; see `docs/RUNTIME-RELEASE.md`.
+
+`loomground doctor` adds three requirement checks after its host checks:
+
+- `python`: `ok`, `unsupported` or `unknown`; the fix names the supported
+  range (`3.12 <= python < 3.13`) and asks to re-run `loomground onboard` with a
+  matching interpreter.
+- `pip`: `ok` or `missing`; fix `python -m ensurepip --upgrade`.
+- `git`: `ok` or `missing`; informational, so it never makes `doctor` exit
+  non-zero. Fix: install git only if installing from source.
+
+With `--json`, host checks appear under `checks` and these under
+`requirement_checks`. Installing the Claude Code or Codex plugin does not
+install the runtime. In Claude Code the plugin's SessionStart hook prints
+``Loomground runtime not installed: run `loomground onboard` (Python 3.12 required)``
+when `loomground-mcp` is not on `PATH`. Codex has no plugin hook; Codex users
+rely on `loomground doctor` and these docs.
+
 Profiles select task-level plugins, not separate copies of their runtime
 dependencies:
 
@@ -88,6 +116,9 @@ Releases publish a signed bundle for each required OS/architecture and Python
 compatibility range. A pure-Python `any` bundle may cover multiple systems;
 platform-specific wheels must be locked in separate compatible bundles. The
 installer selects nothing dynamically and rejects a non-matching bundle.
+
+Schema example (illustrative lock shape only; its `python` values are not the
+supported policy, which is Python 3.12 from `runtime/runtime-sources.json`):
 
 ```json
 {

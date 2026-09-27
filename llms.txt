@@ -5,6 +5,14 @@
 ## Problem
 Without one catalogue, host packages drift from the skills and versions maintained beside each Loomground tool.
 
+## Requirements
+- Runtime: Python 3.12 (`>=3.12, <3.13`) with pip, from `runtime/runtime-sources.json`. No interpreter is bundled; bundles install locked wheels into the user's existing Python.
+- Installer CLI: Python `>=3.11` (`pyproject.toml`); run it under Python 3.12 to install the runtime.
+- git: only for installing from source.
+- Platforms: signed bundles from `.github/workflows/runtime-release.yml` for Linux x86-64/ARM64, macOS Intel/ARM64 and Windows x86-64/ARM64.
+- The plugin does not install the runtime; run `loomground onboard`.
+- `loomground doctor` checks `python`, `pip` and `git` (git informational). Claude Code SessionStart hook message when `loomground-mcp` is not on PATH: ``Loomground runtime not installed: run `loomground onboard` (Python 3.12 required)``. Codex has no plugin hook and relies on `loomground doctor` and docs.
+
 ## Install
 ```text
 Claude Code: /plugin install loomground-suite@loomground
