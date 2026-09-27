@@ -37,6 +37,6 @@
     {"name": "policy-compiler", "url": "https://github.com/flxk1/policy-compiler.git", "commit": "d14e9a859661421738c3e0c8d2d79ae1941fbc2f"},
     {"name": "evidence-emitter", "url": "https://github.com/flxk1/evidence-emitter.git", "commit": "4869b1f90ad12bee25cd19da3bb8b56d69de598c"},
     {"name": "privacy-shield", "url": "https://github.com/flxk1/privacy-shield.git", "commit": "a774b39e64a9aff19dc08c03d5216edaa9eb327d"},
-    {"name": "a2a-compliance", "url": "https://github.com/flxk1/a2a-compliance.git", "commit": "706223c230fcc110c9cb53c3614a3f626c6f2da5"}
+    {"name": "a2a-compliance", "url": "https://github.com/flxk1/a2a-compliance.git", "commit": "1ab6d1c8bbfe9106fb98107897c556721067b3cf"}
   ]
 }

@@ -8,6 +8,7 @@
     {"name": "enforcement-posture", "required_checks": ["install", "test (3.10)", "test (3.11)", "test (3.12)", "test (3.13)"]},
     {"name": "evidence-emitter", "required_checks": ["commit-discipline", "reuse", "tests (3.11)", "tests (3.14)"]},
     {"name": "governance-certification", "required_checks": ["release", "test"]},
+    {"name": "governance-layer", "required_checks": ["test"]},
     {"name": "loomground", "required_checks": ["catalogue", "commit-discipline", "llms-drift", "lockstep", "neutrality", "releases", "reuse", "skill-drift"]},
     {"name": "loomground-audit-chain", "required_checks": ["release", "reuse", "verify (3.10)", "verify (3.14)"]},
     {"name": "loomground-brief", "required_checks": ["release", "reuse", "verify (3.10)", "verify (3.14)"]},

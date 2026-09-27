@@ -51,6 +51,15 @@
       "sha": "408554b0a8f7158f268f168c44ebb690b749b5f7"
     }
   },
+  "loomground-governance-roles": {
+    "path": "../governance-layer",
+    "kind": "plugin",
+    "source": {
+      "source": "url",
+      "url": "https://github.com/flxk1/governance-layer.git",
+      "sha": "bb756d35983826c390fd0a30b288e93437bbb7f7"
+    }
+  },
   "loomground-ingest": {
     "path": "../loomground-ingest",
     "source": {

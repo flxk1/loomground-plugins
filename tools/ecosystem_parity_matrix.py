@@ -3,7 +3,7 @@
 # Copyright 2026 flxk1
 """Generate and enforce the ecosystem CI parity matrix.
 
-One row per repository declared in ecosystem/manifest.json (exactly 41), with
+One row per repository declared in ecosystem/manifest.json (exactly 42), with
 four columns derived from the repositories' own authoritative surfaces:
 
   mcp_tool          -- ecosystem/vendor/catalogue.json (pinned copy of the
@@ -11,13 +11,13 @@ four columns derived from the repositories' own authoritative surfaces:
   installable_skill -- ecosystem/vendor/skills-index.json, the PUBLIC
                         projection at the loomground-mcp pinned commit: the
                         upstream skills/index.json also carries skill records
-                        for repositories outside the 41 public inventory,
+                        for repositories outside the 42 public inventory,
                         which are dropped before vendoring so this public
                         repository never carries their names, descriptions,
                         paths, commit SHAs, or blob URLs. It is not a
                         byte-for-byte copy of the upstream file; see
                         ecosystem/vendor/PINS.json. The generator still
-                        filters defensively (repo public and in the 41) so a
+                        filters defensively (repo public and in the 42) so a
                         future re-vendor that reintroduces a private record
                         fails closed instead of silently leaking again.
   plugin_source     -- .claude-plugin/marketplace.json, this repository's own
@@ -29,7 +29,7 @@ four columns derived from the repositories' own authoritative surfaces:
 
 A blank cell never means "no data was found here" by omission: every cell
 carries present/value/reason, and an absent value always carries a reason.
-A repository referenced by a source surface but outside the 41, or a
+A repository referenced by a source surface but outside the 42, or a
 resolution that leaves a repository unassigned or double-assigned, fails
 closed rather than silently producing a gap.
 """
@@ -107,8 +107,8 @@ def load_manifest() -> dict:
 
 def manifest_names(manifest: dict) -> list[str]:
     names = sorted(repo["name"] for repo in manifest["repositories"])
-    if len(names) != 41 or len(set(names)) != 41:
-        raise ParityError(f"expected exactly 41 uniquely named repositories, found {len(names)}")
+    if len(names) != 42 or len(set(names)) != 42:
+        raise ParityError(f"expected exactly 42 uniquely named repositories, found {len(names)}")
     return names
 
 
@@ -182,7 +182,7 @@ def installable_skill_cells(entries: list[dict], names: list[str]) -> dict[str, 
                 raise ParityError(f"skills-index.json has a public entry for an unknown repository: {repo}")
             continue
         if private:
-            raise ParityError(f"skills-index.json marks a 41-inventory repository private: {repo}")
+            raise ParityError(f"skills-index.json marks a 42-inventory repository private: {repo}")
         public_by_repo[repo].append(entry["name"])
     cells = {}
     for name in names:
@@ -211,9 +211,13 @@ def plugin_source_cells(marketplace: dict, names: list[str]) -> dict[str, dict]:
         source = entry.get("source")
         if not isinstance(source, dict):
             continue  # a repository-local composed plugin (e.g. loomground-suite), not an external repo pin
-        if name not in names_set:
+        # A plugin's name need not match its repository (loomground-governance-roles
+        # ships from governance-layer); the pinned source URL names the repository.
+        url = source.get("url", "")
+        repo = url.rstrip("/").removesuffix(".git").rsplit("/", 1)[-1] if url else name
+        if repo not in names_set:
             raise ParityError(f"marketplace.json pins an external plugin source outside the ecosystem inventory: {name}")
-        pinned[name] = source
+        pinned[repo] = source
     cells = {}
     for name in names:
         if name in pinned:
@@ -424,12 +428,12 @@ def main() -> int:
                 raise ParityError(f"committed parity matrix is stale: {args.output} differs from a fresh regeneration")
             if not args.markdown.is_file() or args.markdown.read_text(encoding="utf-8") != markdown:
                 raise ParityError(f"committed parity matrix markdown is stale: {args.markdown}")
-            print(f"ECOSYSTEM PARITY MATRIX CHECK PASS: {matrix['row_count']}/41 repositories, matrix current")
+            print(f"ECOSYSTEM PARITY MATRIX CHECK PASS: {matrix['row_count']}/42 repositories, matrix current")
             return 0
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_bytes(payload)
         args.markdown.write_text(markdown, encoding="utf-8")
-        print(f"ECOSYSTEM PARITY MATRIX GENERATED: {matrix['row_count']}/41 repositories")
+        print(f"ECOSYSTEM PARITY MATRIX GENERATED: {matrix['row_count']}/42 repositories")
         return 0
     except (ParityError, ecosystem_certify.CertificationError, OSError) as exc:
         print(f"ECOSYSTEM PARITY MATRIX FAIL: {exc}")

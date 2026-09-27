@@ -78,7 +78,7 @@ def write_scenario_traces(directory: Path, manifest: dict, self_commit: str) -> 
 def test_manifest_covers_all_repositories_and_runtime_pins(manifests):
     ecosystem, runtime = manifests
     manifest = ecosystem_certify.validate_manifest(ecosystem, runtime)
-    assert len(manifest["repositories"]) == 41
+    assert len(manifest["repositories"]) == 42
     assert len(runtime["packages"]) == 32
     participants = {
         name for scenario in manifest["scenarios"] for name in scenario["participants"]
@@ -135,14 +135,14 @@ def test_certificate_rejects_missing_repository_result(manifests, tmp_path):
         ecosystem_certify.certify(manifest, tmp_path, "c" * 40)
 
 
-def test_repository_only_verification_accepts_exact_41_results(manifests, tmp_path):
+def test_repository_only_verification_accepts_exact_42_results(manifests, tmp_path):
     ecosystem, runtime = manifests
     manifest = ecosystem_certify.validate_manifest(ecosystem, runtime)
     write_results(tmp_path, manifest, "2" * 40)
     for path in tmp_path.glob("scenario-*.json"):
         path.unlink()
     results = ecosystem_certify.verify_repository_results(manifest, tmp_path, "2" * 40)
-    assert len(results) == 41
+    assert len(results) == 42
 
 
 def test_scenario_verification_binds_traces_to_contract_and_revisions(manifests, tmp_path):
