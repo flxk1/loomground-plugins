@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 flxk1
+#
+# src/loomground_installer/runtime-sources.json is a symlink to the single
+# real file at runtime/runtime-sources.json (the source of truth for the
+# supported runtime Python range). This line makes sure an sdist also
+# carries it, following the symlink to its real bytes rather than requiring
+# a hand-maintained second copy.
+include src/loomground_installer/runtime-sources.json

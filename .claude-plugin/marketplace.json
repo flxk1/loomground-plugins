@@ -248,7 +248,7 @@
         "sha": "3971bd578f3d31d69bdfb3dd22f2ee3a6610be2e"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
-      "version": "0.13.0",
+      "version": "0.14.0",
       "author": {
         "name": "Loomground Contributors"
       },
@@ -273,7 +273,7 @@
         "sha": "d14e9a859661421738c3e0c8d2d79ae1941fbc2f"
       },
       "description": "Compile a written policy into grounded deontic norms (O/P/F with bearer, action, conditions, cross-references), surfacing conflicts, undetermined rules, and unplaceable spans, and running test cases. Stops at a validated draft; activation is reserved. Delegates lowering to the loomground deontic/norm planes when present, degrading to advisory when absent. Output matches the compliance-fleet grounding seam.",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "author": {
         "name": "Loomground Contributors"
       },

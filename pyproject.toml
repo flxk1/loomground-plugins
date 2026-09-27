@@ -27,4 +27,9 @@ Repository = "https://github.com/flxk1/loomground-plugins"
 where = ["src"]
 
 [tool.setuptools.package-data]
-loomground_installer = ["profiles.json"]
+# runtime-sources.json is a symlink to ../../runtime/runtime-sources.json
+# (the single source of truth for the supported runtime Python range). This
+# entry ships that same file as package data so `loomground_installer.requirements`
+# can resolve it from an installed, non-editable wheel too, without a second
+# hand-maintained literal copy.
+loomground_installer = ["profiles.json", "runtime-sources.json"]

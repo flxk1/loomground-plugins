@@ -1,0 +1,15 @@
+{
+  "description": "Warn when the loomground runtime is not installed, instead of a silent MCP server failure.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -13,6 +13,30 @@ That would duplicate source and let package versions drift. The runtime consumes
 the family at release pins; `loomground_catalogue`, `loomground_releases` and
 `loomground_skill` expose the resolved map to the host.
 
+## Requirements
+
+- Runtime: Python 3.12 (`>=3.12, <3.13`) with pip, from
+  `runtime/runtime-sources.json`. No interpreter is bundled; the signed bundle's
+  locked wheels install into the Python that runs `loomground`.
+- Installer CLI: Python `>=3.11` (`pyproject.toml` `requires-python`); it must
+  run under Python 3.12 to install the runtime.
+- git: only for installing from source.
+- Platforms: the signed bundles that `.github/workflows/runtime-release.yml`
+  builds for Linux x86-64/ARM64, macOS Intel/ARM64 and Windows x86-64/ARM64
+  (see `docs/RUNTIME-RELEASE.md`).
+- Installing this plugin does not install the runtime. Run `loomground onboard`.
+
+`loomground doctor` reports `python`, `pip` and `git` requirement checks; `git`
+is informational and never changes the exit code. In Claude Code the plugin's
+SessionStart hook prints, when `loomground-mcp` is not on `PATH`:
+
+```text
+Loomground runtime not installed: run `loomground onboard` (Python 3.12 required)
+```
+
+Codex has no plugin hook; Codex users rely on `loomground doctor` and these
+docs.
+
 ## Current installation
 
 Claude Code:
