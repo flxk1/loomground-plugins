@@ -395,3 +395,32 @@ def test_generate_mode_writes_json_and_markdown(tmp_path):
     regenerated = json.loads(output.read_bytes())
     committed = json.loads((ROOT / "ecosystem/parity-matrix.json").read_bytes())
     assert regenerated == committed
+
+
+def _external(name, repo):
+    return {"name": name, "source": {"source": "url", "url": f"https://github.com/flxk1/{repo}.git", "sha": "a" * 40}}
+
+
+def test_plugin_source_maps_a_renamed_plugin_to_its_repository_by_url():
+    marketplace = {"plugins": [_external("loomground-governance-roles", "governance-layer"), {"name": "suite", "source": "./plugins/suite"}]}
+    cells = parity.plugin_source_cells(marketplace, ["governance-layer", "loomground-governance-roles-absent"])
+    assert cells["governance-layer"]["present"] is True
+    assert cells["governance-layer"]["value"]["url"] == "https://github.com/flxk1/governance-layer.git"
+
+
+def test_plugin_source_rejects_a_url_outside_the_inventory():
+    marketplace = {"plugins": [_external("governance-layer", "not-in-family")]}
+    with pytest.raises(parity.ParityError, match="outside the ecosystem inventory"):
+        parity.plugin_source_cells(marketplace, ["governance-layer"])
+
+
+def test_plugin_source_rejects_two_plugins_pinning_one_repository():
+    marketplace = {"plugins": [_external("roles-a", "governance-layer"), _external("roles-b", "governance-layer")]}
+    with pytest.raises(parity.ParityError, match="more than one plugin"):
+        parity.plugin_source_cells(marketplace, ["governance-layer"])
+
+
+def test_committed_marketplace_maps_governance_roles_to_governance_layer(matrix):
+    row = next(row for row in matrix["rows"] if row["name"] == "governance-layer")
+    assert row["plugin_source"]["present"] is True
+
