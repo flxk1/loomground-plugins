@@ -8,7 +8,8 @@ SessionStart hook that has no Python dependency at run time (Python's
 absence is one of the conditions it reports), so it cannot itself parse
 ``runtime/runtime-sources.json`` or import
 ``loomground_installer.requirements``. Instead, this script generates its
-``PYTHON_MINIMUM_LABEL="..."`` line from
+``PYTHON_RANGE_LABEL="..."`` line -- naming the whole supported range, not
+just its lower bound -- from
 ``loomground_installer.requirements.runtime_python_label`` -- the single
 short-label formatter also used by ``loomground doctor`` and
 ``tests/test_docs_requirements.py`` -- so there is exactly one place that
@@ -49,7 +50,7 @@ from loomground_installer.requirements import (  # noqa: E402
 DEFAULT_RUNTIME_SOURCES = ROOT / "runtime" / "runtime-sources.json"
 DEFAULT_HOOK = ROOT / "plugins" / "loomground-suite" / "hooks" / "session-start.sh"
 
-LABEL_LINE_RE = re.compile(r'^PYTHON_MINIMUM_LABEL="[^"]*"$', re.MULTILINE)
+LABEL_LINE_RE = re.compile(r'^PYTHON_RANGE_LABEL="[^"]*"$', re.MULTILINE)
 
 
 def label_for_runtime_sources(runtime_sources: Path) -> str:
@@ -82,11 +83,11 @@ def label_for_runtime_sources(runtime_sources: Path) -> str:
 
 def render(hook_text: str, label: str) -> str:
     """Return ``hook_text`` with its label line set to ``label``."""
-    new_line = f'PYTHON_MINIMUM_LABEL="{label}"'
+    new_line = f'PYTHON_RANGE_LABEL="{label}"'
     new_text, count = LABEL_LINE_RE.subn(new_line, hook_text)
     if count != 1:
         raise ValueError(
-            'expected exactly one PYTHON_MINIMUM_LABEL="..." line in the hook script, '
+            'expected exactly one PYTHON_RANGE_LABEL="..." line in the hook script, '
             f"found {count}"
         )
     return new_text
@@ -109,7 +110,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.check:
         if rendered != current_text:
             print(
-                f"{args.hook}: PYTHON_MINIMUM_LABEL is out of sync with "
+                f"{args.hook}: PYTHON_RANGE_LABEL is out of sync with "
                 f"{args.runtime_sources} (expected label {label!r})",
                 file=sys.stderr,
             )

@@ -15,8 +15,9 @@
 # present -- and "Python missing" is itself one of the cases this hook must
 # report, so the hook cannot depend on Python to detect that.
 #
-# The PYTHON_MINIMUM_LABEL line below is GENERATED, not hand-maintained: it
-# is produced from runtime/runtime-sources.json (the single source of truth
+# The PYTHON_RANGE_LABEL line below is GENERATED, not hand-maintained: it
+# names the whole supported Python range (not just its lower bound) and is
+# produced from runtime/runtime-sources.json (the single source of truth
 # for the supported runtime range) by
 # loomground_installer.requirements.runtime_python_label -- the one short
 # -label formatter also used by `loomground doctor` and the docs drift test
@@ -25,14 +26,14 @@
 # line with `tools/render_suite_hook.py`, or check it is still in sync with
 # `tools/render_suite_hook.py --check` (as tests/test_suite_runtime_hook.py
 # does). Do not hand-edit this literal.
-PYTHON_MINIMUM_LABEL="3.12"
+PYTHON_RANGE_LABEL="3.12"
 
 # Silent, successful no-op when the runtime is already on PATH.
 if command -v loomground-mcp >/dev/null 2>&1; then
   exit 0
 fi
 
-MESSAGE="Loomground runtime not installed: run \`loomground onboard\` (Python ${PYTHON_MINIMUM_LABEL} required)"
+MESSAGE="Loomground runtime not installed: run \`loomground onboard\` (Python ${PYTHON_RANGE_LABEL} required)"
 
 # SessionStart hook output shape per Claude Code's plugin-dev hook-development
 # skill (Hook Output Format / SessionStart sections) and the shipped
