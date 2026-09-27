@@ -4,7 +4,6 @@ import subprocess
 import sys
 import tempfile
 import unittest
-import uuid
 from pathlib import Path
 from unittest import mock
 
@@ -100,19 +99,26 @@ class PackageBuildTests(unittest.TestCase):
             self.assertEqual(errors, [], f"{package_dir.name}: {[error.message for error in errors]}")
 
     def test_generated_packages_exclude_platform_metadata(self):
+        # This test plants a fixture directory directly in the repo's real
+        # dist/ tree (the build's own stale-removal logic only runs on
+        # success) and then shells out to the real build subprocess. If a
+        # dist/claude/removed-package directory already exists before we
+        # start, it is not ours to touch: some earlier run left it behind,
+        # or another process owns it, and silently adopting/restoring it
+        # would hide that problem. So we fail loudly instead and leave it
+        # exactly as we found it. Otherwise we create the fixture ourselves
+        # and, in `finally`, remove only what we created -- never anyone
+        # else's state -- regardless of how the test exits
+        # (CalledProcessError, assertion failure, or success).
         stale = ROOT / "dist/claude/removed-package"
         marker = stale / "marker"
-        # This test plants a stale directory directly in the repo's real
-        # dist/ tree (the build's own stale-removal logic only runs on
-        # success) and then shells out to the real build subprocess. That
-        # subprocess can fail (e.g. missing sibling checkouts) before it
-        # ever reaches the removal step, which would otherwise leave the
-        # fixture behind and leak into the shipped dist tree on every
-        # future run. So we snapshot whatever pre-existed at `stale` and
-        # restore it exactly in `finally`, regardless of how this test
-        # exits (CalledProcessError, assertion failure, or success).
-        pre_existed = stale.exists()
-        pre_marker_bytes = marker.read_bytes() if marker.exists() else None
+        if stale.exists():
+            self.fail(
+                "pre-existing dist/claude/removed-package found; "
+                "remove it before running tests"
+            )
+        dist_claude = ROOT / "dist/claude"
+        created_dist_claude = not dist_claude.exists()
         try:
             stale.mkdir(parents=True, exist_ok=True)
             marker.write_text("stale", encoding="utf-8")
@@ -126,56 +132,50 @@ class PackageBuildTests(unittest.TestCase):
             self.assertEqual(list((ROOT / "dist").rglob("__pycache__")), [])
             self.assertFalse(stale.exists())
         finally:
-            if pre_existed:
-                stale.mkdir(parents=True, exist_ok=True)
-                if pre_marker_bytes is not None:
-                    marker.write_bytes(pre_marker_bytes)
-                elif marker.exists():
-                    marker.unlink()
-            else:
-                shutil.rmtree(stale, ignore_errors=True)
+            shutil.rmtree(stale, ignore_errors=True)
+            if created_dist_claude and dist_claude.exists() and not any(dist_claude.iterdir()):
+                dist_claude.rmdir()
 
-    def test_build_failure_does_not_leak_stale_removed_package_fixture(self):
-        # Regression check for the cleanup above: force the build subprocess
-        # to fail and assert the fixture the tested method plants does not
-        # survive the failure. We substitute a sentinel marker value (distinct
-        # from the literal "stale" the tested method writes) so a leak is
-        # unambiguously detectable even when the ambient on-disk fixture
-        # already happens to contain "stale" -- comparing raw bytes against
-        # that literal would otherwise let a leak masquerade as a restore.
-        # The true pre-existing state is snapshotted and restored in
-        # `finally` regardless of outcome.
+    def test_clean_checkout_leaves_no_removed_package_fixture(self):
+        # Regression check for the fixture handling above: on a clean
+        # checkout (no pre-existing dist/claude/removed-package), the
+        # planted fixture must not survive the test, whether the build
+        # subprocess succeeds or fails. In this repo the build currently
+        # fails here because sibling checkouts are missing -- that is a
+        # known baseline failure this test does not try to fix -- but the
+        # fixture must still be gone afterwards either way.
         stale = ROOT / "dist/claude/removed-package"
-        marker = stale / "marker"
-        true_pre_existed = stale.exists()
-        true_pre_bytes = marker.read_bytes() if marker.exists() else None
-        sentinel = f"sentinel-{uuid.uuid4().hex}".encode("utf-8")
-
-        def failing_run(*args, **kwargs):
-            raise subprocess.CalledProcessError(1, "tools/build_packages.py")
-
+        self.assertFalse(
+            stale.exists(),
+            "pre-existing dist/claude/removed-package found; "
+            "remove it before running tests",
+        )
         try:
-            stale.mkdir(parents=True, exist_ok=True)
-            marker.write_bytes(sentinel)
-            with mock.patch("subprocess.run", side_effect=failing_run):
-                with self.assertRaises(subprocess.CalledProcessError):
+            self.test_generated_packages_exclude_platform_metadata()
+        except subprocess.CalledProcessError:
+            pass
+        self.assertFalse(stale.exists())
+
+    def test_pre_existing_fixture_fails_loudly_and_is_left_untouched(self):
+        # Direct test of the pre-existing-fixture branch, using a patched
+        # ROOT pointed at a temporary directory instead of the real dist/,
+        # so this test cannot itself perturb the repo's dist/ tree. It
+        # proves the method fails loudly and leaves the pre-existing
+        # directory exactly as it found it -- no restore, no adoption.
+        with tempfile.TemporaryDirectory() as temporary:
+            temp_root = Path(temporary)
+            stale = temp_root / "dist/claude/removed-package"
+            marker = stale / "marker"
+            stale.mkdir(parents=True)
+            marker.write_text("pre-existing", encoding="utf-8")
+            with mock.patch.object(sys.modules[__name__], "ROOT", temp_root):
+                with self.assertRaisesRegex(
+                    AssertionError,
+                    "pre-existing dist/claude/removed-package found",
+                ):
                     self.test_generated_packages_exclude_platform_metadata()
-            # With the fix, the tested method's own finally block restores
-            # exactly what preceded it -- our sentinel -- even though the
-            # build subprocess failed before the method's stale-removal
-            # assertion ever ran. Without the fix, the method's fixture
-            # write ("stale") would survive instead of the sentinel.
             self.assertTrue(stale.exists())
-            self.assertEqual(marker.read_bytes(), sentinel)
-        finally:
-            if true_pre_existed:
-                stale.mkdir(parents=True, exist_ok=True)
-                if true_pre_bytes is not None:
-                    marker.write_bytes(true_pre_bytes)
-                elif marker.exists():
-                    marker.unlink()
-            else:
-                shutil.rmtree(stale, ignore_errors=True)
+            self.assertEqual(marker.read_text(encoding="utf-8"), "pre-existing")
 
     def test_committed_claude_artifacts_are_in_sync(self):
         marketplace = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text())
