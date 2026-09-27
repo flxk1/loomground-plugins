@@ -217,6 +217,8 @@ def plugin_source_cells(marketplace: dict, names: list[str]) -> dict[str, dict]:
         repo = url.rstrip("/").removesuffix(".git").rsplit("/", 1)[-1] if url else name
         if repo not in names_set:
             raise ParityError(f"marketplace.json pins an external plugin source outside the ecosystem inventory: {name}")
+        if repo in pinned:
+            raise ParityError(f"marketplace.json pins repository {repo} for more than one plugin: {name}")
         pinned[repo] = source
     cells = {}
     for name in names:
