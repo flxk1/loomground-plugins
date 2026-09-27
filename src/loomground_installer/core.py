@@ -12,11 +12,19 @@ from __future__ import annotations
 import json
 import os
 import shutil
+import sys
 import tomllib
 from dataclasses import asdict, dataclass
 from importlib import resources
 from pathlib import Path
 from typing import Callable, Iterable
+
+from .requirements import (
+    default_pip_probe,
+    git_runtime_check,
+    pip_runtime_check,
+    python_runtime_check,
+)
 
 HOSTS = ("claude", "codex", "cursor", "n8n", "openai", "generic")
 DETECTABLE_HOSTS = ("claude", "codex", "cursor", "n8n")
@@ -32,6 +40,11 @@ class Check:
     name: str
     status: str
     detail: str
+    fix: str | None = None
+    # Informational checks (e.g. git, needed only for from-source installs)
+    # never flip `loomground doctor`'s process exit code, regardless of their
+    # status. See `doctor`'s exit-code rule in cli.py's `_print_doctor`.
+    informational: bool = False
 
 
 @dataclass(frozen=True)
@@ -214,6 +227,17 @@ def _codex_mcp_check(path: Path) -> Check:
 
 def doctor(hosts: Iterable[str], which: Callable[[str], str | None] = shutil.which,
            environment: dict[str, str] | None = None, home: Path | None = None) -> tuple[Check, ...]:
+    """Diagnose host registration state, render-only.
+
+    Deliberately host checks only (runtime + per-host checks), unchanged in
+    shape and signature. Interpreter/tooling requirement checks (python/pip/
+    git) live in ``doctor_requirements`` below, kept separate on purpose:
+    mixing the two into a single sequence would make positional/index
+    assumptions about "the checks after the runtime check are exactly the
+    requested hosts, in order" silently wrong whenever a requirement check
+    was added, removed, or reordered. Separating the two keeps this
+    function's existing behavior and callers' positional reasoning intact.
+    """
     selected_hosts = resolve_hosts(hosts, which)
     runtime = which("loomground-mcp")
     checks = [Check(
@@ -239,3 +263,21 @@ def doctor(hosts: Iterable[str], which: Callable[[str], str | None] = shutil.whi
                 "Claude marketplace state is not read without invoking the host CLI",
             ))
     return tuple(checks)
+
+
+def doctor_requirements(which: Callable[[str], str | None] = shutil.which,
+                         version_info: tuple = sys.version_info,
+                         pip_probe: Callable[[], bool] = default_pip_probe) -> tuple[Check, ...]:
+    """Diagnose the local interpreter/tooling `loomground doctor` needs.
+
+    Distinct from ``doctor`` (host registration checks) on purpose: this
+    covers the running CPython interpreter's supported-range membership,
+    pip availability, and git presence (informational only). See
+    ``requirements.py`` for the single source of truth for the supported
+    Python range and each check's rationale.
+    """
+    return (
+        python_runtime_check(version_info),
+        pip_runtime_check(pip_probe),
+        git_runtime_check(which),
+    )

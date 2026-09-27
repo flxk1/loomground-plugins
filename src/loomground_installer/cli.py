@@ -12,7 +12,7 @@ from pathlib import Path
 from . import __version__
 from .adapters import HOSTS as ADAPTER_HOSTS, render_adapter
 from .bundle import BundleError, install_bundle, rollback_install, verify_bundle
-from .core import HOSTS, InstallerError, create_plan, doctor, load_profiles
+from .core import HOSTS, InstallerError, create_plan, doctor, doctor_requirements, load_profiles
 from .onboarding import onboard
 from .runtime_bundle import (
     install_runtime_bundle,
@@ -146,13 +146,33 @@ def _print_plan(args: argparse.Namespace) -> int:
 
 
 def _print_doctor(args: argparse.Namespace) -> int:
+    # Host checks (`checks`, the pre-existing key/shape: a flat list of check
+    # dicts, unchanged) and interpreter/tooling requirement checks
+    # (`requirement_checks`, new) are kept as two distinct groups end to end
+    # -- doctor()/doctor_requirements() return separate tuples, and the JSON
+    # payload nests them under separate keys -- rather than one flattened
+    # sequence. Flattening would make any positional/index assumption about
+    # "the checks after the runtime check are exactly the requested hosts,
+    # in order" silently wrong whenever a requirement check was added,
+    # removed, or reordered.
     checks = doctor(args.host)
+    requirement_checks = doctor_requirements()
+    all_checks = checks + requirement_checks
     if args.json:
-        print(json.dumps([check.__dict__ for check in checks], indent=2))
+        print(json.dumps({
+            "checks": [check.__dict__ for check in checks],
+            "requirement_checks": [check.__dict__ for check in requirement_checks],
+        }, indent=2))
     else:
-        for check in checks:
+        for check in all_checks:
             print(f"{check.status.upper():8} {check.name}: {check.detail}")
-    return 0 if all(check.status in {"ok", "unknown"} for check in checks) else 1
+            if check.fix:
+                print(f"         fix: {check.fix}")
+    # Exit-code rule: a check fails doctor's exit code unless its status is
+    # ok/unknown, OR it is marked informational. Informational checks (e.g.
+    # git, needed only for from-source installs) report their true status in
+    # text/JSON output but can never by themselves make doctor exit non-zero.
+    return 0 if all(check.informational or check.status in {"ok", "unknown"} for check in all_checks) else 1
 
 
 def main(argv: list[str] | None = None) -> int:
