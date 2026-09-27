@@ -106,12 +106,12 @@ implementation, policy corpus or live credential boundary. See
 
 ## Usage
 
-`externals.json` pins 13 public source repositories by commit;
+`externals.json` pins 14 public source repositories by commit;
 `tools/build_packages.py` validates them and builds host-specific packages.
 `.claude-plugin/marketplace.json` is the committed catalogue that
 `loomground-suite` composes without copying the repositories.
 
-The catalogue distributes 25 skills across governance, runtime controls,
+The catalogue distributes 32 skills across governance, runtime controls,
 evidence, ingest, solver analysis, Versum knowledge work, and the language
 planes.
 
@@ -137,11 +137,15 @@ out: dist/codex/<package>/ contains the pinned skills and installation metadata
 
 ## Family
 
-Interfaces and authoring: consumes committed skills from 13 Loomground repositories at immutable pins, produces installation packages for supported hosts. Plane execution stays in `loomground-mcp` and the source repositories.
+Interfaces and authoring: consumes committed skills from 14 Loomground repositories at immutable pins, produces installation packages for supported hosts. Plane execution stays in `loomground-mcp` and the source repositories.
 
 ## Status
 
-Installer 0.4.0 · runtime release 0.1.0 · 0.1.0 catalogue · 13 source plugins + 1 suite entry point · 25 source skills + 1 control skill · Python 3.12 for the runtime · Python >=3.11 for the installer CLI.
+Installer 0.4.0 · runtime release 0.1.0 · 0.1.0 catalogue · 14 source plugins + 1 suite entry point · 32 source skills + 1 control skill · Python 3.12 for the runtime · Python >=3.11 for the installer CLI.
+
+## How this is made
+
+The code and documentation are written with Loomground agents. The maintainer reads and corrects all of it.
 
 ## License
 
