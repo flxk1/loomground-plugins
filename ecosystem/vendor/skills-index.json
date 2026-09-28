@@ -2,16 +2,16 @@
   {
     "repo": "a2a-compliance",
     "name": "compliance-fleet",
-    "description": "A compliance team plans a maker action across Loomground, then compliance agents steer maker agents over an agent-to-agent control channel, keeping them aligned to the operator's values: query a maker's state, issue a directive, hold, resume or halt; receive report-state, ack and escalate back. Authority is role-based, and a directive stays within the boundary that maker declares in its own governance block. Works in bare mode with zero Loomground and zero external enforcement, where the steering criterion is the compliance role's advisory judgement. The full Loomground profile consumes the published orchestration, tools, skills and contracts as a fail-closed pipeline; where a value plane is present the criterion is drawn from the grounded value graph, degrading to advisory per dimension when that plane is absent. External enforcement is an optional adapter that adds a verdict and a signed chain to a directive. Triggers on \"control my agents\", \"keep the makers aligned\", \"steer/hold/halt this maker\", \"watch the fleet for value drift\", \"issue a compliance directive\".",
+    "description": "A compliance team plans a maker action across Loomground, then compliance agents steer maker agents over an agent-to-agent control channel, keeping them aligned to the operator's values: query a maker's state, issue a directive, hold, resume or halt; receive report-state, ack and escalate back. Authority is role-based, and a directive stays within the boundary that maker declares in its own governance block. In bare mode (zero Loomground, zero external enforcement) the steering criterion is the compliance role's advisory judgement. The full Loomground profile consumes the published tools, skills and contracts as a fail-closed pipeline; a present value plane draws the criterion from the grounded value graph, an absent one degrades that dimension to advisory. External enforcement is an optional adapter adding a verdict and a signed chain to a directive. Triggers on \"control my agents\", \"keep the makers aligned\", \"steer/hold/halt this maker\", \"watch the fleet for value drift\", \"issue a compliance directive\".",
     "allowed_tools": [
       "a2a_plan",
       "a2a_admission_preview",
       "a2a_reconcile",
       "a2a_ground"
     ],
-    "commit": "66b4f42aaf6235652165f69bfc1f5304b77795d7",
+    "commit": "ba8879abe190709414277344f7439ccc2d55343b",
     "path": "skills/compliance-fleet/SKILL.md",
-    "url": "https://github.com/flxk1/a2a-compliance/blob/66b4f42aaf6235652165f69bfc1f5304b77795d7/skills/compliance-fleet/SKILL.md"
+    "url": "https://github.com/flxk1/a2a-compliance/blob/ba8879abe190709414277344f7439ccc2d55343b/skills/compliance-fleet/SKILL.md"
   },
   {
     "repo": "evidence-emitter",
@@ -26,13 +26,113 @@
     "url": "https://github.com/flxk1/evidence-emitter/blob/4869b1f90ad12bee25cd19da3bb8b56d69de598c/skills/evidence-emitter/SKILL.md"
   },
   {
+    "repo": "governance-layer",
+    "name": "auditor",
+    "description": "Read-only over the signed chain (verify_chain/tail/shadow_scan/discipline). Writes nothing but an attributed override. Reports, never repairs. Use when the signed chain must be verified or reported on — 'verify the chain', 'tail the chain', 'shadow scan', 'discipline check', 'record an override'.",
+    "allowed_tools": [
+      "audit_chain_verify"
+    ],
+    "commit": "bb756d35983826c390fd0a30b288e93437bbb7f7",
+    "path": "skills/auditor/SKILL.md",
+    "url": "https://github.com/flxk1/governance-layer/blob/bb756d35983826c390fd0a30b288e93437bbb7f7/skills/auditor/SKILL.md"
+  },
+  {
+    "repo": "governance-layer",
+    "name": "grounder",
+    "description": "Read-only evidence at coordinate + provenance, or ground-or-escalate. Serves; never writes. Product grounder — official versum only. Use when a claim must be grounded against the official versum — 'ground this', 'is this in the corpus', 'give me the source for X at date D', 'confirm this against the graph'.",
+    "allowed_tools": [
+      "versum_search",
+      "versum_claims"
+    ],
+    "commit": "bb756d35983826c390fd0a30b288e93437bbb7f7",
+    "path": "skills/grounder/SKILL.md",
+    "url": "https://github.com/flxk1/governance-layer/blob/bb756d35983826c390fd0a30b288e93437bbb7f7/skills/grounder/SKILL.md"
+  },
+  {
+    "repo": "governance-layer",
+    "name": "knowledge-steward",
+    "description": "Build and maintain the graph: ingest, concepts, placement, write, curate; enrich; erase. The one write/erase authority. Use when material must enter, be curated in, or be erased from the graph — 'ingest this', 'add what we learned to the graph', 'curate the concepts', 'erase this subject'.",
+    "allowed_tools": [
+      "ingest_text",
+      "versum_capture",
+      "versum_suggest",
+      "versum_confirm",
+      "versum_canon",
+      "erasure_sweep"
+    ],
+    "commit": "bb756d35983826c390fd0a30b288e93437bbb7f7",
+    "path": "skills/knowledge-steward/SKILL.md",
+    "url": "https://github.com/flxk1/governance-layer/blob/bb756d35983826c390fd0a30b288e93437bbb7f7/skills/knowledge-steward/SKILL.md"
+  },
+  {
+    "repo": "governance-layer",
+    "name": "legal-reasoner",
+    "description": "Grounded premises to a warranted conclusion (apply, in-force, conflict, effect, deontic). Calls grounder first; enacts nothing alone. Use when grounded premises must be argued to a conclusion — 'what follows from these provisions', 'is this permitted / obligatory / forbidden', 'which norm wins', 'how likely is liability'.",
+    "allowed_tools": [
+      "deontic_parse",
+      "deontic_conflicts",
+      "solver_evaluate",
+      "solver_analyse_risks",
+      "solver_estimate_liability",
+      "solver_litigation_risk",
+      "solver_opponent_model",
+      "solver_probability",
+      "solver_strategy",
+      "solver_advise_addons"
+    ],
+    "commit": "bb756d35983826c390fd0a30b288e93437bbb7f7",
+    "path": "skills/legal-reasoner/SKILL.md",
+    "url": "https://github.com/flxk1/governance-layer/blob/bb756d35983826c390fd0a30b288e93437bbb7f7/skills/legal-reasoner/SKILL.md"
+  },
+  {
+    "repo": "governance-layer",
+    "name": "local-grounder",
+    "description": "Grounds Felix's own work over his private knowledge folder. Firewalled from the product: never ships, never a product dependency, output never reaches the official versum. Use when Felix's own work must be grounded over his private knowledge folder — 'ground this against my private notes', 'read my private evidence'.",
+    "allowed_tools": [
+      "versum_search",
+      "versum_claims"
+    ],
+    "commit": "bb756d35983826c390fd0a30b288e93437bbb7f7",
+    "path": "skills/local-grounder/SKILL.md",
+    "url": "https://github.com/flxk1/governance-layer/blob/bb756d35983826c390fd0a30b288e93437bbb7f7/skills/local-grounder/SKILL.md"
+  },
+  {
+    "repo": "governance-layer",
+    "name": "lock-steward",
+    "description": "Provisions and discharges the per-folder egress lock (Privacy Lock). Manages the lock, never exempt. Ratchet + fail-secure. Use when a folder's egress lock must be provisioned, checked, raised, lowered, or unsealed — 'lock this folder', 'lock status', 'egress-check this payload', 'unseal'.",
+    "allowed_tools": [
+      "lock_text",
+      "privacy_scan"
+    ],
+    "commit": "bb756d35983826c390fd0a30b288e93437bbb7f7",
+    "path": "skills/lock-steward/SKILL.md",
+    "url": "https://github.com/flxk1/governance-layer/blob/bb756d35983826c390fd0a30b288e93437bbb7f7/skills/lock-steward/SKILL.md"
+  },
+  {
+    "repo": "governance-layer",
+    "name": "policy-officer",
+    "description": "versum-policy to validated .lg to a human applying it. Makes known policy enforced. Know real-time; enforce-a-change reserved. Use when a known policy must become enforced — 'compile this policy to .lg', 'validate this patch', 'apply this patch', 'rebind the lane'.",
+    "allowed_tools": [
+      "solver_evaluate",
+      "solver_verify",
+      "policy_compile",
+      "policy_check",
+      "versum_search",
+      "versum_claims",
+      "lane_evaluate"
+    ],
+    "commit": "bb756d35983826c390fd0a30b288e93437bbb7f7",
+    "path": "skills/policy-officer/SKILL.md",
+    "url": "https://github.com/flxk1/governance-layer/blob/bb756d35983826c390fd0a30b288e93437bbb7f7/skills/policy-officer/SKILL.md"
+  },
+  {
     "repo": "loomground",
     "name": "loomground",
     "description": "Express an AI-governance requirement as a validated Loomground policy-graph patch. Use when the user wants to encode a governance rule (human oversight, reservation, prohibition, separation of duty / quorum, redress or contestation, delegation and the principal chain, autonomy grades, disclosure obligation) as a .lg patch; validate or fix an existing patch; or judge whether a requirement is expressible in Loomground versus belonging to policy or a host. Triggers on \"express this as Loomground\", \"write a .lg patch\", \"is this governable in Loomground\", \"validate this patch\", \"governance as a policy graph\".",
     "allowed_tools": [],
-    "commit": "6a7f37011b595cb70783f4d57ca6b5c2ca9324b6",
+    "commit": "47858e0c005e7c1481cd6dcc6f778e5cc8e685c9",
     "path": "skills/loomground/SKILL.md",
-    "url": "https://github.com/flxk1/loomground/blob/6a7f37011b595cb70783f4d57ca6b5c2ca9324b6/skills/loomground/SKILL.md"
+    "url": "https://github.com/flxk1/loomground/blob/47858e0c005e7c1481cd6dcc6f778e5cc8e685c9/skills/loomground/SKILL.md"
   },
   {
     "repo": "loomground-deontic",
@@ -42,9 +142,9 @@
       "deontic_parse",
       "deontic_conflicts"
     ],
-    "commit": "319e218500da42dea693830ff790343aa340bd60",
+    "commit": "92259770a02987b1763eb3dafd24612b9def0bf9",
     "path": "skills/deontic/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-deontic/blob/319e218500da42dea693830ff790343aa340bd60/skills/deontic/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-deontic/blob/92259770a02987b1763eb3dafd24612b9def0bf9/skills/deontic/SKILL.md"
   },
   {
     "repo": "loomground-epistemic",
@@ -53,9 +153,9 @@
     "allowed_tools": [
       "epistemic_extract"
     ],
-    "commit": "7c5dac171e2df91ae91d96c3ccbea22b27cdd667",
+    "commit": "3058c4c5c7036dd6a2fcc6b94c6a61a42c310c47",
     "path": "skills/epistemic/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-epistemic/blob/7c5dac171e2df91ae91d96c3ccbea22b27cdd667/skills/epistemic/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-epistemic/blob/3058c4c5c7036dd6a2fcc6b94c6a61a42c310c47/skills/epistemic/SKILL.md"
   },
   {
     "repo": "loomground-factual",
@@ -64,9 +164,9 @@
     "allowed_tools": [
       "factual_lower"
     ],
-    "commit": "4be819ec28c890e476b246e3ec616a5e1c3b857c",
+    "commit": "639f57025a1a2942195a8e37729e85c95522abcd",
     "path": "skills/factual/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-factual/blob/4be819ec28c890e476b246e3ec616a5e1c3b857c/skills/factual/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-factual/blob/639f57025a1a2942195a8e37729e85c95522abcd/skills/factual/SKILL.md"
   },
   {
     "repo": "loomground-governance",
@@ -76,9 +176,9 @@
       "solver_evaluate",
       "solver_verify"
     ],
-    "commit": "646893b5757659a16100af26b738fc47ccf7106b",
+    "commit": "9eb9bee37598c347fdbefcaca0c1361a02287932",
     "path": "skills/loomground/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-governance/blob/646893b5757659a16100af26b738fc47ccf7106b/skills/loomground/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-governance/blob/9eb9bee37598c347fdbefcaca0c1361a02287932/skills/loomground/SKILL.md"
   },
   {
     "repo": "loomground-ingest",
@@ -87,9 +187,9 @@
     "allowed_tools": [
       "ingest_text"
     ],
-    "commit": "e741c28f3b4f9cc89e61ae23ff537414ea95cad1",
+    "commit": "2d14ddfeb98bc0ce5811b75eb6b1e98a407cb898",
     "path": "skills/loomground-ingest/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-ingest/blob/e741c28f3b4f9cc89e61ae23ff537414ea95cad1/skills/loomground-ingest/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-ingest/blob/2d14ddfeb98bc0ce5811b75eb6b1e98a407cb898/skills/loomground-ingest/SKILL.md"
   },
   {
     "repo": "loomground-norm",
@@ -98,9 +198,9 @@
     "allowed_tools": [
       "norm_extract"
     ],
-    "commit": "9d5f68f140dc8a904306eb265e19ddfb4dd4562a",
+    "commit": "4924256193b596f71d4ac066e58eafc76297feeb",
     "path": "skills/norm/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-norm/blob/9d5f68f140dc8a904306eb265e19ddfb4dd4562a/skills/norm/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-norm/blob/4924256193b596f71d4ac066e58eafc76297feeb/skills/norm/SKILL.md"
   },
   {
     "repo": "loomground-solver",
@@ -109,9 +209,9 @@
     "allowed_tools": [
       "solver_advise_addons"
     ],
-    "commit": "38a4fcb3a02ed6390aac3a39ee9d753795a231c5",
+    "commit": "7878431c3e803704c80e1129a9d7a24333c35c91",
     "path": "skills/advise-solver-addons/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-solver/blob/38a4fcb3a02ed6390aac3a39ee9d753795a231c5/skills/advise-solver-addons/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-solver/blob/7878431c3e803704c80e1129a9d7a24333c35c91/skills/advise-solver-addons/SKILL.md"
   },
   {
     "repo": "loomground-solver",
@@ -120,9 +220,9 @@
     "allowed_tools": [
       "solver_analyse_risks"
     ],
-    "commit": "38a4fcb3a02ed6390aac3a39ee9d753795a231c5",
+    "commit": "7878431c3e803704c80e1129a9d7a24333c35c91",
     "path": "skills/analyse-risks/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-solver/blob/38a4fcb3a02ed6390aac3a39ee9d753795a231c5/skills/analyse-risks/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-solver/blob/7878431c3e803704c80e1129a9d7a24333c35c91/skills/analyse-risks/SKILL.md"
   },
   {
     "repo": "loomground-solver",
@@ -131,9 +231,9 @@
     "allowed_tools": [
       "solver_estimate_liability"
     ],
-    "commit": "38a4fcb3a02ed6390aac3a39ee9d753795a231c5",
+    "commit": "7878431c3e803704c80e1129a9d7a24333c35c91",
     "path": "skills/estimate-liability/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-solver/blob/38a4fcb3a02ed6390aac3a39ee9d753795a231c5/skills/estimate-liability/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-solver/blob/7878431c3e803704c80e1129a9d7a24333c35c91/skills/estimate-liability/SKILL.md"
   },
   {
     "repo": "loomground-solver",
@@ -142,9 +242,9 @@
     "allowed_tools": [
       "solver_litigation_risk"
     ],
-    "commit": "38a4fcb3a02ed6390aac3a39ee9d753795a231c5",
+    "commit": "7878431c3e803704c80e1129a9d7a24333c35c91",
     "path": "skills/litigation-risk-assessor/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-solver/blob/38a4fcb3a02ed6390aac3a39ee9d753795a231c5/skills/litigation-risk-assessor/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-solver/blob/7878431c3e803704c80e1129a9d7a24333c35c91/skills/litigation-risk-assessor/SKILL.md"
   },
   {
     "repo": "loomground-solver",
@@ -153,9 +253,9 @@
     "allowed_tools": [
       "solver_opponent_model"
     ],
-    "commit": "38a4fcb3a02ed6390aac3a39ee9d753795a231c5",
+    "commit": "7878431c3e803704c80e1129a9d7a24333c35c91",
     "path": "skills/opponent-modeler/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-solver/blob/38a4fcb3a02ed6390aac3a39ee9d753795a231c5/skills/opponent-modeler/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-solver/blob/7878431c3e803704c80e1129a9d7a24333c35c91/skills/opponent-modeler/SKILL.md"
   },
   {
     "repo": "loomground-solver",
@@ -164,9 +264,9 @@
     "allowed_tools": [
       "solver_probability"
     ],
-    "commit": "38a4fcb3a02ed6390aac3a39ee9d753795a231c5",
+    "commit": "7878431c3e803704c80e1129a9d7a24333c35c91",
     "path": "skills/probability-tracker/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-solver/blob/38a4fcb3a02ed6390aac3a39ee9d753795a231c5/skills/probability-tracker/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-solver/blob/7878431c3e803704c80e1129a9d7a24333c35c91/skills/probability-tracker/SKILL.md"
   },
   {
     "repo": "loomground-solver",
@@ -175,9 +275,9 @@
     "allowed_tools": [
       "solver_strategy"
     ],
-    "commit": "38a4fcb3a02ed6390aac3a39ee9d753795a231c5",
+    "commit": "7878431c3e803704c80e1129a9d7a24333c35c91",
     "path": "skills/strategic-analysis/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-solver/blob/38a4fcb3a02ed6390aac3a39ee9d753795a231c5/skills/strategic-analysis/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-solver/blob/7878431c3e803704c80e1129a9d7a24333c35c91/skills/strategic-analysis/SKILL.md"
   },
   {
     "repo": "loomground-topos",
@@ -186,9 +286,9 @@
     "allowed_tools": [
       "topos_parse"
     ],
-    "commit": "a9f4f54cff8275726ea29139d7a8fabc22182747",
+    "commit": "b7e9375067b822204d122e56dd3a19f9fefbfaf2",
     "path": "skills/topos/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-topos/blob/a9f4f54cff8275726ea29139d7a8fabc22182747/skills/topos/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-topos/blob/b7e9375067b822204d122e56dd3a19f9fefbfaf2/skills/topos/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -199,9 +299,9 @@
       "versum_confirm",
       "versum_canon"
     ],
-    "commit": "e12fd35f251c1af758b83ed32e918797a07b6bfc",
+    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
     "path": "skills/loomground-curate/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/e12fd35f251c1af758b83ed32e918797a07b6bfc/skills/loomground-curate/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-curate/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -211,9 +311,9 @@
       "versum_search",
       "versum_claims"
     ],
-    "commit": "e12fd35f251c1af758b83ed32e918797a07b6bfc",
+    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
     "path": "skills/loomground-enrich/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/e12fd35f251c1af758b83ed32e918797a07b6bfc/skills/loomground-enrich/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-enrich/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -223,9 +323,9 @@
       "versum_search",
       "versum_claims"
     ],
-    "commit": "e12fd35f251c1af758b83ed32e918797a07b6bfc",
+    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
     "path": "skills/loomground-kg/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/e12fd35f251c1af758b83ed32e918797a07b6bfc/skills/loomground-kg/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-kg/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -235,9 +335,9 @@
       "versum_search",
       "versum_claims"
     ],
-    "commit": "e12fd35f251c1af758b83ed32e918797a07b6bfc",
+    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
     "path": "skills/loomground-kg-chat/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/e12fd35f251c1af758b83ed32e918797a07b6bfc/skills/loomground-kg-chat/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-kg-chat/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -246,9 +346,9 @@
     "allowed_tools": [
       "versum_capture"
     ],
-    "commit": "e12fd35f251c1af758b83ed32e918797a07b6bfc",
+    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
     "path": "skills/loomground-knowledge-write/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/e12fd35f251c1af758b83ed32e918797a07b6bfc/skills/loomground-knowledge-write/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-knowledge-write/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -259,9 +359,9 @@
       "versum_claims",
       "versum_search"
     ],
-    "commit": "e12fd35f251c1af758b83ed32e918797a07b6bfc",
+    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
     "path": "skills/loomground-mental-model/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/e12fd35f251c1af758b83ed32e918797a07b6bfc/skills/loomground-mental-model/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-mental-model/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -271,9 +371,9 @@
       "versum_index",
       "versum_search"
     ],
-    "commit": "e12fd35f251c1af758b83ed32e918797a07b6bfc",
+    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
     "path": "skills/loomground-organise/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/e12fd35f251c1af758b83ed32e918797a07b6bfc/skills/loomground-organise/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-organise/SKILL.md"
   },
   {
     "repo": "policy-compiler",
@@ -292,10 +392,12 @@
     "name": "privacy-shield",
     "description": "Local-first PII/PHI detection and clean-overlay pipeline for governed folders. Scan a folder, file, or text span by span, produce the PII-cleaned overlay — the only thing meant to leave the machine — then decide whether egress to an external service is allowed, by source classification. Personal data is found with a regex/lexicon floor plus an optional local embedding/LLM layer; the value<->placeholder map stays local; every decision is written to a local audit trail. Works standalone with every Loomground plane optional. An external enforcement host can attach behind the neutral sink interface that no-ops when absent. \"Cleared\" means the source class is allowed to egress, NOT a zero-residual certificate. Use when the user says \"redact this\", \"clean this before I send it to the cloud\", \"is this safe for an external LLM\", \"scan this folder for personal data\", \"make a privacy overlay\", \"lock this folder's egress\".",
     "allowed_tools": [
-      "privacy_scan"
+      "privacy_scan",
+      "Bash(privacy-shield:*)",
+      "Read"
     ],
-    "commit": "a774b39e64a9aff19dc08c03d5216edaa9eb327d",
+    "commit": "dc71ff0bc1491cc6cfd5f31568c41a3c94d474a0",
     "path": "skills/privacy-shield/SKILL.md",
-    "url": "https://github.com/flxk1/privacy-shield/blob/a774b39e64a9aff19dc08c03d5216edaa9eb327d/skills/privacy-shield/SKILL.md"
+    "url": "https://github.com/flxk1/privacy-shield/blob/dc71ff0bc1491cc6cfd5f31568c41a3c94d474a0/skills/privacy-shield/SKILL.md"
   }
 ]
