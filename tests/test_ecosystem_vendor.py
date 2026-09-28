@@ -81,12 +81,13 @@ def test_build_artifacts_offline_matches_fixture(manifest):
 
     artifacts = vendor.build_artifacts(manifest, fetcher)
 
-    assert artifacts[vendor.CATALOGUE_PATH] == vendor.pretty_json_bytes(catalogue)
+    # catalogue and role manifests are byte copies of upstream, never re-serialised
+    assert artifacts[vendor.CATALOGUE_PATH] == json.dumps(catalogue).encode("utf-8")
     expected_projection = vendor.public_projection(skills_index, names)
     assert artifacts[vendor.SKILLS_INDEX_PATH] == vendor.pretty_json_bytes(expected_projection)
     for role_id in vendor.ROLE_IDS:
         path = vendor.ROLES_DIR / f"{role_id}.json"
-        assert artifacts[path] == vendor.pretty_json_bytes(roles[role_id])
+        assert artifacts[path] == json.dumps(roles[role_id]).encode("utf-8")
     assert artifacts[vendor.PINS_PATH] == vendor.build_pins_document()
 
 

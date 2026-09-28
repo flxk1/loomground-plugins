@@ -109,7 +109,10 @@ def manifest_pin(manifest: dict, repo_name: str) -> str:
 
 
 def fetch_json(fetcher: Fetcher, repo: str, commit: str, path: str) -> object:
-    raw = fetcher(repo, commit, path)
+    return _parse_json(fetcher(repo, commit, path), repo, commit, path)
+
+
+def _parse_json(raw: bytes, repo: str, commit: str, path: str) -> object:
     try:
         return json.loads(raw.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -118,20 +121,23 @@ def fetch_json(fetcher: Fetcher, repo: str, commit: str, path: str) -> object:
 
 def build_catalogue_artifact(manifest: dict, fetcher: Fetcher) -> bytes:
     commit = manifest_pin(manifest, CATALOGUE_SOURCE_REPO)
-    document = fetch_json(fetcher, CATALOGUE_SOURCE_REPO, commit, CATALOGUE_SOURCE_PATH)
+    raw = fetcher(CATALOGUE_SOURCE_REPO, commit, CATALOGUE_SOURCE_PATH)
+    document = _parse_json(raw, CATALOGUE_SOURCE_REPO, commit, CATALOGUE_SOURCE_PATH)
     if document.get("family") != "Loomground" or not isinstance(document.get("repos"), list):
         raise VendorError("fetched catalogue.json has an unexpected shape")
-    return pretty_json_bytes(document)
+    return raw  # byte copy: validated, never re-serialised
 
 
 def build_role_artifacts(manifest: dict, fetcher: Fetcher) -> dict[str, bytes]:
     commit = manifest_pin(manifest, ROLES_SOURCE_REPO)
     artifacts = {}
     for role_id in ROLE_IDS:
-        document = fetch_json(fetcher, ROLES_SOURCE_REPO, commit, f"{ROLES_SOURCE_DIR}/{role_id}.json")
+        path = f"{ROLES_SOURCE_DIR}/{role_id}.json"
+        raw = fetcher(ROLES_SOURCE_REPO, commit, path)
+        document = _parse_json(raw, ROLES_SOURCE_REPO, commit, path)
         if document.get("id") != role_id or not isinstance(document.get("allowed_capabilities"), list):
             raise VendorError(f"fetched role manifest is malformed: {role_id}")
-        artifacts[f"{role_id}.json"] = pretty_json_bytes(document)
+        artifacts[f"{role_id}.json"] = raw  # byte copy: validated, never re-serialised
     return artifacts
 
 
