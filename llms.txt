@@ -59,7 +59,7 @@ deployment is advisory, not enforced.
 | source registry | `externals.json`: repository URL, immutable commit, sibling path |
 | package manifest | `<source>/package.json` against `schemas/loomground-package.schema.json` |
 | Claude catalogue | `.claude-plugin/marketplace.json`, regenerated from pins |
-| ecosystem certification | `ecosystem/manifest.json`: the 42 certified repositories, exact revisions, invariants and scenarios |
+| ecosystem certification | `ecosystem/manifest.json`: the 41 certified repositories, exact revisions, invariants and scenarios |
 | release gate | JSON validity, supply-chain checks, generated-catalogue parity, tests |
 
 ## Family

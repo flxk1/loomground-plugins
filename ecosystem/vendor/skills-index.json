@@ -299,9 +299,9 @@
       "versum_confirm",
       "versum_canon"
     ],
-    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
+    "commit": "d4491b6f896ef2d3acd2d36eccb07af48b477a29",
     "path": "skills/loomground-curate/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-curate/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/d4491b6f896ef2d3acd2d36eccb07af48b477a29/skills/loomground-curate/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -311,9 +311,9 @@
       "versum_search",
       "versum_claims"
     ],
-    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
+    "commit": "d4491b6f896ef2d3acd2d36eccb07af48b477a29",
     "path": "skills/loomground-enrich/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-enrich/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/d4491b6f896ef2d3acd2d36eccb07af48b477a29/skills/loomground-enrich/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -323,9 +323,9 @@
       "versum_search",
       "versum_claims"
     ],
-    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
+    "commit": "d4491b6f896ef2d3acd2d36eccb07af48b477a29",
     "path": "skills/loomground-kg/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-kg/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/d4491b6f896ef2d3acd2d36eccb07af48b477a29/skills/loomground-kg/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -335,9 +335,9 @@
       "versum_search",
       "versum_claims"
     ],
-    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
+    "commit": "d4491b6f896ef2d3acd2d36eccb07af48b477a29",
     "path": "skills/loomground-kg-chat/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-kg-chat/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/d4491b6f896ef2d3acd2d36eccb07af48b477a29/skills/loomground-kg-chat/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -346,9 +346,9 @@
     "allowed_tools": [
       "versum_capture"
     ],
-    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
+    "commit": "d4491b6f896ef2d3acd2d36eccb07af48b477a29",
     "path": "skills/loomground-knowledge-write/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-knowledge-write/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/d4491b6f896ef2d3acd2d36eccb07af48b477a29/skills/loomground-knowledge-write/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -359,9 +359,9 @@
       "versum_claims",
       "versum_search"
     ],
-    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
+    "commit": "d4491b6f896ef2d3acd2d36eccb07af48b477a29",
     "path": "skills/loomground-mental-model/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-mental-model/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/d4491b6f896ef2d3acd2d36eccb07af48b477a29/skills/loomground-mental-model/SKILL.md"
   },
   {
     "repo": "loomground-versum",
@@ -371,9 +371,9 @@
       "versum_index",
       "versum_search"
     ],
-    "commit": "dd12dcecc04c135c52b867a423d202fc831cdaaa",
+    "commit": "d4491b6f896ef2d3acd2d36eccb07af48b477a29",
     "path": "skills/loomground-organise/SKILL.md",
-    "url": "https://github.com/flxk1/loomground-versum/blob/dd12dcecc04c135c52b867a423d202fc831cdaaa/skills/loomground-organise/SKILL.md"
+    "url": "https://github.com/flxk1/loomground-versum/blob/d4491b6f896ef2d3acd2d36eccb07af48b477a29/skills/loomground-organise/SKILL.md"
   },
   {
     "repo": "policy-compiler",

@@ -6,7 +6,7 @@
   },
   "root": "loomground-mcp",
   "packages": [
-    {"name": "loomground-mcp", "url": "https://github.com/flxk1/loomground-mcp.git", "commit": "cc2636e29bd1b23dc1468c79105a1e7b99ffd217"},
+    {"name": "loomground-mcp", "url": "https://github.com/flxk1/loomground-mcp.git", "commit": "5a51d5bef4dfe769a27d83d78e94af27f4102df7"},
     {"name": "loomground-governance", "url": "https://github.com/flxk1/loomground-governance.git", "commit": "56590673fef668a231527bb7ee9f7dcefa544854"},
     {"name": "loomground-deontic", "url": "https://github.com/flxk1/loomground-deontic.git", "commit": "2dd810bdeac05196fd917b05556ccdd460af9215"},
     {"name": "loomground-factual", "url": "https://github.com/flxk1/loomground-factual.git", "commit": "ebf9fe19d518dde0aad08962632d95f9d97ee31c"},
@@ -37,6 +37,6 @@
     {"name": "policy-compiler", "url": "https://github.com/flxk1/policy-compiler.git", "commit": "961a46d593a3478c8633305d6c9f5fc729cb8412"},
     {"name": "evidence-emitter", "url": "https://github.com/flxk1/evidence-emitter.git", "commit": "6164ed153e4def641ec19826ebd45ed08cfe97b2"},
     {"name": "privacy-shield", "url": "https://github.com/flxk1/privacy-shield.git", "commit": "baff18500db05fa25a3e465581d0e788c65c45a5"},
-    {"name": "a2a-compliance", "url": "https://github.com/flxk1/a2a-compliance.git", "commit": "9d7939da97a42f26d575df293f932e374e462398"}
+    {"name": "a2a-compliance", "url": "https://github.com/flxk1/a2a-compliance.git", "commit": "629da04424d986d99fec9bf9c3f79b522df54051"}
   ]
 }

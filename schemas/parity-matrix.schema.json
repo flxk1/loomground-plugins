@@ -8,7 +8,7 @@
   "properties": {
     "schema_version": {"const": 1},
     "kind": {"const": "loomground-ecosystem-parity-matrix"},
-    "row_count": {"const": 42},
+    "row_count": {"const": 41},
     "sources": {
       "type": "object",
       "additionalProperties": false,
@@ -31,8 +31,8 @@
     },
     "rows": {
       "type": "array",
-      "minItems": 42,
-      "maxItems": 42,
+      "minItems": 41,
+      "maxItems": 41,
       "items": {"$ref": "#/$defs/row"}
     },
     "matrix_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}

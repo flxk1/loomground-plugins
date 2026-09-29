@@ -28,7 +28,6 @@
     {"name": "loomground-mandate", "required_checks": ["release", "reuse", "verify (3.10)", "verify (3.14)"]},
     {"name": "loomground-mcp", "required_checks": ["test"]},
     {"name": "loomground-norm", "required_checks": ["release", "verify (3.10)", "verify (3.14)"]},
-    {"name": "loomground-patchbay", "required_checks": ["release-gate"]},
     {"name": "loomground-plugins", "required_checks": ["release-gate"]},
     {"name": "loomground-proxy", "required_checks": ["release", "reuse", "verify (3.10)", "verify (3.14)"]},
     {"name": "loomground-ref", "required_checks": ["commit-discipline", "conformance"]},
