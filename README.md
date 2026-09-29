@@ -97,7 +97,7 @@ Requirements. Each is authenticated by GitHub OIDC/Sigstore attestation and
 signed with an ephemeral key discarded after use. See
 [docs/RUNTIME-RELEASE.md](docs/RUNTIME-RELEASE.md).
 
-The ecosystem certification contract covers the 42 certified Loomground
+The ecosystem certification contract covers the 41 certified Loomground
 repositories at exact revisions and eight cross-repository failure
 scenarios; missing, stale, or mutated evidence cannot produce a passing
 certificate. It does not prove every possible composition, external host
@@ -132,7 +132,7 @@ out: dist/codex/<package>/ contains the pinned skills and installation metadata
 | source registry | `externals.json`: repository URL, immutable commit, sibling path |
 | package manifest | `<source>/package.json` against `schemas/loomground-package.schema.json` |
 | Claude catalogue | `.claude-plugin/marketplace.json`, regenerated from pins |
-| ecosystem certification | `ecosystem/manifest.json`: the 42 certified repositories, exact revisions, invariants and scenarios |
+| ecosystem certification | `ecosystem/manifest.json`: the 41 certified repositories, exact revisions, invariants and scenarios |
 | release gate | JSON validity, supply-chain checks, generated-catalogue parity, tests |
 
 ## Family

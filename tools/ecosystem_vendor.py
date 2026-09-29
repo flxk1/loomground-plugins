@@ -13,7 +13,7 @@ Three artifacts are vendored at the commits pinned in ecosystem/manifest.json:
                                                     loomground-mcp's
                                                     src/loomground_mcp/skills/index.json:
                                                     every record whose repository is
-                                                    private, or outside the 42-repo
+                                                    private, or outside the 41-repo
                                                     ecosystem/manifest.json inventory,
                                                     is dropped before it is written.
 
@@ -191,12 +191,12 @@ def build_pins_document() -> bytes:
                 "source_path": SKILLS_INDEX_SOURCE_PATH,
                 "note": (
                     "NOT a byte-for-byte copy of the upstream file: the upstream index "
-                    "also carries skill records for private repositories outside the 42 "
+                    "also carries skill records for private repositories outside the 41 "
                     "public ecosystem/manifest.json inventory. Vendoring those into this "
                     "public repository would leak private-repo names, descriptions, paths, "
                     "commit SHAs, and blob URLs. This file is the public projection at the "
                     "pinned commit: every record marked private, or whose repo is outside "
-                    "the 42-repo inventory, is dropped before it is committed here, not "
+                    "the 41-repo inventory, is dropped before it is committed here, not "
                     "merely filtered downstream. tests/test_ecosystem_parity_matrix.py "
                     "asserts zero such records remain and that no known private repo name "
                     "appears anywhere under ecosystem/vendor/."

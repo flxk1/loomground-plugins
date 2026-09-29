@@ -834,18 +834,6 @@
       "url": "https://github.com/flxk1/loomground-plugins"
     },
     {
-      "repo": "loomground-patchbay",
-      "family": "Interfaces and authoring",
-      "role": "reusable presentation contract and console shell",
-      "description": "Presentation contract and console shell for Loomground plane data: shell renderers, canvas units, render harness, and a loopback host.",
-      "pipeline_position": null,
-      "depends_on": [],
-      "tools": [],
-      "skills": [],
-      "install": "git clone https://github.com/flxk1/loomground-patchbay",
-      "url": "https://github.com/flxk1/loomground-patchbay"
-    },
-    {
       "repo": "loomground-mcp",
       "family": "Interfaces and authoring",
       "role": "one MCP server exposing the planes as tools and the skills as prompts",

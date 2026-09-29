@@ -100,10 +100,10 @@ def test_collect_writes_complete_revision_bound_result_set(inventory, tmp_path):
         "token",
         fetch=successful_fetch(contracts),
     )
-    assert passed == 42
+    assert passed == 41
     assert failures == []
     result_files = sorted((tmp_path / "results").glob("repository-*.json"))
-    assert len(result_files) == 42
+    assert len(result_files) == 41
     for path in result_files:
         result = ecosystem_certify.load_json(path)
         evidence_path = tmp_path / "results/evidence" / f"{result['name']}.json"
@@ -115,7 +115,7 @@ def test_collect_writes_complete_revision_bound_result_set(inventory, tmp_path):
     verified = ecosystem_certify.verify_repository_results(
         manifest, tmp_path / "results", self_commit, verify_evidence_files=True
     )
-    assert len(verified) == 42
+    assert len(verified) == 41
 
 
 def test_repository_evidence_mutation_is_detected(inventory, tmp_path):
@@ -143,7 +143,7 @@ def test_collect_reports_partial_evidence_without_fabricating_pass(inventory, tm
     passed, failures = collect_github_evidence.collect(
         manifest, contracts, "d" * 40, tmp_path / "results", "token", fetch=one_missing
     )
-    assert passed == 41
+    assert passed == 40
     assert len(failures) == 1
     assert "oversight-certificate" in failures[0]
     assert not (tmp_path / "results/repository-oversight-certificate.json").exists()
@@ -172,6 +172,6 @@ def test_collect_can_delegate_explicit_backfill_repositories(inventory, tmp_path
         excluded,
         fetch=successful_fetch(contracts),
     )
-    assert passed == 40
+    assert passed == 39
     assert failures == []
     assert not (tmp_path / "results/repository-loomground-factual.json").exists()
