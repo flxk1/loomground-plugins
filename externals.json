@@ -108,7 +108,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/policy-compiler.git",
-      "sha": "c51e06b159ffd9b0f3bfb9334f52538ef7137547"
+      "sha": "5f524b7ba6f7517517c4af31577b97e5e4c56c64"
     }
   },
   "privacy-shield": {
@@ -117,7 +117,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/privacy-shield.git",
-      "sha": "a774b39e64a9aff19dc08c03d5216edaa9eb327d"
+      "sha": "baff18500db05fa25a3e465581d0e788c65c45a5"
     }
   }
 }
