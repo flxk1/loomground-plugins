@@ -260,11 +260,20 @@ def build_tool_and_skill_maps(catalogue: dict) -> tuple[dict[str, str], dict[str
 
 
 def agent_role_cells(roles: dict[str, dict], catalogue: dict, names: list[str]) -> dict[str, dict]:
+    """Assign every repository to exactly one compliance role.
+
+    A role's ``contract:``/``distribution:`` capability claims the repository
+    outright. A ``tool:``/``skill:`` capability only uses a repository's surface:
+    it assigns that repository to the role when no role contracts it, so a role
+    may call another role's repository's tools without owning it. Two roles
+    contracting the same repository, or two roles reaching an uncontracted
+    repository only through tools or skills, is ambiguous and refused.
+    """
     names_set = set(names)
     tool_to_repo, skill_to_repos = build_tool_and_skill_maps(catalogue)
-    assigned: dict[str, str] = {}
+    contracted: dict[str, str] = {}
+    used: dict[str, set[str]] = {}
     for role_id, role in roles.items():
-        resolved: set[str] = set()
         for capability in role["allowed_capabilities"]:
             kind, sep, value = capability.partition(":")
             if not sep or kind not in CAPABILITY_KINDS:
@@ -272,19 +281,27 @@ def agent_role_cells(roles: dict[str, dict], catalogue: dict, names: list[str]) 
             if kind in ("contract", "distribution"):
                 if value not in names_set:
                     raise ParityError(f"role {role_id} declares {capability!r} outside the ecosystem inventory")
-                resolved.add(value)
-            elif kind == "tool":
+                if value in contracted and contracted[value] != role_id:
+                    raise ParityError(f"repository {value} is assigned to more than one role: {contracted[value]}, {role_id}")
+                contracted[value] = role_id
+                continue
+            if kind == "tool":
                 repo = tool_to_repo.get(value)
-                if repo is not None:
-                    resolved.add(repo)
-            elif kind == "skill":
-                resolved |= skill_to_repos.get(value, set())
-        for repo in resolved:
-            if repo not in names_set:
-                raise ParityError(f"role {role_id} resolves to a repository outside the ecosystem inventory: {repo}")
-            if repo in assigned and assigned[repo] != role_id:
-                raise ParityError(f"repository {repo} is assigned to more than one role: {assigned[repo]}, {role_id}")
-            assigned[repo] = role_id
+                reached = {repo} if repo is not None else set()
+            else:  # skill
+                reached = skill_to_repos.get(value, set())
+            for repo in reached:
+                if repo not in names_set:
+                    raise ParityError(f"role {role_id} resolves to a repository outside the ecosystem inventory: {repo}")
+                used.setdefault(repo, set()).add(role_id)
+    assigned = dict(contracted)
+    for repo, role_ids in sorted(used.items()):
+        if repo in assigned:
+            continue
+        if len(role_ids) > 1:
+            first, second = sorted(role_ids)[:2]
+            raise ParityError(f"repository {repo} is assigned to more than one role: {first}, {second}")
+        assigned[repo] = next(iter(role_ids))
     if set(assigned) != names_set:
         missing = sorted(names_set - set(assigned))
         extra = sorted(set(assigned) - names_set)
