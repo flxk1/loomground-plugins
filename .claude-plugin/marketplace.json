@@ -59,7 +59,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-deontic.git",
-        "sha": "0f57e8d2c02f288169d76e3ec93714b0d3f00ea2"
+        "sha": "2dd810bdeac05196fd917b05556ccdd460af9215"
       },
       "description": "Transcribe a natural-language norm into a verified deontic formula: split it into modality (O/P/F), bearer, and action; classify the Hohfeldian incident; resolve a 'right' as a claim or a liberty; validate with a bundled stdlib engine; and flag candidate conflicts. Transcribes and flags, never infers or resolves.",
       "version": "0.1.3",
@@ -164,7 +164,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-ingest.git",
-        "sha": "9a994941ba2591416ccd90e5561f25eb4145f1cd"
+        "sha": "e8fab247dd50850688346dd79c8610cd4c74b396"
       },
       "description": "Drive the network-free Loomground ingest plane: dispatch a post-acquisition artifact to the registered ingester, lower it to a dimensioned subgraph with provenance and quarantine semantics, dry-run by default, and write only through the host-injected, versioned Versum sink.",
       "version": "0.1.1",
@@ -185,7 +185,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-norm.git",
-        "sha": "0a54ca7bc9c5955be87569e154b24c1717f8ba00"
+        "sha": "a37b0f1f3609ea84a999d8e0a5b3dd88d1e81086"
       },
       "description": "The norm plane's lift: running text to RuleFacet to a rendered deontic formula, in 24 EU languages. The norm skill is the lift card with the modal-phrase table; the loomground MCP server carries norm_extract.",
       "version": "0.1.0",
@@ -206,7 +206,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-solver.git",
-        "sha": "39607adac15f4abb7612698cbf5c5ccd571cd852"
+        "sha": "aced448ed6e937356038fefb843953c2b1dfffdc"
       },
       "description": "Analytic and probabilistic reasoning skills over the Loomground Solver kernel: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, analyse risks, and advise on optional add-ons.",
       "version": "0.3.0",
@@ -246,7 +246,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-topos.git",
-        "sha": "176ca83b926163e06516aac3ebb5a07cc10c12e7"
+        "sha": "d3eb145b648ddc57003aa2bf9c8b3350a6f04dd9"
       },
       "description": "lt, the legal-system topology language: systems, levels, organs, instruments, competences and their relations, with assertions by named organs. The topos skill is the language card; the loomground MCP server carries topos_parse.",
       "version": "0.1.0",
@@ -268,7 +268,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-versum.git",
-        "sha": "eaf316d1cf14e5c4af2ba065a27601f1ba7a495d"
+        "sha": "d4491b6f896ef2d3acd2d36eccb07af48b477a29"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
       "version": "0.14.1",
@@ -293,10 +293,10 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/policy-compiler.git",
-        "sha": "5f524b7ba6f7517517c4af31577b97e5e4c56c64"
+        "sha": "961a46d593a3478c8633305d6c9f5fc729cb8412"
       },
       "description": "Compile a written policy into grounded deontic norms (O/P/F with bearer, action, conditions, cross-references), surfacing conflicts, undetermined rules, and unplaceable spans, and running test cases. Stops at a validated draft; activation is reserved. Delegates lowering to the loomground deontic/norm planes when present, degrading to advisory when absent. Output matches the compliance-fleet grounding seam.",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "author": {
         "name": "Loomground Contributors"
       },
