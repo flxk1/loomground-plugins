@@ -13,7 +13,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/a2a-compliance.git",
-        "sha": "781749f4ceb0f28194fe5352596a810d77b7715e"
+        "sha": "9d7939da97a42f26d575df293f932e374e462398"
       },
       "description": "Control maker agents over an A2A protocol with role authority and optional Loomground value grounding.",
       "version": "0.1.0",
@@ -59,7 +59,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-deontic.git",
-        "sha": "b61aa94ab665401181c2f6996c6d3ba56843e62d"
+        "sha": "0f57e8d2c02f288169d76e3ec93714b0d3f00ea2"
       },
       "description": "Transcribe a natural-language norm into a verified deontic formula: split it into modality (O/P/F), bearer, and action; classify the Hohfeldian incident; resolve a 'right' as a claim or a liberty; validate with a bundled stdlib engine; and flag candidate conflicts. Transcribes and flags, never infers or resolves.",
       "version": "0.1.3",
@@ -80,7 +80,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-epistemic.git",
-        "sha": "f4f293dd7d8a17e28d4ad710565dee234cf9234a"
+        "sha": "10a3d6948eaf20092c49fc72efa98d43a5c2fca3"
       },
       "description": "The epistemic plane's reader: who knows or believes what, at which certainty band (K/B, holder, proposition, certainty, source). The epistemic skill is the language card; the loomground MCP server carries epistemic_extract.",
       "version": "0.1.0",
@@ -101,7 +101,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-factual.git",
-        "sha": "514c75aa4bb95846a25fd42cef821750be6230f4"
+        "sha": "ebf9fe19d518dde0aad08962632d95f9d97ee31c"
       },
       "description": "The factual plane's reader: lower a plain assertion into subject, predicate, object with dimension, negation and quantification. The factual skill is the language card; the loomground MCP server carries factual_lower.",
       "version": "0.1.0",
@@ -121,7 +121,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-governance.git",
-        "sha": "3eed4cab3cba2a288fcac3671171cd4fa7e5bc18"
+        "sha": "56590673fef668a231527bb7ee9f7dcefa544854"
       },
       "description": "Express an AI-governance requirement as a verified Loomground policy-graph patch: draft the .lg patch, litmus-classify each requirement as expressible, policy, or host, and validate with the bundled validation engine. Non-normative companion skill to the Loomground standard.",
       "version": "0.1.0",
@@ -164,7 +164,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-ingest.git",
-        "sha": "652cb49fcf61b2bac71684d9d80dbf26d7c02b26"
+        "sha": "9a994941ba2591416ccd90e5561f25eb4145f1cd"
       },
       "description": "Drive the network-free Loomground ingest plane: dispatch a post-acquisition artifact to the registered ingester, lower it to a dimensioned subgraph with provenance and quarantine semantics, dry-run by default, and write only through the host-injected, versioned Versum sink.",
       "version": "0.1.1",
@@ -268,10 +268,10 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-versum.git",
-        "sha": "884cb28371460a576ca0dfe2793ed2b19c7ca325"
+        "sha": "eaf316d1cf14e5c4af2ba065a27601f1ba7a495d"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
-      "version": "0.14.0",
+      "version": "0.14.1",
       "author": {
         "name": "Loomground Contributors"
       },

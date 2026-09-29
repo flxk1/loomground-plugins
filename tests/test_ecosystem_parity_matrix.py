@@ -424,3 +424,34 @@ def test_committed_marketplace_maps_governance_roles_to_governance_layer(matrix)
     row = next(row for row in matrix["rows"] if row["name"] == "governance-layer")
     assert row["plugin_source"]["present"] is True
 
+
+
+def _role(role_id, *capabilities):
+    return {"id": role_id, "allowed_capabilities": list(capabilities)}
+
+
+def _catalogue_with_tools(tools_by_repo):
+    return {"repos": [{"repo": repo, "tools": tools, "skills": []} for repo, tools in tools_by_repo.items()]}
+
+
+def test_a_contract_owns_a_repository_another_role_only_uses():
+    catalogue = _catalogue_with_tools({"lib": ["lib_digest", "lib_resolve"]})
+    roles = {"recorder": _role("recorder", "tool:lib_digest", "contract:lib"),
+             "grounder": _role("grounder", "tool:lib_resolve")}
+    cells = parity.agent_role_cells(roles, catalogue, ["lib"])
+    assert cells["lib"]["value"] == "recorder"
+
+
+def test_two_roles_reaching_an_uncontracted_repository_by_tools_is_refused():
+    catalogue = _catalogue_with_tools({"lib": ["lib_digest", "lib_resolve"]})
+    roles = {"recorder": _role("recorder", "tool:lib_digest"),
+             "grounder": _role("grounder", "tool:lib_resolve")}
+    with pytest.raises(parity.ParityError, match="more than one role"):
+        parity.agent_role_cells(roles, catalogue, ["lib"])
+
+
+def test_two_roles_contracting_one_repository_is_refused():
+    catalogue = _catalogue_with_tools({"lib": []})
+    roles = {"a": _role("a", "contract:lib"), "b": _role("b", "contract:lib")}
+    with pytest.raises(parity.ParityError, match="more than one role"):
+        parity.agent_role_cells(roles, catalogue, ["lib"])

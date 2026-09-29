@@ -322,7 +322,9 @@
         "versum_capture",
         "versum_suggest",
         "versum_confirm",
-        "versum_canon"
+        "versum_canon",
+        "versum_coords",
+        "versum_cell"
       ],
       "skills": [
         "loomground-curate",
@@ -543,7 +545,8 @@
       "pipeline_position": null,
       "depends_on": [],
       "tools": [
-        "nd_digest"
+        "nd_digest",
+        "nd_resolve"
       ],
       "skills": [],
       "install": "pip install \"5d-nd @ git+https://github.com/flxk1/5d-nd\"",
