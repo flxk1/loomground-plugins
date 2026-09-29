@@ -164,7 +164,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-ingest.git",
-        "sha": "e8fab247dd50850688346dd79c8610cd4c74b396"
+        "sha": "ca12e4d1b1e13f1840566e72f4b3abd6b4306e17"
       },
       "description": "Drive the network-free Loomground ingest plane: dispatch a post-acquisition artifact to the registered ingester, lower it to a dimensioned subgraph with provenance and quarantine semantics, dry-run by default, and write only through the host-injected, versioned Versum sink.",
       "version": "0.1.1",
@@ -206,7 +206,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-solver.git",
-        "sha": "aced448ed6e937356038fefb843953c2b1dfffdc"
+        "sha": "b6e3beb14a7b76c440fc343716305ab8f6587a09"
       },
       "description": "Analytic and probabilistic reasoning skills over the Loomground Solver kernel: model opponents, track probabilities, analyse strategy, estimate liability, assess litigation risk, analyse risks, and advise on optional add-ons.",
       "version": "0.3.0",
@@ -268,10 +268,10 @@
       "source": {
         "source": "url",
         "url": "https://github.com/flxk1/loomground-versum.git",
-        "sha": "d4491b6f896ef2d3acd2d36eccb07af48b477a29"
+        "sha": "e416c81da5cfeab13457d7d70119c6631dbdc4d4"
       },
       "description": "Loomground's human-gated knowledge-graph write path, concept-neighbour organiser, mental-model engine, and the research→graph enrichment loop, plus the read-only KG cockpit and conversational query surface over the graph.",
-      "version": "0.14.1",
+      "version": "0.14.2",
       "author": {
         "name": "Loomground Contributors"
       },
