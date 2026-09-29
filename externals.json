@@ -65,7 +65,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-ingest.git",
-      "sha": "e8fab247dd50850688346dd79c8610cd4c74b396"
+      "sha": "ca12e4d1b1e13f1840566e72f4b3abd6b4306e17"
     }
   },
   "loomground-norm": {
@@ -82,7 +82,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-solver.git",
-      "sha": "aced448ed6e937356038fefb843953c2b1dfffdc"
+      "sha": "b6e3beb14a7b76c440fc343716305ab8f6587a09"
     }
   },
   "loomground-topos": {
@@ -99,7 +99,7 @@
     "source": {
       "source": "url",
       "url": "https://github.com/flxk1/loomground-versum.git",
-      "sha": "d4491b6f896ef2d3acd2d36eccb07af48b477a29"
+      "sha": "e416c81da5cfeab13457d7d70119c6631dbdc4d4"
     }
   },
   "policy-compiler": {
